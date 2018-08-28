@@ -1,0 +1,132 @@
+
+trainer.png
+size: 128,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+run_down
+  rotate: false
+  xy: 75, 42
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 0
+run_down
+  rotate: false
+  xy: 60, 0
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 1
+run_down
+  rotate: false
+  xy: 75, 21
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 2
+run_left
+  rotate: false
+  xy: 0, 0
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 0
+run_left
+  rotate: false
+  xy: 15, 21
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 1
+run_left
+  rotate: false
+  xy: 30, 42
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 2
+run_up
+  rotate: false
+  xy: 60, 42
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 0
+run_up
+  rotate: false
+  xy: 45, 0
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 1
+run_up
+  rotate: false
+  xy: 60, 21
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 2
+stand_down
+  rotate: false
+  xy: 15, 42
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: -1
+stand_left
+  rotate: false
+  xy: 90, 42
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: -1
+stand_up
+  rotate: false
+  xy: 0, 42
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: -1
+walk_down
+  rotate: false
+  xy: 15, 0
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 1
+walk_down
+  rotate: false
+  xy: 45, 21
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 0
+walk_left
+  rotate: false
+  xy: 0, 21
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 1
+walk_left
+  rotate: false
+  xy: 30, 21
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 0
+walk_up
+  rotate: false
+  xy: 45, 42
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 0
+walk_up
+  rotate: false
+  xy: 30, 0
+  size: 15, 21
+  orig: 15, 21
+  offset: 0, 0
+  index: 1

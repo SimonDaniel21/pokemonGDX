@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="55" height="13" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" source="Pokemon Gold.tsx"/>
+ <tileset firstgid="2145" source="triggers.tsx"/>
+ <tileset firstgid="2148" source="CollisionTileset.tsx"/>
+ <layer name="back" width="55" height="13">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NkYGBgHMWjeBSP4lE8IrESnbDyAPhNi05YewD8ZkQHDPMfPdIHvcNPk4rxTwjT22+GVIp/YjC9/TZQGACA7qm9LAsAAA==
+  </data>
+ </layer>
+ <layer name="fore" width="55" height="13">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC93TOU8CURSG4SFBK7USKuRv2GGnUSEEqcAKrFwa0UalEWwELBQpRCjcCtfEjcSNRLZEAX+TbzHFzYSbmIBzJ5zkCfnOzGTumRw0zZplt2naAAZtqk/S+xpipmGM9OFso8zkgFPxbLL96WavXDwzBrfi2WT7I+tfkq9wjRvc4s6iuyfbH1n/nvyARzzhGSXDPYvkJSxjRb+2y28KaWSwZ8L3kO2PrP9CfsUb3vGBsuGeVXIMa1jHOPZxgCwOkdP7Yk2TZzCraA8+eW8FVdRQR8Nwlg3yJrYQxwSOkMcxCijqfbEC5DkEFc32xXu/0UQLbfwYzrJNTiCJHUzhBKc4wzku9L5YIXIY8xb9//61/B3OH6EXxQJ8/8zTw+/XaRaVNWnCeVTN7DVhN0Ri/QLJIVIALAsAAA==
+  </data>
+ </layer>
+ <layer name="middle" width="55" height="13">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAWjgHogmQOBhxsYzn4bLABXGBMjPtjjhxZ+wyY3FMKDln4baH/jcjO6GnQ5UsNkOANcYUFNPFzBcPcbPTEyAAD0MOYaLAsAAA==
+  </data>
+ </layer>
+ <layer name="collision" width="55" height="13">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGHwghQOChyIg5Pah5jeYW2HuRse41A81gO5ubP4cLn5DlxtqaRIZEJsuhyIgxm9Dxd/Y8tJw8RsM4PLTcPAbOhiKbiYWDGe/DTdAKM9Rs34AAJUlVY0sCwAA
+  </data>
+ </layer>
+</map>
