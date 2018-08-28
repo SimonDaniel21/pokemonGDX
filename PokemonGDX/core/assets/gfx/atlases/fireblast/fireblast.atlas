@@ -1,0 +1,202 @@
+
+fireblast.png
+size: 2048,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+fireblast
+  rotate: false
+  xy: 360, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 4
+fireblast
+  rotate: false
+  xy: 420, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 1
+fireblast
+  rotate: false
+  xy: 480, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 2
+fireblast
+  rotate: false
+  xy: 540, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 3
+fireblast
+  rotate: false
+  xy: 660, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 5
+fireblast
+  rotate: false
+  xy: 1620, 0
+  size: 52, 57
+  orig: 52, 57
+  offset: 0, 0
+  index: 0
+fireblast_explosion
+  rotate: false
+  xy: 0, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 20
+fireblast_explosion
+  rotate: false
+  xy: 60, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 21
+fireblast_explosion
+  rotate: false
+  xy: 120, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 18
+fireblast_explosion
+  rotate: false
+  xy: 180, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 0
+fireblast_explosion
+  rotate: false
+  xy: 240, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 15
+fireblast_explosion
+  rotate: false
+  xy: 300, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 13
+fireblast_explosion
+  rotate: false
+  xy: 600, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 16
+fireblast_explosion
+  rotate: false
+  xy: 720, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 1
+fireblast_explosion
+  rotate: false
+  xy: 780, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 6
+fireblast_explosion
+  rotate: false
+  xy: 840, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 14
+fireblast_explosion
+  rotate: false
+  xy: 900, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 10
+fireblast_explosion
+  rotate: false
+  xy: 960, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 11
+fireblast_explosion
+  rotate: false
+  xy: 1020, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 12
+fireblast_explosion
+  rotate: false
+  xy: 1080, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 2
+fireblast_explosion
+  rotate: false
+  xy: 1140, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 3
+fireblast_explosion
+  rotate: false
+  xy: 1200, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 4
+fireblast_explosion
+  rotate: false
+  xy: 1260, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 5
+fireblast_explosion
+  rotate: false
+  xy: 1320, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 17
+fireblast_explosion
+  rotate: false
+  xy: 1380, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 7
+fireblast_explosion
+  rotate: false
+  xy: 1440, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 8
+fireblast_explosion
+  rotate: false
+  xy: 1500, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 9
+fireblast_explosion
+  rotate: false
+  xy: 1560, 0
+  size: 60, 57
+  orig: 60, 57
+  offset: 0, 0
+  index: 19

@@ -1,0 +1,145 @@
+
+fabio.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+hit
+  rotate: false
+  xy: 0, 379
+  size: 162, 190
+  orig: 162, 190
+  offset: 0, 0
+  index: 2
+walk
+  rotate: false
+  xy: 0, 189
+  size: 110, 190
+  orig: 110, 190
+  offset: 0, 0
+  index: 3
+walk
+  rotate: false
+  xy: 0, 0
+  size: 105, 189
+  orig: 105, 189
+  offset: 0, 0
+  index: 0
+hit
+  rotate: false
+  xy: 162, 379
+  size: 105, 190
+  orig: 105, 190
+  offset: 0, 0
+  index: 1
+walk
+  rotate: false
+  xy: 110, 192
+  size: 108, 187
+  orig: 108, 187
+  offset: 0, 0
+  index: 2
+crouch
+  rotate: false
+  xy: 267, 379
+  size: 80, 190
+  orig: 80, 190
+  offset: 0, 0
+  index: 1
+crouch
+  rotate: false
+  xy: 218, 217
+  size: 106, 162
+  orig: 106, 162
+  offset: 0, 0
+  index: 2
+jump
+  rotate: false
+  xy: 347, 359
+  size: 72, 210
+  orig: 72, 210
+  offset: 0, 0
+  index: 2
+jump
+  rotate: false
+  xy: 419, 351
+  size: 70, 218
+  orig: 70, 218
+  offset: 0, 0
+  index: 3
+crouch
+  rotate: false
+  xy: 489, 376
+  size: 64, 193
+  orig: 64, 193
+  offset: 0, 0
+  index: 0
+jump
+  rotate: false
+  xy: 324, 203
+  size: 86, 156
+  orig: 86, 156
+  offset: 0, 0
+  index: 1
+walk
+  rotate: false
+  xy: 410, 171
+  size: 80, 180
+  orig: 80, 180
+  offset: 0, 0
+  index: 1
+hit
+  rotate: false
+  xy: 490, 186
+  size: 58, 190
+  orig: 58, 190
+  offset: 0, 0
+  index: 0
+side
+  rotate: false
+  xy: 105, 3
+  size: 39, 186
+  orig: 39, 186
+  offset: 0, 0
+  index: 0
+jump
+  rotate: false
+  xy: 144, 9
+  size: 78, 183
+  orig: 78, 183
+  offset: 0, 0
+  index: 0
+side
+  rotate: false
+  xy: 222, 31
+  size: 39, 186
+  orig: 39, 186
+  offset: 0, 0
+  index: 2
+side
+  rotate: false
+  xy: 261, 31
+  size: 39, 186
+  orig: 39, 186
+  offset: 0, 0
+  index: 3
+crouch
+  rotate: false
+  xy: 300, 71
+  size: 104, 132
+  orig: 104, 132
+  offset: 0, 0
+  index: 3
+crouch
+  rotate: false
+  xy: 404, 57
+  size: 90, 114
+  orig: 90, 114
+  offset: 0, 0
+  index: 4
+side
+  rotate: false
+  xy: 494, 1
+  size: 39, 185
+  orig: 39, 185
+  offset: 0, 0
+  index: 1

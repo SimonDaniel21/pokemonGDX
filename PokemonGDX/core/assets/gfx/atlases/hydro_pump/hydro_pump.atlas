@@ -1,0 +1,146 @@
+
+hydro_pump.png
+size: 512,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+hydro_pump
+  rotate: false
+  xy: 304, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+hydro_pump
+  rotate: false
+  xy: 304, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+hydro_pump
+  rotate: false
+  xy: 336, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+hydro_pump
+  rotate: false
+  xy: 336, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 3
+hydro_pump
+  rotate: false
+  xy: 368, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+hydro_pump
+  rotate: false
+  xy: 368, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 5
+hydro_pump
+  rotate: false
+  xy: 400, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 6
+hydro_pump
+  rotate: false
+  xy: 400, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 7
+hydro_pump
+  rotate: false
+  xy: 432, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 8
+hydro_pump_fly
+  rotate: false
+  xy: 240, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+hydro_pump_fly
+  rotate: false
+  xy: 272, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+hydro_pump_fly
+  rotate: false
+  xy: 272, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+hydro_pump_hit
+  rotate: false
+  xy: 0, 19
+  size: 48, 45
+  orig: 48, 45
+  offset: 0, 0
+  index: 7
+hydro_pump_hit
+  rotate: false
+  xy: 48, 21
+  size: 44, 43
+  orig: 44, 43
+  offset: 0, 0
+  index: 5
+hydro_pump_hit
+  rotate: false
+  xy: 92, 21
+  size: 44, 43
+  orig: 44, 43
+  offset: 0, 0
+  index: 6
+hydro_pump_hit
+  rotate: false
+  xy: 136, 25
+  size: 39, 39
+  orig: 39, 39
+  offset: 0, 0
+  index: 4
+hydro_pump_hit
+  rotate: false
+  xy: 175, 30
+  size: 33, 34
+  orig: 33, 34
+  offset: 0, 0
+  index: 3
+hydro_pump_hit
+  rotate: false
+  xy: 208, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+hydro_pump_hit
+  rotate: false
+  xy: 208, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+hydro_pump_hit
+  rotate: false
+  xy: 240, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
