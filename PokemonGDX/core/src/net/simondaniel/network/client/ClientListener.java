@@ -1,18 +1,12 @@
 package net.simondaniel.network.client;
 
-import java.util.List;
-
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.Listener;
 
 import net.simondaniel.network.client.GameClient.Packet;
 import net.simondaniel.network.client.GameClient.State;
-import net.simondaniel.network.client.Request.LoginChandler;
-import net.simondaniel.network.client.Request.MessageChandler;
 import net.simondaniel.network.server.Response.EndConnectionS;
-import net.simondaniel.network.server.Response.LobbyJoinS;
-import net.simondaniel.network.server.Response.LobbyListS;
 import net.simondaniel.network.server.Response.LobbyUserJoinedS;
 import net.simondaniel.network.server.Response.LoginS;
 import net.simondaniel.network.server.Response.MessageS;
@@ -20,9 +14,6 @@ import net.simondaniel.network.server.Response.MessageS;
 public class ClientListener extends Listener{
 	
 	GameClient client;
-	List<LoginChandler> loginHandlers;
-	List<MessageChandler> messageHandlers;
-	List<LoginChandler> movementHanlers;
 	
 	public ClientListener(GameClient client) {
 		this.client = client;
@@ -68,27 +59,6 @@ public class ClientListener extends Listener{
 		else{
 			client.packetBuffer.add(new Packet(c, o));
 		}
-	
-		/*for(ResponseHandler h : client.handlers) h.handle(connection, o);
-		if(o instanceof LoginResponse) {
-			LoginResponse r = (LoginResponse) o;
-			client.verify(r.msg.equals("success"));
-			client.errorMsg = r.msg;
-		}
-		
-		if(o instanceof addUserResponse) {
-			addUserResponse r = (addUserResponse) o;
-			NewUser u = new NewUser(r.user);
-			client.others.add(u);
-			System.err.println("adding " + r.user + " to " + client.user.getName() + client.listeners.size());
-			for(MyClientListener l : client.listeners) l.userJoined(u);
-		}
-		
-		if(o instanceof DisconnectResponse) {
-			DisconnectResponse r = (DisconnectResponse)o;
-			connection.close();
-			for(MyClientListener l : client.listeners) l.gotDisconnected(r.msg);
-		}*/
 	}
 
 	@Override

@@ -23,7 +23,7 @@ import net.simondaniel.network.client.Request.MovementChandler;
 import net.simondaniel.network.server.Response.MovementS;
 import net.simondaniel.network.server.Response.MovementShandler;
 
-public class myMapRenderer extends OrthogonalTiledMapRenderer implements MovementShandler{
+public class myMapRenderer extends OrthogonalTiledMapRenderer{
 
 	Sprite player;
 	int x, y = 0;
@@ -44,7 +44,6 @@ public class myMapRenderer extends OrthogonalTiledMapRenderer implements Movemen
 		fore = (TiledMapTileLayer) map.getLayers().get("foreground");
 		Texture tex = new Texture(Gdx.files.internal("gfx/trainer.png"));
 		player = new Sprite(tex);
-		client.addMovementShandler(this);
 		//sb = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 	}
@@ -126,10 +125,6 @@ public class myMapRenderer extends OrthogonalTiledMapRenderer implements Movemen
 	    shapeRenderer.end();
 	}
 
-	@Override
-	public void handle(MovementS p) {
-		
-	}
 
 	public float getX() {	
 		return x;

@@ -1,5 +1,6 @@
 package net.simondaniel.game.client.ui.masks;
 
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -36,49 +38,86 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
 	Label title;
 	List<String> addable, undecided;
-	TextButton joinUndecided;
+	TextButton joinUndecided, readyButton;
 	TeamWidget tw1, tw2;
 	
 	LobbyMaskListener listener;
 
+	private boolean ready = false;
 	
 	public LobbyMask(Skin s) {
 		super(new LobbyMaskInfo(), s);
+		debug();
+		//this.right();
 		listener = new LobbyMaskListener();
 		title = new Label(null, s);
-		add(title).colspan(2);
+		add(title).colspan(2).center();
 		row();
 		
 		addable = new List<String>(s);
 		tw1 = new TeamWidget(s);
 		tw2 = new TeamWidget(s);
-		add(tw1);
-		add(tw2);
+		add(tw1).fillX();
+		add(tw2).fillX();
 		add(addable);
 		row();
 		undecided = new List<String>(s);
 		undecided.setTouchable(Touchable.disabled);
-		add(undecided).colspan(2).fillY().row();
-		joinUndecided = new TextButton("join", s);
+		add(undecided).colspan(2).fillY();
+		
+		TextButton inviteButton = new TextButton("invite", s);
+		add(inviteButton).row();
+		joinUndecided = new TextButton("join", s, "small");
 		joinUndecided.setTouchable(Touchable.disabled);
 		joinUndecided.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				
+					if(!isActive())return;
+				
 					TeamJoinC p = new TeamJoinC();
 					p.teamID = 0;
 					info.gc.sendTCP(p);
+					deactivateUntilResponse();
 			}
 			
 		});
 		add(joinUndecided).colspan(2);
 		
+		readyButton = new TextButton("", s);
+		
+		readyButton.addListener(new ChangeListener() {
+
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				ready = !ready;
+				updateReadyButton();
+				setTouchable(Touchable.disabled);
+			}
+			
+		});
+		updateReadyButton();
+		add(readyButton).width(210);
+		
 		addable.setItems("other player1", "otherplayer2");
+	}
+	
+	private void updateReadyButton() {
+		if(ready) {
+			readyButton.setText("ready");
+			readyButton.setColor(Color.GREEN);
+		}
+		else {
+			readyButton.setText("not ready");
+			readyButton.setColor(Color.RED);
+		}
+		
 	}
 	
 	public void set(String lobbyName, String[][] others, GameMode mode, final GameClient gc, Skin skin) {
 		
 	}
-
+	
 	public void addPlayerToLobby(String playersName) {
 //		for(Slot s : team.getItems()) {
 //			if(!s.occupied) {
@@ -94,6 +133,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		if(playersName.equals(info.gc.userName())) {
 			undecided.setSelected(playersName);
 		}
+		this.sizeChanged();
 	}
 	
 	/**
@@ -175,7 +215,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		}
 	}
 
-	public static class TeamWidget extends Table{
+	public class TeamWidget extends Table{
 	
 		GameClient gc;
 		
@@ -188,7 +228,6 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		
 		public TeamWidget(Skin skin) {
 			super(skin);
-			debug();
 			list = new List<Slot>(skin);
 			list.setColor(Color.GOLD);
 			list.setTouchable(Touchable.disabled);
@@ -196,10 +235,15 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			join.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
+					
+					if(!isActive())return;
+					
 					TeamJoinC p = new TeamJoinC();
 					p.teamID = id;
 					gc.sendTCP(p);
 					System.out.println("join team " + id + "!");
+					
+					deactivateUntilResponse();
 				}
 			});
 			add(name).row();
@@ -228,6 +272,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 
 		public void addName(String name, int slot) {
 			list.getItems().get(slot).set(name);
+			list.setItems(list.getItems());
 		}
 		
 		public void removeName(String name) {
@@ -325,6 +370,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 					joinTeam(p.name, p.id, p.slotID);
 					//System.out.println("receivedd a TEAM " + p.id + "@" + p.slotID);
 				}
+				reActivateUI();
 			}
 		}
 	}

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import net.simondaniel.MyRandom;
+import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.Test;
 import net.simondaniel.game.client.ui.UImaskHandler;
@@ -37,9 +38,9 @@ public class MainMenuScreen implements Screen{
 	
 	@Override
 	public void show() {
-		
 		Skin skin = new Skin(Gdx.files.internal("skins/sgx/sgx-ui.json"));
 		serverSelection = new ServerSelection(skin);
+		serverSelection.getInfo().greetingMessage = "";
 		stage = new UImaskHandler(new TextureRegion(new Texture("gfx/background.jpg")));
 		serverSelection.show(stage);
 		
@@ -47,9 +48,11 @@ public class MainMenuScreen implements Screen{
 			GameMenu m = new GameMenu(skin);
 			
 			GameClient gc = new GameClient("localhost", "AutoConnectServer");
-			if(gc.sendConnectRequest()) {
+			gc.sendConnectRequest();
+			if(gc.waitForConnection()) {
 				gc.sendLoginRequest("user " + MyRandom.random.nextInt(1000), "development");
-				if(gc.waitForVerification(1000)) {
+				if(gc.waitForLogin()) {
+					PokemonGDX.game.client = gc;
 					m.getInfo().client = gc;
 					serverSelection.switchTo(m);
 				}

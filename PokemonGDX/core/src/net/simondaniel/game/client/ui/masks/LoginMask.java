@@ -28,12 +28,12 @@ import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.MyListener;
 import net.simondaniel.network.client.Request.AccountActivationC;
 import net.simondaniel.network.client.Request.RegisterUserC;
+import net.simondaniel.network.server.Response.EndConnectionS;
 import net.simondaniel.network.server.Response.MessageS;
 import net.simondaniel.screens.MainMenuScreen;
 
 public class LoginMask extends UImask<LoginMaskInfo>{
 
-	Skin skin;
 	TextField name_tf, pw_tf;
 	TextButton login_bttn;
 	
@@ -47,10 +47,18 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 	
 	MyListener listener;
 
+	ServerSelection serverSelection;
+	
+	final Dialog loggingInDialog;
+	
 	public LoginMask(Skin s) {
 		super(new LoginMaskInfo(), s);
 		gameMenu = new GameMenu(s);
 		listener = new LoginMaskListener();
+		
+		loggingInDialog = new Dialog("info", s);
+		loggingInDialog.text("logging in...");
+		
 		nd = new NamingDialog("enter email", s, ButtonOption.OK_CANCEL, new Entry("email:", ""), new Entry("repeat password:", "")) {
 			@Override
 			public void updateValues(String[] values) {
@@ -64,6 +72,7 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 					p.pw = values[1];
 					p.email = values[0];
 					info.client.send(p);
+					deactivateUntilResponse();
 				}
 			}
 		};
@@ -74,14 +83,14 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 				p.name = name_tf.getText();
 				p.code = values[0];
 				info.client.send(p);
+				deactivateUntilResponse();
 			}
 		};
-		this.skin = s;
-		serverName =  new Label(null, skin);
+		serverName =  new Label(null, s);
 		add(serverName).colspan(2);
 		row();
 		add("name:").width(200);
-		name_tf = new TextField(GameConfig.gameConfig.LAST_LOGIN_NAME, skin);
+		name_tf = new TextField(GameConfig.gameConfig.LAST_LOGIN_NAME, s);
 		name_tf.selectAll();
 		//getStage().setKeyboardFocus(name_tf);
 		name_tf.setCursorPosition(name_tf.getText().length());
@@ -91,21 +100,23 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 		//development
 		String pw = GameConfig.gameConfig.LAST_LOGIN_PASSWORD;
 		if(pw.equals("null")) pw = "";
-		pw_tf = new TextField(pw, skin);
+		pw_tf = new TextField(pw, s);
 		add(pw_tf).width(200);
 		row();
-		remindPW = new CheckBox("passwort merken", skin);
+		remindPW = new CheckBox("passwort merken", s);
 		add(remindPW);
-		login_bttn = new TextButton("login", skin);
+		login_bttn = new TextButton("login", s);
 		login_bttn.addListener(new ChangeListener() {
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				loginRequest(name_tf.getText(), pw_tf.getText());
+				if(isActive())
+					loginRequest(name_tf.getText(), pw_tf.getText());
+				//deactivateUntilResponse();
 			}
 		});
 		add(login_bttn).row();
-		TextButton tb = new TextButton("back", skin);
+		TextButton tb = new TextButton("back", s);
 		tb.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -114,11 +125,12 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 		});
 		add(tb);
 		
-		TextButton register = new TextButton("register", skin, "small");
+		TextButton register = new TextButton("register", s, "small");
 		register.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				nd.show(getStage());
+				if(isActive())
+					nd.show(getStage());
 			}
 		});
 		add(register).bottom().right();
@@ -127,7 +139,8 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 			@Override
 			public boolean keyUp(InputEvent event, int keycode) {
 				if (keycode == Input.Keys.ENTER) {
-					loginRequest(name_tf.getText(), pw_tf.getText());
+					if(isActive())
+						loginRequest(name_tf.getText(), pw_tf.getText());
 				}
 				return false;
 			}
@@ -135,36 +148,35 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 	}
 	
 	public void loginRequest(String name, String pw) {
-		final Dialog d = new Dialog("info", skin);
-		d.text("logging in...");
-		d.show(getStage());
+		loggingInDialog.show(getStage());
 		GameClient gc = info.client;
 		gc.sendLoginRequest(name, pw);
+		deactivateUntilResponse();
 
-		boolean loggedIn = gc.waitForVerification(2000);
-		if (!loggedIn) {
-			InfoDialog id = new InfoDialog(gc.errorMsg, skin);
-			id.show(getStage());
-		} else {
-			GameConfig.gameConfig.writeAsString("last_loginName", name);
-			if(remindPW.isChecked()) {
-				GameConfig.gameConfig.writeAsString("last_loginPassword", pw);
-			}
-			else {
-				GameConfig.gameConfig.writeAsString("last_loginPassword", "null");
-			}
-			GameConfig.gameConfig.writeAsBool("keep_password", remindPW.isChecked());
-			GameConfig.gameConfig.save();
-			
-			d.addAction(Actions.sequence(Actions.fadeOut(0.4f), Actions.hide()));
-			PokemonGDX.game.client = gc;
-			gameMenu.getInfo().client = gc;
-			switchTo(gameMenu);
-						
-			
-			//stage.add(new Friendlist(skin));
-		}
-		d.hide();
+//		boolean loggedIn = gc.waitForVerification(2000);
+//		if (!loggedIn) {
+//			InfoDialog id = new InfoDialog(gc.errorMsg, skin);
+//			id.show(getStage());
+//		} else {
+//			GameConfig.gameConfig.writeAsString("last_loginName", name);
+//			if(remindPW.isChecked()) {
+//				GameConfig.gameConfig.writeAsString("last_loginPassword", pw);
+//			}
+//			else {
+//				GameConfig.gameConfig.writeAsString("last_loginPassword", "null");
+//			}
+//			GameConfig.gameConfig.writeAsBool("keep_password", remindPW.isChecked());
+//			GameConfig.gameConfig.save();
+//			
+//			d.addAction(Actions.sequence(Actions.fadeOut(0.4f), Actions.hide()));
+//			PokemonGDX.game.client = gc;
+//			gameMenu.getInfo().client = gc;
+//			switchTo(gameMenu);
+//						
+//			
+//			//stage.add(new Friendlist(skin));
+//		}
+//		d.hide();
 
 	}
 
@@ -187,6 +199,33 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 	@Override
 	public void act(float delta) {
 		info.client.handlePacketBuffer();
+		if(info.client.isLoginFinished()){
+			if(info.client.isLoggedIn()) {
+					GameConfig.gameConfig.writeAsString("last_loginName", name_tf.getText());
+					if(remindPW.isChecked()) {
+						GameConfig.gameConfig.writeAsString("last_loginPassword", pw_tf.getText());
+					}
+					else {
+						GameConfig.gameConfig.writeAsString("last_loginPassword", "null");
+					}
+					GameConfig.gameConfig.writeAsBool("keep_password", remindPW.isChecked());
+					GameConfig.gameConfig.save();
+					
+					PokemonGDX.game.client = info.client;
+					gameMenu.getInfo().client = info.client;
+					switchTo(gameMenu);
+					reActivateUI();
+					
+			}
+			else{
+				InfoDialog id = new InfoDialog(info.client.errorMsg, getSkin());
+				info.client.resetLogin();
+				id.show(getStage());
+				//System.out.println("showing login error");
+			}
+			loggingInDialog.hide();
+			reActivateUI();
+		}
 		super.act(delta);
 	}
 	
@@ -199,14 +238,27 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 
 		@Override
 		public void received(Connection c, Object o) {
+			
+			if(o instanceof EndConnectionS) {
+				reActivateUI();
+				ServerSelection s = new ServerSelection(getSkin());
+				s.getInfo().greetingMessage = "lost connection to server...";
+				switchTo(s);
+				
+				System.out.println("go back");
+			}
+			
 			if(o instanceof MessageS) {
 				System.out.println("received response");
 				MessageS p = (MessageS) o;
 				if(p.type == 1) {
+					reActivateUI();
 					activation.show(getStage());
 				}
 				else if(p.type == 0) {
+					reActivateUI();
 					InfoDialog.show(p.message, getStage());
+					loggingInDialog.hide();
 				}
 					
 			}

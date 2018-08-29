@@ -57,6 +57,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			public void updateValues(String[] values) {
 				
 				info.client.sendLobbyCreateRequest(values[0], GameMode.ONE_VS_ONE);
+				deactivateUntilResponse();
 			}
 		};
 		Table startTable = new Table(skin);
@@ -128,6 +129,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			}
 			if(o instanceof LobbyJoinS) {
 				LobbyJoinS p = (LobbyJoinS)o;
+				reActivateUI();
 				if(p.gameMode != -1) {
 					enterLobby(p.name, GameMode.valueOf(p.gameMode), p.others);
 				}
@@ -139,6 +141,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 				MessageS s = (MessageS)o;
 				if(s.sender.equals("server")) {
 					InfoDialog.show(s.message, getStage());
+					reActivateUI();
 				}
 			}
 			if(o instanceof LobbyListS) {
@@ -147,7 +150,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 				lobbyTable.clear();
 				lobbyTable.add("public Lobbys: ").row();
 				for(String l : p.lobbys) {
-					final TextButton b = new TextButton(l, getSkin());
+					final TextButton b = new TextButton(l, getSkin(), "menu-list-button");
 					b.addListener(new ChangeListener() {
 						@Override
 						public void changed(ChangeEvent event, Actor actor) {

@@ -45,6 +45,11 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 		super(new ServerSelectionInfo(), s);
 		loginMask = new LoginMask(s);
 		this.skin = getSkin();
+		
+		tryToConnectDialog = new Dialog("info", skin);
+		connectingLabel = new Label("", skin);
+		tryToConnectDialog.add(connectingLabel).center();
+		
 		add(new Label("recommended Servers", skin));
 		row();
 		
@@ -57,7 +62,8 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					tryToConnectTo(name, ip);
+					if(isActive())
+						tryToConnectTo(name, ip);
 				}
 				
 			});
@@ -155,6 +161,7 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 	}
 	
 	private Dialog tryToConnectDialog;
+	private Label connectingLabel;
 	
 	/** sends a connectRequest and displays a waiting dialog while waiting for response
 	 * 
@@ -162,36 +169,19 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 	 * @param ip
 	 */
 	private void tryToConnectTo(final String name, final String ip) {
-		tryToConnectDialog = new Dialog("info", skin);
-		tryToConnectDialog.text("trying to connect to server " + name);
+		connectingLabel.setText("connecting to " + name + "...");
 		tryToConnectDialog.show(getStage());
 		tryToConnectDialog.setOrigin(Align.center);
 		
-		addAction(
-				Actions.run(new Runnable() {
-					@Override
-					public void run(){
-						connectRequest(ip, name);
-					}
-				}));
+		connectRequest(ip, name);
 	}
 	
 	public void connectRequest(String ip, String name) {
 		gc = new GameClient(ip, name);
 		
+		gc.sendConnectRequest();
 		
-		boolean connected = gc.sendConnectRequest();
-		if(connected) {
-			loginMask.getInfo().client = gc;
-			switchTo(loginMask);
-			
-		}
-		else {
-			InfoDialog d;
-			d = new InfoDialog(gc.errorMsg, skin);	
-			d.show(getStage());
-		}
-		tryToConnectDialog.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.hide()));
+		//tryToConnectDialog.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.hide()));
 	
 	}
 	
@@ -230,13 +220,35 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 
 	@Override
 	public void enter() {
-		// TODO Auto-generated method stub
-		
+		if(!info.greetingMessage.equals("")) {
+			InfoDialog.show(info.greetingMessage, getStage());
+		}
 	}
 
 	@Override
 	public void leave() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+		if(gc == null) return;
+		System.out.println(gc.getState());
+		if(gc.isConnectionFinished()) {
+			if(gc.isConnected()) {
+				System.err.println("isCOnnected");
+				loginMask.getInfo().client = gc;
+				switchTo(loginMask);
+			}
+			else {
+				System.err.println("showing error");
+				InfoDialog.show(gc.errorMsg, getStage());
+				gc.resetConnection();
+				System.out.println(gc.getState());
+			}
+			tryToConnectDialog.hide();
+		}
 	}
 }
