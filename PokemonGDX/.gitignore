@@ -127,7 +127,6 @@ Thumbs.db
 /.gradle
 /.settings
 /backup
-/gradle
 core.zip
 desktop.zip
 */lib
