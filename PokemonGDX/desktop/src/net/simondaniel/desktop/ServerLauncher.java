@@ -24,7 +24,7 @@ public class ServerLauncher {
 			boolean lag = true;
 			
 			if(lag) {
-				server.addListener(new LagListener(200, 600, new GameServerManager(server)));
+				server.addListener(new LagListener(50, 200, new GameServerManager(server)));
 			}
 			else {
 				server.addListener(new ThreadedListener(new GameServerManager(server)));
