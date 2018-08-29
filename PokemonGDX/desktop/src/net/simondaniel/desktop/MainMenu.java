@@ -148,7 +148,7 @@ public class MainMenu extends JFrame {
 				m.cf = cFrame;
 				client.bindMonitor(cFrame);
 				client.errorMsg = "server timed out after 2000ms";
-				if(client.waitForVerification(2000)) {
+				if(client.waitForLogin()) {
 					cFrame.LoggedInServer();
 					cFrame.show();
 					frame.dispose();

@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
+import com.esotericsoftware.kryonet.Listener.LagListener;
+import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 
 import net.simondaniel.game.server.GameServerManager;
 import net.simondaniel.network.server.GameServer;
@@ -19,7 +21,15 @@ public class ServerLauncher {
 			server.openConsole();
 			server.start();
 			
-			server.addListener(new GameServerManager(server));
+			boolean lag = true;
+			
+			if(lag) {
+				server.addListener(new LagListener(200, 600, new GameServerManager(server)));
+			}
+			else {
+				server.addListener(new ThreadedListener(new GameServerManager(server)));
+			}
+			
 			System.out.println("launched server!");
 		} catch (IOException e) {
 			e.printStackTrace();

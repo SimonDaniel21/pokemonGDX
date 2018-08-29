@@ -24,7 +24,7 @@ public class ClientLauncher {
 		Gdx.files = new LwjglFiles();
 		Config.init();
 		
-		UpdateDialog d = new UpdateDialog(GameConfig.gameConfig.DOWNLOAD_URL, GameConfig.gameConfig.CONFIG_URL, GameConfig.gameConfig.FILENAME);	
+		//UpdateDialog d = new UpdateDialog(GameConfig.gameConfig.DOWNLOAD_URL, GameConfig.gameConfig.CONFIG_URL, GameConfig.gameConfig.FILENAME);	
 	
 		
 		PokemonGDX.init();
