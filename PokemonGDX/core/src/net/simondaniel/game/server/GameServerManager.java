@@ -132,15 +132,9 @@ public class GameServerManager extends Listener{
 			}
 			if(!exists) {
 				Lobby l = new Lobby(name, GameMode.valueOf(p.gameMode), gs);
-				l.addUser(c);
-				c.user.lobby = l;
-				
-				LobbyJoinS s = new LobbyJoinS();
-				s.name = name;
-				s.gameMode = p.gameMode;
-				s.others = l.getNames();
-				c.sendTCP(s);
 				lobbys.add(l);
+				l.addUser(c);
+				
 				gs.window.addedLobby(name);
 				LobbyListS lls = new LobbyListS();
 				lls.lobbys = new String[lobbys.size()];
@@ -153,22 +147,7 @@ public class GameServerManager extends Listener{
 			LobbyJoinC p = (LobbyJoinC) o;
 			Lobby l = getLobby(p.lobbyName);
 			if(l != null) {
-				LobbyJoinS ps = new LobbyJoinS();
-			
-				if(l.addUser(c)) {
-					c.user.lobby = l;
-					
-					LobbyUserJoinedS luj = new LobbyUserJoinedS();
-					luj.name = c.user.name;
-					l.sendToAllTCP(luj);
-					ps.name = l.NAME;
-					ps.gameMode = l.getMode().ordinal();
-					ps.others = l.getNames();
-				}
-				else {
-					ps.gameMode = -1;
-				}
-				c.sendTCP(ps);
+				l.addUser(c);
 			}
 		}
 		else if(o instanceof InviteUserToLobbyC) {
@@ -177,24 +156,20 @@ public class GameServerManager extends Listener{
 			
 			Lobby l = getLobby(p.lobby);
 			if(l != null) {
-				s.lobby = p.lobby;
-				s.name = p.user;
-				s.sender = c.user.name;
+				UserConnection user = gs.getUser(p.user);
+				System.out.println("lobby is not null");
 				
-				
-				if(gs.sendToTcp(p.user, s)) {
-					l.sendToAllTCP(s);
+				if(user != null) {
+					l.invite(user, c.user.name);
 				}
 			}
 		}
 		else if(o instanceof InviteAnswerC) {
 			InviteAnswerC p = (InviteAnswerC)o;
-			InviteAnswerS s = new InviteAnswerS();
-			s.answer = p.answer;
-			s.name = c.user.name;
+			
 			Lobby l = getLobby(p.lobby);
 			if(l != null) {
-				l.sendToAllTCP(s);
+				l.inviteAnswer(c, p.answer);
 			}
 		}
 	}
@@ -209,7 +184,6 @@ public class GameServerManager extends Listener{
 		
 		for(Lobby l : lobbys) {
 			if(l.NAME.equals(name)) {
-				System.out.println("accept");
 				return l;
 			}
 		}

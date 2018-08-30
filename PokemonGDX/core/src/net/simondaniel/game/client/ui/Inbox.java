@@ -59,8 +59,9 @@ public class Inbox extends Table{
 			this.getColor().a = 1.4f;
 			TextArea ta = new TextArea(title + "\n" + msg, getSkin());
 			ta.setTouchable(Touchable.disabled);
-			add(ta).width(270).growY().colspan(3);
+			add(ta).width(270).height(85).colspan(3);
 			row();
+			
 			TextButton accept = new TextButton("accept", getSkin(), "small");
 			accept.addListener(new ChangeListener() {
 				@Override

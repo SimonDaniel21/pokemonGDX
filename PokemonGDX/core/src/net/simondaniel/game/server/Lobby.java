@@ -12,6 +12,10 @@ import net.simondaniel.game.client.OneVsOneGame;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.GameServer.Packet;
 import net.simondaniel.network.server.MyServerlistener;
+import net.simondaniel.network.server.Response.InviteAnswerS;
+import net.simondaniel.network.server.Response.InviteUserToLobbyS;
+import net.simondaniel.network.server.Response.LobbyJoinS;
+import net.simondaniel.network.server.Response.LobbyUserJoinedS;
 import net.simondaniel.network.server.Response.MoveToS;
 import net.simondaniel.network.server.User;
 import net.simondaniel.network.server.UserConnection;
@@ -35,6 +39,7 @@ public class Lobby implements MyServerlistener{
 	
 	public Lobby(String name, GameMode mode, GameServer gs) {
 		users = new ArrayList<UserConnection>();
+		invitedUsers = new HashMap<UserConnection, Integer>();
 		this.NAME = name;
 		this.mode = mode;
 		switch (mode) {
@@ -101,12 +106,27 @@ public class Lobby implements MyServerlistener{
 		userSlots[slot] = c;
 	}
 	
-	public boolean addUser(UserConnection c) {
+	public void addUser(UserConnection c) {
 		
-		if(isFull()) return false;
+		LobbyJoinS ps = new LobbyJoinS();
 		
-		users.add(c);
-		return true;
+		if(isFull()) {
+			ps.gameMode = -1;
+		}
+		else {
+			users.add(c);
+			
+			c.user.lobby = this;
+			LobbyUserJoinedS luj = new LobbyUserJoinedS();
+			luj.name = c.user.name;
+			sendToAllTCP(luj);
+			
+			ps.name = NAME;
+			ps.gameMode = mode.ordinal();
+			ps.others = getNames();
+		}
+		
+		c.sendTCP(ps);
 	}
 
 	public GameMode getMode() {
@@ -203,4 +223,56 @@ public class Lobby implements MyServerlistener{
 		
 		return count >= maxCount;
 	}
+	
+	public boolean contains(UserConnection c) {
+		
+		for(UserConnection c_ : users) 
+			if(c_ == c)
+				return true;
+		for(UserConnection c_ : userSlots) 
+			if(c_ == c)
+				return true;
+		return false;
+	}
+	
+	public void invite(UserConnection c, String sender) {
+		
+		if(contains(c))return;
+		
+		if(invitedUsers.containsKey(c)) {
+			if(invitedUsers.get(c) == PENDING) {
+				System.out.println("contains key doppel lool");
+				return;
+			}
+		}
+		
+		invitedUsers.put(c, PENDING);
+		
+		InviteUserToLobbyS p = new InviteUserToLobbyS();
+		p.lobby = NAME;
+		p.name = c.user.name;
+		sendToAllTCP(p);
+		p.sender = sender;
+		c.sendTCP(p);
+	}
+	
+	public void inviteAnswer(UserConnection c, boolean answer) {
+		
+		if(!invitedUsers.containsKey(c)) return;
+		
+		invitedUsers.put(c, answer ? ACCEPTED : DECLINED);
+		
+		InviteAnswerS s = new InviteAnswerS();
+		s.answer = answer;
+		s.name = c.user.name;
+		sendToAllTCP(s);
+		if(answer)
+			addUser(c);
+		
+	}
+	
+	private static final int PENDING = 0, ACCEPTED = 1, DECLINED = 2;
+
+
+	
 }
