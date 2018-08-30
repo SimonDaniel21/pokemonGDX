@@ -27,6 +27,7 @@ import net.simondaniel.network.client.Request.MovementChandler;
 import net.simondaniel.network.client.Request.RequestAreaC;
 import net.simondaniel.network.client.Request.RequestAreaChandler;
 import net.simondaniel.network.server.Response.EndConnectionS;
+import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.MessageS;
 import net.simondaniel.network.server.database.DatabaseInerface;
 import net.simondaniel.network.server.database.LocalFileDatabase;
@@ -364,5 +365,13 @@ public class GameServer extends Server{
 	         mex.printStackTrace();
 	        return false;
 	      }
+	}
+
+	public boolean sendToTcp(String user, InviteUserToLobbyS o) {
+		UserConnection c = getUser(user);
+		if(c == null) return false;
+		
+		c.sendTCP(o);
+		return true;
 	}
 }

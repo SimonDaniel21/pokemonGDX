@@ -87,4 +87,9 @@ public class Response {
 	public static interface AddEntityShandler{
 		public void handle(AddEntityS p);
 	}
+	
+	public static class InviteUserToLobbyS{
+		//name is either the invite sender name OR the name of the invited player!
+		public String name, lobby;
+	}
 }

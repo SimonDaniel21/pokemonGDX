@@ -2,6 +2,7 @@ package net.simondaniel.game.client.ui.masks;
 
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Connection;
 
+import net.simondaniel.MyColor;
 import net.simondaniel.fabio.GameMode;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
@@ -22,8 +24,10 @@ import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.MyListener;
+import net.simondaniel.network.client.Request.InviteUserToLobbyC;
 import net.simondaniel.network.client.Request.LobbyJoinC;
 import net.simondaniel.network.client.Request.TeamJoinC;
+import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyJoinS;
 import net.simondaniel.network.server.Response.LobbyListS;
 import net.simondaniel.network.server.Response.LobbyUserJoinedS;
@@ -47,6 +51,10 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
 	public LobbyMask(Skin s) {
 		super(new LobbyMaskInfo(), s);
+		s.getFont("font").getData().markupEnabled = true;
+		s.getFont("medium").getData().markupEnabled = true;
+		s.getFont("small").getData().markupEnabled = true;
+		s.getFont("title").getData().markupEnabled = true;
 		debug();
 		//this.right();
 		listener = new LobbyMaskListener();
@@ -55,6 +63,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		row();
 		
 		addable = new List<String>(s);
+		addable.getColor().a = 0.5f;
 		tw1 = new TeamWidget(s);
 		tw2 = new TeamWidget(s);
 		add(tw1).fillX();
@@ -65,9 +74,20 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		undecided.setTouchable(Touchable.disabled);
 		add(undecided).colspan(2).fillY();
 		
-		TextButton inviteButton = new TextButton("invite", s);
+		TextButton inviteButton = new TextButton("invite", s,  "small");
+		inviteButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if(!isActive()) return;
+				
+				InviteUserToLobbyC p = new InviteUserToLobbyC();
+				p.user = addable.getSelected();
+				p.lobby = info.lobbyName;
+				info.gc.send(p);
+			}
+		});
 		add(inviteButton).row();
-		joinUndecided = new TextButton("join", s, "small");
+		joinUndecided = new TextButton("join", s);
 		joinUndecided.setTouchable(Touchable.disabled);
 		joinUndecided.addListener(new ChangeListener() {
 			@Override
@@ -371,6 +391,20 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 					//System.out.println("receivedd a TEAM " + p.id + "@" + p.slotID);
 				}
 				reActivateUI();
+			}
+			if(o instanceof InviteUserToLobbyS) {
+				InviteUserToLobbyS p = (InviteUserToLobbyS) o;
+				System.out.println("received invite message");
+				int sel = addable.getSelectedIndex();
+				for(int i = 0; i < addable.getItems().size; i++) {
+					if(addable.getItems().get(i).equals(p.name)) {
+						addable.getItems().set(i,  MyColor.dye(Color.CYAN, addable.getSelected()));
+						addable.setItems(addable.getItems());
+						addable.setSelectedIndex(sel);
+						break;
+					}
+				}
+				
 			}
 		}
 	}

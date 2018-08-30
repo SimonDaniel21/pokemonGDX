@@ -66,6 +66,10 @@ public class Request {
 		public int id;
 	}
 	
+	public static class InviteUserToLobbyC{
+		public String user, lobby;
+	}
+	
 	//--------------------------------------
 	
 	public static class RequestAreaC{

@@ -10,6 +10,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import net.simondaniel.fabio.GameMode;
 import net.simondaniel.network.client.Request.AccountActivationC;
+import net.simondaniel.network.client.Request.InviteUserToLobbyC;
 import net.simondaniel.network.client.Request.LobbyCreateC;
 import net.simondaniel.network.client.Request.LobbyJoinC;
 import net.simondaniel.network.client.Request.LobbyListC;
@@ -20,6 +21,7 @@ import net.simondaniel.network.client.Request.RegisterUserC;
 import net.simondaniel.network.client.Request.TeamJoinC;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.UserConnection;
+import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyJoinS;
 import net.simondaniel.network.server.Response.LobbyListS;
 import net.simondaniel.network.server.Response.LobbyUserJoinedS;
@@ -167,6 +169,22 @@ public class GameServerManager extends Listener{
 				c.sendTCP(ps);
 			}
 		}
+		else if(o instanceof InviteUserToLobbyC) {
+			InviteUserToLobbyC p = (InviteUserToLobbyC)o;
+			InviteUserToLobbyS s = new InviteUserToLobbyS();
+			
+			Lobby l = getLobby(p.lobby);
+			if(l != null) {
+				s.lobby = p.lobby;
+				s.name = c.user.name;
+				
+				
+				//if(gs.sendToTcp(p.user, s)) {
+					s.name = p.user;
+				//}
+				l.sendToAllTCP(s);
+			}
+		}
 	}
 	
 
@@ -176,8 +194,10 @@ public class GameServerManager extends Listener{
 	 * @return lobby with the given name or null if no such lobby exists
 	 */
 	private Lobby getLobby(String name) {
+		
 		for(Lobby l : lobbys) {
 			if(l.NAME.equals(name)) {
+				System.out.println("accept");
 				return l;
 			}
 		}
