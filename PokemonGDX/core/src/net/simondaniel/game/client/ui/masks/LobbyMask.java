@@ -28,6 +28,7 @@ import net.simondaniel.network.client.MyListener;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
 import net.simondaniel.network.client.Request.LobbyJoinC;
 import net.simondaniel.network.client.Request.TeamJoinC;
+import net.simondaniel.network.server.Response.InviteAnswerS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyJoinS;
 import net.simondaniel.network.server.Response.LobbyListS;
@@ -81,6 +82,11 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if(!isActive()) return;
+				
+				if(inviteList.isPending()) {
+					beep();
+					return;
+				}
 				
 				InviteUserToLobbyC p = new InviteUserToLobbyC();
 				p.user = inviteList.getSelectedName();
@@ -394,8 +400,11 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			}
 			if(o instanceof InviteUserToLobbyS) {
 				InviteUserToLobbyS p = (InviteUserToLobbyS) o;
-				System.out.println("received invite message");
 				inviteList.setPending(p.name);
+			}
+			if(o instanceof InviteAnswerS) {
+				InviteAnswerS p = (InviteAnswerS) o;
+				inviteList.reply(p.name, p.answer);
 			}
 		}
 	}

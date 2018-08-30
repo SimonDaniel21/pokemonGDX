@@ -36,6 +36,19 @@ public class InviteList extends List<Entry>{
 			}	
 		}
 	}
+
+	public void reply(String name, boolean answer) {
+		for(Entry e : getItems()) {
+			if(e.getName().equals(name)) {
+				EntryType t = answer ? EntryType.ACCEPTED : EntryType.DECLINED;
+				e.setState(t);
+			}	
+		}
+	}
+
+	public boolean isPending() {
+		return getSelected().getState() == EntryType.PENDING;
+	}
 	
 }
 
@@ -47,6 +60,10 @@ class Entry{
 		this(name, EntryType.NORMAL);
 	}
 	
+	public EntryType getState() {
+		return state;
+	}
+
 	public Entry(String name, EntryType type) {
 		this.name = name;
 		setState(type);
@@ -56,7 +73,7 @@ class Entry{
 		state = type;
 		switch (state) {
 		case PENDING:
-			coloredString = MyColor.dye(Color.ORANGE, name);
+			coloredString = MyColor.dye(Color.CORAL, name);
 			break;
 
 		case ACCEPTED:

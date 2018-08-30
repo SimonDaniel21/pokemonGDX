@@ -70,6 +70,11 @@ public class Request {
 		public String user, lobby;
 	}
 	
+	public static class InviteAnswerC{
+		public String lobby;
+		public boolean answer;
+	}
+	
 	//--------------------------------------
 	
 	public static class RequestAreaC{

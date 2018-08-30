@@ -89,7 +89,11 @@ public class Response {
 	}
 	
 	public static class InviteUserToLobbyS{
-		//name is either the invite sender name OR the name of the invited player!
-		public String name, lobby;
+		public String name, sender, lobby;
+	}
+	
+	public static class InviteAnswerS{
+		public String name;
+		public boolean answer;
 	}
 }

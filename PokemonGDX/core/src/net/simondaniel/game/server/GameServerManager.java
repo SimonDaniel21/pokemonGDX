@@ -10,6 +10,7 @@ import com.esotericsoftware.kryonet.Server;
 
 import net.simondaniel.fabio.GameMode;
 import net.simondaniel.network.client.Request.AccountActivationC;
+import net.simondaniel.network.client.Request.InviteAnswerC;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
 import net.simondaniel.network.client.Request.LobbyCreateC;
 import net.simondaniel.network.client.Request.LobbyJoinC;
@@ -21,6 +22,7 @@ import net.simondaniel.network.client.Request.RegisterUserC;
 import net.simondaniel.network.client.Request.TeamJoinC;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.UserConnection;
+import net.simondaniel.network.server.Response.InviteAnswerS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyJoinS;
 import net.simondaniel.network.server.Response.LobbyListS;
@@ -176,12 +178,22 @@ public class GameServerManager extends Listener{
 			Lobby l = getLobby(p.lobby);
 			if(l != null) {
 				s.lobby = p.lobby;
-				s.name = c.user.name;
+				s.name = p.user;
+				s.sender = c.user.name;
 				
 				
-				//if(gs.sendToTcp(p.user, s)) {
-					s.name = p.user;
-				//}
+				if(gs.sendToTcp(p.user, s)) {
+					l.sendToAllTCP(s);
+				}
+			}
+		}
+		else if(o instanceof InviteAnswerC) {
+			InviteAnswerC p = (InviteAnswerC)o;
+			InviteAnswerS s = new InviteAnswerS();
+			s.answer = p.answer;
+			s.name = c.user.name;
+			Lobby l = getLobby(p.lobby);
+			if(l != null) {
 				l.sendToAllTCP(s);
 			}
 		}

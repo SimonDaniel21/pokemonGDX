@@ -169,8 +169,12 @@ public abstract class UImask<T extends ShowMaskInfo> extends Table {
 	 * @return false if waiting for a server response and critical actions should be disabled
 	 */
 	public boolean isActive() {
-		if(!active) unActiveSound.play();
+		if(!active) beep();
 		return active;
+	}
+	
+	public void beep() {
+		unActiveSound.play();
 	}
 	
 	boolean waitingForAnswer = false;

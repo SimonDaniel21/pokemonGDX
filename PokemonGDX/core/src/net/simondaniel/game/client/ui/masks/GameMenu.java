@@ -13,15 +13,19 @@ import net.simondaniel.fabio.GameMode;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.Friendlist;
 import net.simondaniel.game.client.ui.Inbox;
+import net.simondaniel.game.client.ui.Inbox.MailListener;
 import net.simondaniel.game.client.ui.InfoDialog;
+import net.simondaniel.game.client.ui.InviteList;
 import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.MyListener;
+import net.simondaniel.network.client.Request.InviteAnswerC;
 import net.simondaniel.network.client.Request.LobbyJoinC;
 import net.simondaniel.network.client.Request.LobbyListC;
 import net.simondaniel.network.server.Response.EndConnectionS;
+import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyJoinS;
 import net.simondaniel.network.server.Response.LobbyListS;
 import net.simondaniel.network.server.Response.MessageS;
@@ -39,10 +43,15 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	
 	MyListener listener;
 	
+	Inbox inbox;
+	
+	MailListener gameInviteListener;
+	
 	public GameMenu(final Skin skin) {
 		super(new LoginMaskInfo(), skin);
 		
 		listener = new GameMenuListener();
+		gameInviteListener = new GameInviteListener();
 		
 		lobbyMask  = new LobbyMask(skin);
 		
@@ -78,8 +87,8 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		startTable.add(startGame);
 		this.add(startTable).expand().colspan(3);
 		this.row();
-		Inbox ib = new Inbox(skin);
-		this.add(ib).size(270,350).left().bottom();
+		inbox = new Inbox(skin);
+		this.add(inbox).size(270,350).left().bottom();
 		add(lobbyTable).expandX();
 		fl = new Friendlist(skin);
 		this.add(fl).size(300, 300).right().bottom();
@@ -119,7 +128,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		info.client.removeMyListener(listener);
 	}
 	
-	class GameMenuListener implements MyListener{
+	private class GameMenuListener implements MyListener{
 
 		@Override
 		public void received(Connection c, Object o) {
@@ -176,8 +185,39 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 				PokemonGDX.game.setScreen(new IngameScreen(info.client));
 				getStage().dispose();
 			}
+			if(o instanceof InviteUserToLobbyS) {
+				System.out.println("received invite message");
+				InviteUserToLobbyS p = (InviteUserToLobbyS) o;
+				if(p.name.equals(info.client.userName())) {
+					System.out.println("name is correct");
+					inbox.addMail("game invite", p.sender + " wants you to join " + p.lobby,
+							new String[] {p.lobby},
+							gameInviteListener);
+				}
+			}
 		
 		}
 		
+	}
+	
+	private class GameInviteListener implements MailListener{
+
+		
+		@Override
+		public void accept(String[] data) {
+			InviteAnswerC p = new InviteAnswerC();
+			p.lobby = data[0];
+			p.answer = true;
+			info.client.send(p);
+			deactivateUntilResponse();
+		}
+
+		@Override
+		public void decline(String[] data) {
+			InviteAnswerC p = new InviteAnswerC();
+			p.lobby = data[0];
+			p.answer = false;
+			info.client.send(p);
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package net.simondaniel.game.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.esotericsoftware.kryonet.Connection;
@@ -26,6 +27,7 @@ public class Lobby implements MyServerlistener{
 	
 	private UserConnection[] userSlots; // specific slots
 	private List<UserConnection> users; // those who have no slot yet
+	private HashMap<UserConnection, Integer> invitedUsers;
 	private UserConnection admin;
 	
 	private GameMode mode;
