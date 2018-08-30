@@ -20,6 +20,7 @@ import net.simondaniel.MyColor;
 import net.simondaniel.fabio.GameMode;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
+import net.simondaniel.game.client.ui.InviteList;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.client.GameClient;
@@ -41,7 +42,8 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
 	
 	Label title;
-	List<String> addable, undecided;
+	List<String> undecided;
+	InviteList inviteList;
 	TextButton joinUndecided, readyButton;
 	TeamWidget tw1, tw2;
 	
@@ -62,13 +64,13 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		add(title).colspan(2).center();
 		row();
 		
-		addable = new List<String>(s);
-		addable.getColor().a = 0.5f;
+		inviteList = new InviteList(s);
+		inviteList.getColor().a = 0.5f;
 		tw1 = new TeamWidget(s);
 		tw2 = new TeamWidget(s);
 		add(tw1).fillX();
 		add(tw2).fillX();
-		add(addable);
+		add(inviteList).fillX();
 		row();
 		undecided = new List<String>(s);
 		undecided.setTouchable(Touchable.disabled);
@@ -81,7 +83,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 				if(!isActive()) return;
 				
 				InviteUserToLobbyC p = new InviteUserToLobbyC();
-				p.user = addable.getSelected();
+				p.user = inviteList.getSelectedName();
 				p.lobby = info.lobbyName;
 				info.gc.send(p);
 			}
@@ -118,8 +120,6 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		});
 		updateReadyButton();
 		add(readyButton).width(210);
-		
-		addable.setItems("other player1", "otherplayer2");
 	}
 	
 	private void updateReadyButton() {
@@ -353,7 +353,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
 	
 		
-		addable.setItems(info.inviteableUsers);
+		inviteList.set(info.inviteableUsers);
 		addPlayersToLobby(info.others[0]);
 		
 		addPlayersToTeam(tw1, info.others[1]);
@@ -395,16 +395,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			if(o instanceof InviteUserToLobbyS) {
 				InviteUserToLobbyS p = (InviteUserToLobbyS) o;
 				System.out.println("received invite message");
-				int sel = addable.getSelectedIndex();
-				for(int i = 0; i < addable.getItems().size; i++) {
-					if(addable.getItems().get(i).equals(p.name)) {
-						addable.getItems().set(i,  MyColor.dye(Color.CYAN, addable.getSelected()));
-						addable.setItems(addable.getItems());
-						addable.setSelectedIndex(sel);
-						break;
-					}
-				}
-				
+				inviteList.setPending(p.name);
 			}
 		}
 	}
