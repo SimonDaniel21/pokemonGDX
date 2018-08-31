@@ -96,7 +96,8 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		
 	}
 	
-	public void enterLobby(String name,GameMode mode, String[][] others) {
+	public void enterLobby(String name,GameMode mode, String[][] others,
+			String[] sa, String[] sd, String[] sp) {
 	
 		LobbyMaskInfo info = lobbyMask.getInfo();
 		info.gc = getInfo().client;
@@ -105,6 +106,15 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		info.others = others;
 		info.inviteableUsers = otherPlayers;
 		switchTo(lobbyMask);
+		for(String s : sa) {
+			lobbyMask.inviteList.setAccepted(s);
+		}
+		for(String s : sd) {
+			lobbyMask.inviteList.setDeclined(s);
+		}
+		for(String s : sp) {
+			lobbyMask.inviteList.setPending(s);
+		}
 	}
 	
 	@Override
@@ -140,7 +150,10 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 				LobbyJoinS p = (LobbyJoinS)o;
 				reActivateUI();
 				if(p.gameMode != -1) {
-					enterLobby(p.name, GameMode.valueOf(p.gameMode), p.others);
+					enterLobby(p.name, GameMode.valueOf(p.gameMode), p.others,
+							p.invitedAccepted,
+							p.invitedDeclined,
+							p.invitedPending);
 				}
 				else {
 					InfoDialog.show("lobby is full already", getStage());

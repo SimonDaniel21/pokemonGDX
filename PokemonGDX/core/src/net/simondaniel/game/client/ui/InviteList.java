@@ -28,6 +28,22 @@ public class InviteList extends List<Entry>{
 	public void addName(String name) {
 		getItems().add(new Entry(name));
 	}
+	
+	public void setAccepted(String name) {
+		for(Entry e : getItems()) {
+			if(e.getName().equals(name)) {
+				e.setState(EntryType.ACCEPTED);
+			}	
+		}
+	}
+	
+	public void setDeclined(String name) {
+		for(Entry e : getItems()) {
+			if(e.getName().equals(name)) {
+				e.setState(EntryType.DECLINED);
+			}	
+		}
+	}
 
 	public void setPending(String name) {
 		for(Entry e : getItems()) {

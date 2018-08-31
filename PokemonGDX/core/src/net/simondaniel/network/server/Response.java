@@ -16,6 +16,7 @@ public class Response {
 		public String name;
 		public int gameMode;
 		public String[][] others;
+		public String[] invitedPending, invitedAccepted, invitedDeclined;
 	}
 	
 	public static class LobbyUserJoinedS{

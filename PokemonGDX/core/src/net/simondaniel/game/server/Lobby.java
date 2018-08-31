@@ -106,6 +106,19 @@ public class Lobby implements MyServerlistener{
 		userSlots[slot] = c;
 	}
 	
+	private String[] getInvitedUsersWithState(int state) {
+		ArrayList<String> l = new ArrayList<String>();
+		for(UserConnection s : invitedUsers.keySet()) {
+			if(invitedUsers.get(s) == state)
+				l.add(s.user.name);
+		}
+		String[] sa = new String[l.size()];
+		for(int i = 0; i < l.size(); i++) {
+			sa[i] = l.get(i);
+		}
+		return sa;
+	}
+	
 	public void addUser(UserConnection c) {
 		
 		LobbyJoinS ps = new LobbyJoinS();
@@ -123,7 +136,10 @@ public class Lobby implements MyServerlistener{
 			
 			ps.name = NAME;
 			ps.gameMode = mode.ordinal();
-			ps.others = getNames();
+			ps.others = getNames(); 
+			ps.invitedAccepted = getInvitedUsersWithState(ACCEPTED);
+			ps.invitedDeclined = getInvitedUsersWithState(DECLINED);
+			ps.invitedPending = getInvitedUsersWithState(PENDING);
 		}
 		
 		c.sendTCP(ps);
