@@ -29,6 +29,8 @@ import net.simondaniel.network.client.Request.RequestAreaChandler;
 import net.simondaniel.network.server.Response.EndConnectionS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.MessageS;
+import net.simondaniel.network.server.Response.UserJoinedS;
+import net.simondaniel.network.server.Response.UserLeftS;
 import net.simondaniel.network.server.database.DatabaseInerface;
 import net.simondaniel.network.server.database.LocalFileDatabase;
 import net.simondaniel.network.server.database.NotActivatedDO;
@@ -57,9 +59,6 @@ public class GameServer extends Server{
 		}
 		
 		loggedIn.add(new User("Marco"));
-		
-		requestAreaChandlers = new ArrayList<RequestAreaChandler>();
-		movementChandlers = new ArrayList<MovementChandler>();
 		
 		// For consistency, the classes to be sent over the network are
 		// registered by the same method for both the client and server.
@@ -126,11 +125,24 @@ public class GameServer extends Server{
 			
 			c.user = u;
 			
+			UserJoinedS p = new UserJoinedS();
+			p.user = name;
+			sendToAllExceptTCP(c.getID(), p);
+			
 			loggedIn.add(u);
 			window.connected(u);
 		}
 		
 		return res;
+	}
+	
+
+	public void logout(UserConnection user) {
+		if(loggedIn.remove(user.user)){
+			UserLeftS p = new UserLeftS();
+			p.user = user.user.name;
+			window.disConnected(user.user);
+		}
 	}
 
 	/**
@@ -166,12 +178,6 @@ public class GameServer extends Server{
 	public void openConsole() {
 		window.setVisible(true);
 	}
-
-	public void logout(UserConnection user) {
-		if(loggedIn.remove(user.user)){
-			window.disConnected(user.user);
-		}
-	}
 	
 	public static class Packet{
 		public Packet(UserConnection con, Object o) {
@@ -182,41 +188,6 @@ public class GameServer extends Server{
 		public UserConnection con;
 	}
 	
-	
-	//------------------------------------------------Packet handling
-	
-	private List<RequestAreaChandler> requestAreaChandlers;
-
-	public void addRequestAreaChandler(RequestAreaChandler h){
-		this.requestAreaChandlers.add(h);
-	}
-
-	public void removeRequestAreaChandler(RequestAreaChandler h){
-		this.requestAreaChandlers.remove(h);
-	}
-
-	public void handle(RequestAreaC p, UserConnection c){
-		for(RequestAreaChandler h : requestAreaChandlers){
-			h.handle(p, c);
-		}
-	}
-	
-	
-	private List<MovementChandler> movementChandlers;
-
-	public void addMovementChandler(MovementChandler h){
-		this.movementChandlers.add(h);
-	}
-
-	public void removeMovementChandler(MovementC h){
-		this.movementChandlers.remove(h);
-	}
-
-	public void handle(MovementC p, UserConnection c){
-		for(MovementChandler h : movementChandlers){
-			h.handle(p, c);
-		}
-	}
 	
 	public List<User> getUsers() {
 		return loggedIn;

@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.EndPoint;
 import net.simondaniel.entities.EntityInformation;
 import net.simondaniel.network.client.Request;
 import net.simondaniel.network.server.Response;
+import net.simondaniel.network.server.Response.UserJoinedS;
 
 public class Network {
 	static public final int port = 54555;
@@ -19,6 +20,7 @@ public class Network {
 		kryo.register(short[].class);
 		kryo.register(String[].class);
 		kryo.register(String[][].class);
+		kryo.register(UserJoinedS[].class);
 		
 		for(Class<?> c : Request.class.getClasses()) {
 			kryo.register(c);

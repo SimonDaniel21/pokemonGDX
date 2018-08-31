@@ -32,6 +32,7 @@ import net.simondaniel.network.server.Response.MessageS;
 import net.simondaniel.network.server.Response.MoveToS;
 import net.simondaniel.network.server.Response.PlayerListS;
 import net.simondaniel.network.server.Response.TeamJoinedS;
+import net.simondaniel.network.server.Response.UserJoinedS;
 import net.simondaniel.network.server.User;
 
 public class GameServerManager extends Listener{
@@ -82,9 +83,12 @@ public class GameServerManager extends Listener{
 			c.sendTCP(lls);
 			
 			PlayerListS pls = new PlayerListS();
-			pls.players = new String[gs.getUsers().size()];
-			for(int i = 0; i < gs.getUsers().size(); i++)
-				pls.players[i] = gs.getUsers().get(i).getName();
+			pls.joined = new UserJoinedS[gs.getUsers().size()];
+			for(int i = 0; i < gs.getUsers().size(); i++) {
+				UserJoinedS p = new UserJoinedS();
+				p.user = gs.getUsers().get(i).getName();
+				pls.joined[i] = p;
+			}
 			c.sendTCP(pls);
 		}
 	

@@ -20,9 +20,9 @@ public class InviteList extends List<Entry>{
 		return getSelected().getName();
 	}
 
-	public void set(String ... s) {
+	public void set(java.util.List<String> sa) {
 		clearItems();
-		for(String ss : s) addName(ss);
+		for(String s : sa) addName(s);
 	}
 	
 	public void addName(String name) {

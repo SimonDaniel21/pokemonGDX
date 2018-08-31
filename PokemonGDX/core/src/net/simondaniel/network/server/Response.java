@@ -33,7 +33,15 @@ public class Response {
 	}
 	
 	public static class PlayerListS{
-		public String[] players;
+		public UserJoinedS[] joined;
+	}
+	
+	public static class UserJoinedS{
+		public String user;
+	}
+	
+	public static class UserLeftS{
+		public String user;
 	}
 	
 	public static class MessageS{

@@ -1,5 +1,7 @@
 package net.simondaniel.game.client.ui.masks;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -31,6 +33,8 @@ import net.simondaniel.network.server.Response.LobbyListS;
 import net.simondaniel.network.server.Response.MessageS;
 import net.simondaniel.network.server.Response.PlayerListS;
 import net.simondaniel.network.server.Response.StartGameS;
+import net.simondaniel.network.server.Response.UserJoinedS;
+import net.simondaniel.network.server.Response.UserLeftS;
 import net.simondaniel.screens.IngameScreen;
 
 public class GameMenu extends UImask<LoginMaskInfo>{
@@ -38,7 +42,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	NamingDialog nda;
 	Table lobbyTable;
 	Friendlist fl;
-	String[] otherPlayers;
+	ArrayList<String> otherPlayers;
 	LobbyMask lobbyMask;
 	
 	MyListener listener;
@@ -56,6 +60,8 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		lobbyMask  = new LobbyMask(skin);
 		
 		lobbyTable = new Table(skin);
+		
+		otherPlayers = new ArrayList<String>();
 		final List<String> list = new List<String>(skin);
 		list.setItems(new String[]{"1v1", "2v2", "3v3"});
 		add(lobbyTable);
@@ -140,6 +146,17 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	
 	private class GameMenuListener implements MyListener{
 
+		private void playerJoined(String name) {
+			if(!info.client.userName().equals(name)) {
+				otherPlayers.add(name);
+				fl.addUser(name);
+			}
+		}
+		
+		private void playerLeft(String name) {
+			otherPlayers.remove(name);
+		}
+		
 		@Override
 		public void received(Connection c, Object o) {
 			if(o instanceof EndConnectionS) {
@@ -189,9 +206,17 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			}
 			if(o instanceof PlayerListS) {
 				PlayerListS p = (PlayerListS)o;
-				otherPlayers = p.players;
-				System.err.println("setting fl!");
-				fl.set(p.players);
+				for(UserJoinedS ujs : p.joined) {
+					playerJoined(ujs.user);
+				}
+			}
+			if(o instanceof UserJoinedS) {
+				UserJoinedS p = (UserJoinedS)o;
+				playerJoined(p.user);
+			}
+			if(o instanceof UserLeftS) {
+				UserLeftS p = (UserLeftS)o;
+				playerLeft(p.user);
 			}
 			if(o instanceof StartGameS) {
 				System.err.println("received Startgame");

@@ -358,7 +358,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		tw2.set("Team 2",info. mode.maxPlayersInTeam(1), 2, gc);
 	
 	
-		
+
 		inviteList.set(info.inviteableUsers);
 		addPlayersToLobby(info.others[0]);
 		

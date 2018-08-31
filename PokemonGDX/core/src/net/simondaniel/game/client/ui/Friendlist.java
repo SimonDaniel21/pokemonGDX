@@ -52,4 +52,10 @@ public class Friendlist extends Table {
 			scrollTable.row();
 		}
 	}
+	
+	public void addUser(String name) {
+			FriendListEntry fle = new FriendListEntry(s, name, true);
+			scrollTable.add(fle);
+			scrollTable.row();
+	}
 }
