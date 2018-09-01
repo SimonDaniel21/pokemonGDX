@@ -42,6 +42,9 @@ public class Request {
 	public static class LobbyListC{
 	}
 	
+	public static class UserListC{
+	}
+	
 	public static class MessageC{
 		public String message;
 	}

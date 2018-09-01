@@ -23,6 +23,7 @@ import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.InviteList;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.game.server.Lobby;
+import net.simondaniel.network.UserTracker.UserTrackerListener;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.MyListener;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
@@ -49,6 +50,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	TeamWidget tw1, tw2;
 	
 	LobbyMaskListener listener;
+	UserTrackerListener userTrackerListener;
 
 	private boolean ready = false;
 	
@@ -61,6 +63,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		debug();
 		//this.right();
 		listener = new LobbyMaskListener();
+		userTrackerListener = new UserListener();
 		title = new Label(null, s);
 		add(title).colspan(2).center();
 		row();
@@ -357,9 +360,11 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		tw1.set("Team 1", info.mode.maxPlayersInTeam(0), 1,gc);
 		tw2.set("Team 2",info. mode.maxPlayersInTeam(1), 2, gc);
 	
-	
-
-		inviteList.set(info.inviteableUsers);
+		info.userTracker.addListener(userTrackerListener);
+		for(String s : info.userTracker.getUsers()) {
+			inviteList.addName(s);
+		}
+		
 		addPlayersToLobby(info.others[0]);
 		
 		addPlayersToTeam(tw1, info.others[1]);
@@ -371,18 +376,18 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	@Override
 	public void leave() {
 		info.gc.removeMyListener(listener);
+		info.userTracker.removeListener(userTrackerListener);
 	}
 	
 	
-	class LobbyMaskListener implements MyListener{
+	private class LobbyMaskListener implements MyListener{
 
 		@Override
 		public void received(Connection c, Object o) {
 			if(o instanceof LobbyUserJoinedS) {
 				//System.out.println("RECEIVED LOBBYJOIN " + info.gc.userName());
 				LobbyUserJoinedS p = (LobbyUserJoinedS) o;
-				addPlayerToLobby(p.name);
-				
+				addPlayerToLobby(p.name);		
 			}
 			if(o instanceof TeamJoinedS) {
 				TeamJoinedS p = (TeamJoinedS) o;
@@ -407,5 +412,25 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 				inviteList.reply(p.name, p.answer);
 			}
 		}
+	}
+	
+	private class UserListener implements UserTrackerListener{
+
+		@Override
+		public void userJoined(String name) {
+			inviteList.addName(name);
+		}
+
+		@Override
+		public void userLeft(String name) {
+			inviteList.removeName(name);
+		}
+
+		@Override
+		public void reset() {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 }

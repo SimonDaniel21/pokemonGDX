@@ -58,4 +58,9 @@ public class Friendlist extends Table {
 			scrollTable.add(fle);
 			scrollTable.row();
 	}
+
+	public void removeUser(String name) {
+		// TODO Auto-generated method stub
+		
+	}
 }

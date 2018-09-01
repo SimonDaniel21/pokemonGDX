@@ -141,6 +141,7 @@ public class GameServer extends Server{
 		if(loggedIn.remove(user.user)){
 			UserLeftS p = new UserLeftS();
 			p.user = user.user.name;
+			sendToAllExceptTCP(user.getID(), p);
 			window.disConnected(user.user);
 		}
 	}

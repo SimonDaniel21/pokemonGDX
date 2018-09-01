@@ -27,6 +27,13 @@ public class InviteList extends List<Entry>{
 	
 	public void addName(String name) {
 		getItems().add(new Entry(name));
+		setItems(getItems());
+	}
+	public void removeName(String name) {
+		for(Entry e : getItems()) {
+			getItems().removeValue(e, false);
+		}
+		setItems(getItems());
 	}
 	
 	public void setAccepted(String name) {
@@ -65,6 +72,8 @@ public class InviteList extends List<Entry>{
 	public boolean isPending() {
 		return getSelected().getState() == EntryType.PENDING;
 	}
+
+	
 	
 }
 

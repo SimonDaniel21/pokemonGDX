@@ -9,6 +9,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import net.simondaniel.fabio.GameMode;
+import net.simondaniel.network.UserTracker.UserTrackerListener;
 import net.simondaniel.network.client.Request.AccountActivationC;
 import net.simondaniel.network.client.Request.InviteAnswerC;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
@@ -20,6 +21,7 @@ import net.simondaniel.network.client.Request.MessageC;
 import net.simondaniel.network.client.Request.MoveToC;
 import net.simondaniel.network.client.Request.RegisterUserC;
 import net.simondaniel.network.client.Request.TeamJoinC;
+import net.simondaniel.network.client.Request.UserListC;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.UserConnection;
 import net.simondaniel.network.server.Response.InviteAnswerS;
@@ -81,7 +83,8 @@ public class GameServerManager extends Listener{
 			for(int i = 0; i < lobbys.size(); i++)
 				lls.lobbys[i] = lobbys.get(i).NAME;
 			c.sendTCP(lls);
-			
+		}
+		else if (o instanceof UserListC) {
 			PlayerListS pls = new PlayerListS();
 			pls.joined = new UserJoinedS[gs.getUsers().size()];
 			for(int i = 0; i < gs.getUsers().size(); i++) {
@@ -201,5 +204,4 @@ public class GameServerManager extends Listener{
 		if(user.user != null)
 			System.out.println("removing user " + user.user.getName());
 	}
-	
 }

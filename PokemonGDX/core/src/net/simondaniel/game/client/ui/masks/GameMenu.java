@@ -1,10 +1,7 @@
 package net.simondaniel.game.client.ui.masks;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -17,10 +14,11 @@ import net.simondaniel.game.client.ui.Friendlist;
 import net.simondaniel.game.client.ui.Inbox;
 import net.simondaniel.game.client.ui.Inbox.MailListener;
 import net.simondaniel.game.client.ui.InfoDialog;
-import net.simondaniel.game.client.ui.InviteList;
 import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
+import net.simondaniel.network.UserTracker;
+import net.simondaniel.network.UserTracker.UserTrackerListener;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.MyListener;
 import net.simondaniel.network.client.Request.InviteAnswerC;
@@ -31,10 +29,7 @@ import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyJoinS;
 import net.simondaniel.network.server.Response.LobbyListS;
 import net.simondaniel.network.server.Response.MessageS;
-import net.simondaniel.network.server.Response.PlayerListS;
 import net.simondaniel.network.server.Response.StartGameS;
-import net.simondaniel.network.server.Response.UserJoinedS;
-import net.simondaniel.network.server.Response.UserLeftS;
 import net.simondaniel.screens.IngameScreen;
 
 public class GameMenu extends UImask<LoginMaskInfo>{
@@ -42,7 +37,6 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	NamingDialog nda;
 	Table lobbyTable;
 	Friendlist fl;
-	ArrayList<String> otherPlayers;
 	LobbyMask lobbyMask;
 	
 	MyListener listener;
@@ -50,6 +44,10 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	Inbox inbox;
 	
 	MailListener gameInviteListener;
+	UserTrackerListener userTrackerListener;
+	
+	UserTracker userTracker;
+	
 	
 	public GameMenu(final Skin skin) {
 		super(new LoginMaskInfo(), skin);
@@ -57,11 +55,14 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		listener = new GameMenuListener();
 		gameInviteListener = new GameInviteListener();
 		
+		userTracker = new UserTracker();
+		userTrackerListener = new UserListener();
 		lobbyMask  = new LobbyMask(skin);
 		
-		lobbyTable = new Table(skin);
 		
-		otherPlayers = new ArrayList<String>();
+		
+		lobbyTable = new Table(skin);
+	
 		final List<String> list = new List<String>(skin);
 		list.setItems(new String[]{"1v1", "2v2", "3v3"});
 		add(lobbyTable);
@@ -110,7 +111,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		info.lobbyName = name;
 		info.mode = mode;
 		info.others = others;
-		info.inviteableUsers = otherPlayers;
+		info.userTracker = userTracker;
 		switchTo(lobbyMask);
 		for(String s : sa) {
 			lobbyMask.inviteList.setAccepted(s);
@@ -135,6 +136,9 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	
 		gc.sendTCP(new LobbyListC());
 		
+		userTracker.addListener(userTrackerListener);
+		userTracker.startTracking(gc);
+		
 		gc.addMyListener(listener);
 		
 	}
@@ -142,20 +146,10 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	@Override
 	public void leave() {
 		info.client.removeMyListener(listener);
+		userTracker.removeListener(userTrackerListener);
 	}
 	
 	private class GameMenuListener implements MyListener{
-
-		private void playerJoined(String name) {
-			if(!info.client.userName().equals(name)) {
-				otherPlayers.add(name);
-				fl.addUser(name);
-			}
-		}
-		
-		private void playerLeft(String name) {
-			otherPlayers.remove(name);
-		}
 		
 		@Override
 		public void received(Connection c, Object o) {
@@ -184,7 +178,6 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 				}
 			}
 			if(o instanceof LobbyListS) {
-				System.out.println("RECEIVED LOBBY LIST");
 				LobbyListS p = (LobbyListS)o;
 				lobbyTable.clear();
 				lobbyTable.add("public Lobbys: ").row();
@@ -204,30 +197,15 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 					lobbyTable.row();
 				}
 			}
-			if(o instanceof PlayerListS) {
-				PlayerListS p = (PlayerListS)o;
-				for(UserJoinedS ujs : p.joined) {
-					playerJoined(ujs.user);
-				}
-			}
-			if(o instanceof UserJoinedS) {
-				UserJoinedS p = (UserJoinedS)o;
-				playerJoined(p.user);
-			}
-			if(o instanceof UserLeftS) {
-				UserLeftS p = (UserLeftS)o;
-				playerLeft(p.user);
-			}
 			if(o instanceof StartGameS) {
 				System.err.println("received Startgame");
 				PokemonGDX.game.setScreen(new IngameScreen(info.client));
 				getStage().dispose();
 			}
 			if(o instanceof InviteUserToLobbyS) {
-				System.out.println("received invite message");
+			
 				InviteUserToLobbyS p = (InviteUserToLobbyS) o;
 				if(p.name.equals(info.client.userName())) {
-					System.out.println("name is correct");
 					inbox.addMail("game invite", p.sender + " wants you to join " + p.lobby,
 							new String[] {p.lobby},
 							gameInviteListener);
@@ -257,5 +235,27 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			p.answer = false;
 			info.client.send(p);
 		}
+	}
+	
+	private class UserListener implements UserTrackerListener{
+
+		@Override
+		public void userJoined(String name) {
+			if(!info.client.userName().equals(name)) {
+				fl.addUser(name);
+				System.out.println("adding " + name);
+			}
+		}
+
+		@Override
+		public void userLeft(String name) {
+			fl.removeUser(name);
+		}
+
+		@Override
+		public void reset() {
+		
+		}
+		
 	}
 }
