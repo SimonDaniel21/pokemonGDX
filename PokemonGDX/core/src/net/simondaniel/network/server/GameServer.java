@@ -42,11 +42,13 @@ public class GameServer extends Server{
 	public ServerMonitor window;
 	
 	List<User> loggedIn = new ArrayList<User>();
-
+	List<UserConnection> usersTrackingUsers;
+	
 	DatabaseInerface database;
 
 	public GameServer() throws IOException {
 
+		usersTrackingUsers = new ArrayList<UserConnection>();
 		database = new LocalFileDatabase("database.deseus");
 		Collection<NotActivatedDO> nots = database.loadNotActivatedNames();
 		List<String> namesToRemove = new ArrayList<String>();
@@ -127,7 +129,9 @@ public class GameServer extends Server{
 			
 			UserJoinedS p = new UserJoinedS();
 			p.user = name;
-			sendToAllExceptTCP(c.getID(), p);
+			for(UserConnection con : usersTrackingUsers) {
+				con.sendTCP(p);
+			}
 			
 			loggedIn.add(u);
 			window.connected(u);
@@ -141,7 +145,9 @@ public class GameServer extends Server{
 		if(loggedIn.remove(user.user)){
 			UserLeftS p = new UserLeftS();
 			p.user = user.user.name;
-			sendToAllExceptTCP(user.getID(), p);
+			for(UserConnection con : usersTrackingUsers) {
+				con.sendTCP(p);
+			}
 			window.disConnected(user.user);
 		}
 	}
@@ -345,5 +351,9 @@ public class GameServer extends Server{
 		
 		c.sendTCP(o);
 		return true;
+	}
+
+	public void startTracking(UserConnection c) {
+		usersTrackingUsers.add(c);
 	}
 }

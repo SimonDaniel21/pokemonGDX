@@ -30,8 +30,10 @@ public class InviteList extends List<Entry>{
 		setItems(getItems());
 	}
 	public void removeName(String name) {
-		for(Entry e : getItems()) {
-			getItems().removeValue(e, false);
+		for(int i = 0; i < getItems().size; i++) {
+			if(getItems().get(i).getName().equals(name)) {
+				getItems().removeIndex(i);
+			}
 		}
 		setItems(getItems());
 	}

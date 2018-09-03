@@ -78,6 +78,9 @@ public class Request {
 		public boolean answer;
 	}
 	
+	public static class UserReadyC{
+		public boolean ready;
+	} 
 	//--------------------------------------
 	
 	public static class RequestAreaC{

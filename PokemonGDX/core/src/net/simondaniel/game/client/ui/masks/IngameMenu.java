@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.simondaniel.game.client.ui.UImask;
 
-public class IngameMenu extends UImask{
+public class IngameMenu extends UImask<IngameMenuInfo>{
 
 	Stage stage;
 	BitmapFont font;
@@ -32,7 +32,7 @@ public class IngameMenu extends UImask{
 	Button bttnExit;
 	
 	public IngameMenu(Skin skin){
-		super(null, skin);
+		super(new IngameMenuInfo(), skin);
 		int w = 200;
 		int h = 500;
 		bttnPokedex = new TextButton("fullscreen", skin, "big");

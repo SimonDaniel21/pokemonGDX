@@ -92,6 +92,11 @@ public class Response {
 	public static class AddEntityS{
 		public EntityInformation info;
 	}
+	
+	public static class UserReadyS{
+		public String user;
+		public boolean ready;
+	} 
 
 	public static interface AddEntityShandler{
 		public void handle(AddEntityS p);
@@ -104,5 +109,12 @@ public class Response {
 	public static class InviteAnswerS{
 		public String name;
 		public boolean answer;
+	}
+	
+	public static class LobbyStartTimerS{
+		public long start;
+	}
+	public static class LobbyStopTimerS{
+		public long start;
 	}
 }

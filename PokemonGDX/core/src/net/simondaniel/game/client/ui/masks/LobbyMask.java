@@ -1,8 +1,9 @@
 package net.simondaniel.game.client.ui.masks;
 
 
+import java.util.Arrays;
+
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -11,13 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Connection;
 
-import net.simondaniel.MyColor;
-import net.simondaniel.fabio.GameMode;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.InviteList;
@@ -27,23 +24,22 @@ import net.simondaniel.network.UserTracker.UserTrackerListener;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.MyListener;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
-import net.simondaniel.network.client.Request.LobbyJoinC;
 import net.simondaniel.network.client.Request.TeamJoinC;
+import net.simondaniel.network.client.Request.UserReadyC;
 import net.simondaniel.network.server.Response.InviteAnswerS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
-import net.simondaniel.network.server.Response.LobbyJoinS;
-import net.simondaniel.network.server.Response.LobbyListS;
+import net.simondaniel.network.server.Response.LobbyStartTimerS;
 import net.simondaniel.network.server.Response.LobbyUserJoinedS;
-import net.simondaniel.network.server.Response.MessageS;
-import net.simondaniel.network.server.Response.PlayerListS;
 import net.simondaniel.network.server.Response.StartGameS;
 import net.simondaniel.network.server.Response.TeamJoinedS;
+import net.simondaniel.network.server.Response.UserLeftS;
+import net.simondaniel.network.server.Response.UserReadyS;
 import net.simondaniel.screens.IngameScreen;
 
 public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
 	
-	Label title;
+	Label title, timer;
 	List<String> undecided;
 	InviteList inviteList;
 	TextButton joinUndecided, readyButton;
@@ -51,6 +47,9 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
 	LobbyMaskListener listener;
 	UserTrackerListener userTrackerListener;
+	
+	boolean timerStarted;
+	long targetTime;
 
 	private boolean ready = false;
 	
@@ -121,14 +120,25 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				ready = !ready;
-				updateReadyButton();
-				setTouchable(Touchable.disabled);
+				if(!isActive()) return;
+				for(String s : undecided.getItems()) {
+					if(s.equals(info.gc.userName())){
+						beep();
+						return;
+					}
+				}
+				UserReadyC p = new UserReadyC();
+				p.ready = !ready;
+				info.gc.send(p);
+				deactivateUntilResponse();
 			}
 			
 		});
 		updateReadyButton();
-		add(readyButton).width(210);
+		add(readyButton).width(210).row();
+		add().colspan(2);
+		timer = new Label("", s);
+		add(timer);
 	}
 	
 	private void updateReadyButton() {
@@ -143,26 +153,16 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		
 	}
 	
-	public void set(String lobbyName, String[][] others, GameMode mode, final GameClient gc, Skin skin) {
-		
-	}
-	
 	public void addPlayerToLobby(String playersName) {
-//		for(Slot s : team.getItems()) {
-//			if(!s.occupied) {
-//				s.set(playersName);
-//				System.out.println(playersName);
-//				if(s.name.equals(gc.userName()))
-//					tw1.list.setSelected(s);
-//				return;
-//			}
-//		}
+
+		
+		System.out.println("---------adding: " + playersName);
 		undecided.getItems().add(playersName);
-		undecided.setItems(undecided.getItems());
+		
 		if(playersName.equals(info.gc.userName())) {
 			undecided.setSelected(playersName);
 		}
-		this.sizeChanged();
+		undecided.setItems(undecided.getItems());
 	}
 	
 	/**
@@ -176,6 +176,16 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		}
 	}
 	
+	/**
+	 * adds player Strings to the Lobby if they arent null
+	 * @param playersNames name of player, may be null
+	 */
+	public void removePlayerFromLobby(String name) {
+		undecided.getItems().removeValue(name, false);
+		undecided.setItems(undecided.getItems());
+		tw1.removeName(name);
+		tw2.removeName(name);
+	}
 
 	public void addPlayerToTeam(TeamWidget team, String playersName) {
 		
@@ -241,9 +251,13 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			default:
 				break;
 			}
-		}
+		}	
 	}
 
+	public void startTimer() {
+		
+	}
+	
 	public class TeamWidget extends Table{
 	
 		GameClient gc;
@@ -251,7 +265,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		int id;
 		int size;
 		String name;
-		
+
 		List<Slot> list;
 		TextButton join;
 		
@@ -340,16 +354,20 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			occupied = false;
 		}
 	}
-	
 	@Override
 	public void act(float delta) {
 		info.gc.handlePacketBuffer();
+		long timeLeft = (targetTime - System.currentTimeMillis() + 999) / 1000;
+		if(timerStarted)
+			timer.setText(timeLeft + "");
 		super.act(delta);
 	}
 	
 
 	@Override
 	public void enter() {
+		
+		timerStarted = false;
 		
 		title.setText(info.lobbyName + " (" +  info.mode + ")");
 		
@@ -362,7 +380,8 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
 		info.userTracker.addListener(userTrackerListener);
 		for(String s : info.userTracker.getUsers()) {
-			inviteList.addName(s);
+			if(!s.equals(info.gc.userName()))
+				inviteList.addName(s);
 		}
 		
 		addPlayersToLobby(info.others[0]);
@@ -387,8 +406,9 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			if(o instanceof LobbyUserJoinedS) {
 				//System.out.println("RECEIVED LOBBYJOIN " + info.gc.userName());
 				LobbyUserJoinedS p = (LobbyUserJoinedS) o;
-				addPlayerToLobby(p.name);		
+				addPlayerToLobby(p.name);
 			}
+			
 			if(o instanceof TeamJoinedS) {
 				TeamJoinedS p = (TeamJoinedS) o;
 				if(p.id == Lobby.LOBBY_FULL) {
@@ -411,6 +431,27 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 				InviteAnswerS p = (InviteAnswerS) o;
 				inviteList.reply(p.name, p.answer);
 			}
+			if(o instanceof UserReadyS) {
+				UserReadyS p = (UserReadyS) o;
+				if(p.user.equals(info.gc.userName())){
+					ready = p.ready;
+					updateReadyButton();
+					reActivateUI();
+				}
+				if(p.ready == false) {
+					timerStarted = false;
+					timer.setText("");
+				}
+			}
+			if(o instanceof LobbyStartTimerS) {
+				LobbyStartTimerS p = (LobbyStartTimerS) o;
+				targetTime = p.start;
+				timerStarted = true;
+			}
+			if(o instanceof StartGameS) {
+				StartGameS p = (StartGameS) o;
+				PokemonGDX.game.setScreen(new IngameScreen(info.gc));
+			}
 		}
 	}
 	
@@ -424,6 +465,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		@Override
 		public void userLeft(String name) {
 			inviteList.removeName(name);
+			removePlayerFromLobby(name);	
 		}
 
 		@Override
@@ -431,6 +473,5 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			// TODO Auto-generated method stub
 			
 		}
-		
 	}
 }

@@ -148,6 +148,13 @@ public class GameInstance implements MyListener, MyServerlistener{
 			renderer = new OrthogonalTiledMapRenderer(map, 2);
 			debugRenderer = new Box2DDebugRenderer();
 			ui.show(stage);
+			OnlinePlayerInfo info = new OnlinePlayerInfo();
+			info.id = 20;
+			info.name = "simon";
+			info.radius = 0.5f;
+			info.x = 8;
+			info.y = 8;
+			player = new OnlinePlayer(world, info);
 		}
 	}
 
@@ -177,7 +184,8 @@ public class GameInstance implements MyListener, MyServerlistener{
 	boolean last = false;
 
 	public void update(float deltaTime) {
-		System.out.println("updating lobby: " + lobby.NAME);
+		if(isServer)
+			System.out.println("updating lobby: " + lobby.NAME);
 
 		Vector2 dir = new Vector2();
 		
@@ -191,28 +199,30 @@ public class GameInstance implements MyListener, MyServerlistener{
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			System.out.println("sent @" + timestamp);
 		}
-		if(!isServer)
+		if(!isServer) {
 			last = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 
-		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-			dir.add(0, 1);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-			dir.add(0, -1);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-			dir.add(-1, 0);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-			dir.add(1, 0);
-		}
-		if (!dir.isZero()) {
-			//b.setLinearVelocity(dir.nor().scl(5));
-			if(player != null) {
-				
-				player.body().setLinearVelocity(dir.nor().scl(5));
+			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+				dir.add(0, 1);
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+				dir.add(0, -1);
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+				dir.add(-1, 0);
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+				dir.add(1, 0);
+			}
+			if (!dir.isZero()) {
+				//b.setLinearVelocity(dir.nor().scl(5));
+				if(player != null) {
+					
+					player.body().setLinearVelocity(dir.nor().scl(5));
+				}
 			}
 		}
+
 		
 		
 		for(Entity e : entities.values()) {
@@ -224,7 +234,7 @@ public class GameInstance implements MyListener, MyServerlistener{
 		doPhysicsStep(deltaTime);
 		
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+		if (!isServer && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			if (ui.isVisible()) {
 				ui.hide();
 			} else {
@@ -235,7 +245,7 @@ public class GameInstance implements MyListener, MyServerlistener{
 		if (!isServer)
 			stage.act(deltaTime);
 		// engine.update(deltaTime);
-		if (!isServer) {
+		if (!isServer && player != null) {
 			anim.update(deltaTime);
 			Body b = player.body();
 			anim.setPosition(b.getPosition().cpy().scl(PIXELS_PER_METER));

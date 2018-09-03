@@ -3,6 +3,7 @@ package net.simondaniel.game.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -22,6 +23,7 @@ import net.simondaniel.network.client.Request.MoveToC;
 import net.simondaniel.network.client.Request.RegisterUserC;
 import net.simondaniel.network.client.Request.TeamJoinC;
 import net.simondaniel.network.client.Request.UserListC;
+import net.simondaniel.network.client.Request.UserReadyC;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.UserConnection;
 import net.simondaniel.network.server.Response.InviteAnswerS;
@@ -93,6 +95,7 @@ public class GameServerManager extends Listener{
 				pls.joined[i] = p;
 			}
 			c.sendTCP(pls);
+			gs.startTracking(c);
 		}
 	
 		if(o instanceof MessageC){
@@ -179,6 +182,13 @@ public class GameServerManager extends Listener{
 				l.inviteAnswer(c, p.answer);
 			}
 		}
+		else if(o instanceof UserReadyC) {
+			UserReadyC p = (UserReadyC) o;
+			Lobby l = c.user.lobby;
+			if(l != null) {
+				l.ready(c, p.ready);
+			}
+		}
 	}
 	
 
@@ -201,7 +211,12 @@ public class GameServerManager extends Listener{
 	public void disconnected(Connection c) {
 		UserConnection user = (UserConnection) c;
 		gs.logout(user);
-		if(user.user != null)
+		if(user.user != null) {
+			Lobby l = user.user.lobby;
 			System.out.println("removing user " + user.user.getName());
+			if(l != null) {
+				l.removeUser(user);
+			}
+		}
 	}
 }
