@@ -216,6 +216,10 @@ public class GameServerManager extends Listener{
 			System.out.println("removing user " + user.user.getName());
 			if(l != null) {
 				l.removeUser(user);
+				if(l.isEmpty()) {
+					lobbys.remove(l);
+					gs.window.removedLobby(l.NAME);
+				}
 			}
 		}
 	}

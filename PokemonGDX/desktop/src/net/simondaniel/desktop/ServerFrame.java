@@ -147,4 +147,15 @@ public class ServerFrame extends JFrame implements ServerMonitor{
 		lblGames.setText(lobbysActive+ "");
 	}
 
+	@Override
+	public void removedLobby(String name) {
+		messageReceived("[server]", " removed Lobby " + name);
+		lobbysActive--;
+		for(String s : lobbyList.getItems())
+			if(s.equals(name))
+				lobbyList.remove(s);
+		
+		lblGames.setText(lobbysActive+ "");
+	}
+
 }

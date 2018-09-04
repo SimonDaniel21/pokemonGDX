@@ -1,5 +1,8 @@
 package net.simondaniel.game.client.ui.masks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -10,8 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
+import net.simondaniel.MyRandom;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.pokes.Pokemon;
 
@@ -25,8 +31,10 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 	Table infoTable;
 	Label nameLBL, typeLBL, loreLBL;
 	
-	public PokemonChooseMask(PokemonChooseMaskInfo info, Skin skin) {
-		super(info, skin);
+	TextButton select;
+	
+	public PokemonChooseMask(PokemonChooseMaskInfo info_, Skin skin) {
+		super(info_, skin);
 		infoTable = new Table(skin);
 		nameLBL = new Label("", skin);
 		typeLBL = new Label("", skin);
@@ -40,6 +48,21 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 		infoTable.setPosition(220, 620);
 		infoTable.left();
 		
+		select = new TextButton("select", skin);
+		select.setPosition(30, 440);
+		select.left();
+		select.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if(selected == null) {
+					beep();
+					return;
+				}
+				info.lobbyMask.setPokemon(selected.poke);
+				info.lobbyMask.getInfo().joinLobby = false;
+				switchTo(info.lobbyMask);
+			}
+		});
 	}
 	
 
@@ -48,12 +71,26 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 		Pokemon.loadFromFile();
 		Image image = new Image(new TextureRegion(new Texture("gfx/pokeFrame2.png")));
 		buttons = new PokemonButton[6];
-		buttons[0] = new PokemonButton("gfx/pikachu_preview128.png", Pokemon.pikachu);
-		buttons[1] = new PokemonButton("gfx/rayquaza_preview128.png", Pokemon.rayquaza);
-		buttons[2] = new PokemonButton("gfx/kyogre_preview128.png", Pokemon.kyogre);
-		buttons[3] = new PokemonButton("gfx/squirtle_preview128.png", Pokemon.squirtle);
-		buttons[4] = new PokemonButton("gfx/charmander_preview128.png", Pokemon.charmander);
-		buttons[5] = new PokemonButton("gfx/bulbasaur_preview128.png", Pokemon.bulbasaur);
+		
+		info.gc.addMyListener(info.lobbyMask.listener);
+		info.lobbyMask.getInfo().userTracker.addListener(info.lobbyMask.userTrackerListener);
+		
+		List<Pokemon> taken = new ArrayList<Pokemon>();
+		for(int i = 0; i < buttons.length; i++) {
+			
+			Pokemon random;
+			do {
+				int ri = MyRandom.random.nextInt(Pokemon.pokemon.length);
+				if(i == 0) ri =5;
+				random = Pokemon.pokemon[ri];
+			}
+			while(taken.contains(random));
+			
+			taken.add(random);
+			
+			buttons[i] = new PokemonButton(random);
+		}
+		
 		//39 : 36
 		int startX = 500, x = 0;
 		int y = 300;
@@ -72,10 +109,13 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 		image.setTouchable(Touchable.disabled);
 		getStage().addActor(image);	
 		getStage().addActor(infoTable);
+		getStage().addActor(select);
 	}
 
 	@Override
 	public void leave() {
+		info.gc.removeMyListener(info.lobbyMask.listener);
+		info.lobbyMask.getInfo().userTracker.removeListener(info.lobbyMask.userTrackerListener);
 	}
 
 	private class PokemonButton extends Button{
@@ -85,8 +125,11 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 		String type;
 		String lore;
 		
-		public PokemonButton(String path, Pokemon p) {
-			super(new TextureRegionDrawable(new TextureRegion(new Texture(path))));
+		Pokemon poke;
+		
+		public PokemonButton(Pokemon p) {
+			super(new TextureRegionDrawable(new TextureRegion(new Texture(p.getPreviewPicturePath()))));
+			this.poke = p;
 			//getImage().setFillParent(true);
 			pokeName = p.name;
 			type = p.type1.name();
@@ -94,7 +137,6 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 				type += "/" + p.type2.name();
 			
 			lore = p.ID + "";
-			debug();
 			final PokemonButton ref = this;
 			addListener(new ChangeListener() {
 				
@@ -159,5 +201,8 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 						}
 					})));
 		}
+	}
+	public Pokemon getSelectedPokemon() {
+		return selected.poke;
 	}
 }

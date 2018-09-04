@@ -2,13 +2,24 @@ package net.simondaniel.pokes;
 
 public enum PokemonType {
 
-	grass("grass"),
-	electric("electric"),
-	psychic("psychic"),
-	water("water"),
+	normal("normal"),
 	fire("fire"),
-	fly("flying"),
-	dragon("dragon");
+	fighting("fighting"),
+	water("water"),
+	flying("flying"),
+	grass("grass"),
+	poison("poison"),
+	electric("electric"),
+	ground("ground"),
+	psychic("psychic"),
+	rock("rock"),
+	ice("ice"),
+	bug("bug"),
+	dragon("dragon"),
+	ghost("ghost"),
+	dark("dark"),
+	steel("steel");
+	
 	
 	public final String name;
 	

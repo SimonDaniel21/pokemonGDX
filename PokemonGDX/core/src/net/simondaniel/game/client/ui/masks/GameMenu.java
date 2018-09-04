@@ -112,6 +112,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		info.mode = mode;
 		info.others = others;
 		info.userTracker = userTracker;
+		info.joinLobby = true;
 		switchTo(lobbyMask);
 		for(String s : sa) {
 			lobbyMask.inviteList.setAccepted(s);

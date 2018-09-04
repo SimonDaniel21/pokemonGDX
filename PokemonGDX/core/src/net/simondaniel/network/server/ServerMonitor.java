@@ -13,5 +13,7 @@ public interface ServerMonitor {
 	void messageReceived(String sender, String message);
 
 	void addedLobby(String s);
+
+	void removedLobby(String nAME);
 	
 }

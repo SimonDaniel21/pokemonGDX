@@ -272,7 +272,7 @@ public class EditorFrame extends JFrame {
 		contentPane.add(button_2);
 		
 		
-		load(new File("/home/simon/git/pokemonGDX/PokemonGDX/core/assets/Pokemons.xml"));
+		load(new File("/Users/simon/git/pokemonGDX2/PokemonGDX/core/assets/Pokemons.xml"));
 	}
 	
 	private void save() {
@@ -310,7 +310,7 @@ public class EditorFrame extends JFrame {
 		s = makePretty(s);
 		String header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 		String xml = header + "\n" + s;
-		FileHandle fh = new FileHandle(new File("/home/simon/git/pokemonGDX/PokemonGDX/core/assets/Pokemons.xml"));
+		FileHandle fh = new FileHandle(new File("/Users/simon/git/pokemonGDX2/PokemonGDX/core/assets/Pokemons.xml"));
 		fh.writeString(xml, false);
 		System.out.println(s);
 		

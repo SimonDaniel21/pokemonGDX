@@ -31,6 +31,7 @@ import net.simondaniel.network.server.Response.LobbyUserJoinedS;
 import net.simondaniel.network.server.Response.StartGameS;
 import net.simondaniel.network.server.Response.TeamJoinedS;
 import net.simondaniel.network.server.Response.UserReadyS;
+import net.simondaniel.pokes.Pokemon;
 import net.simondaniel.screens.IngameScreen;
 
 public class LobbyMask extends UImask<LobbyMaskInfo>{
@@ -113,22 +114,27 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		
 		readyButton = new TextButton("", s);
 		
+		final LobbyMask ref = this;
+		
 		readyButton.addListener(new ChangeListener() {
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				if(!isActive()) return;
+				for(String s : undecided.getItems()) {
+					if(s.equals(info.gc.userName())){
+						beep();
+						return;
+					}
+				}
 				
 				PokemonChooseMaskInfo info = new PokemonChooseMaskInfo();
+				info.lobbyMask = ref;
+				info.gc = ref.info.gc;
 				PokemonChooseMask m = new PokemonChooseMask(info, getSkin());
 				switchTo(m);
 				
-//				if(!isActive()) return;
-//				for(String s : undecided.getItems()) {
-//					if(s.equals(info.gc.userName())){
-//						beep();
-//						return;
-//					}
-//				}
+			
 //				UserReadyC p = new UserReadyC();
 //				p.ready = !ready;
 //				info.gc.send(p);
@@ -141,6 +147,10 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		add().colspan(2);
 		timer = new Label("", s);
 		add(timer);
+	}
+	
+	public void setPokemon(Pokemon p) {
+		//timer.setText(p.name);
 	}
 	
 	private void updateReadyButton() {
@@ -369,6 +379,20 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	@Override
 	public void enter() {
 		
+		if(!info.joinLobby) {
+//			for(String s : undecided.getItems()) {
+//				if(s.equals(info.gc.userName())){
+//					beep();
+//					return;
+//				}
+//			}
+			UserReadyC p = new UserReadyC();
+			p.ready = true;
+			info.gc.send(p);
+			deactivateUntilResponse();
+			return;
+		}
+		
 		timerStarted = false;
 		
 		title.setText(info.lobbyName + " (" +  info.mode + ")");
@@ -391,7 +415,6 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		addPlayersToTeam(tw1, info.others[1]);
 		addPlayersToTeam(tw2, info.others[2]);
 		
-		ready();
 	}
 
 	@Override
@@ -449,6 +472,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 				LobbyStartTimerS p = (LobbyStartTimerS) o;
 				targetTime = p.start;
 				timerStarted = true;
+				System.err.println("START TIMER");
 			}
 			if(o instanceof StartGameS) {
 				StartGameS p = (StartGameS) o;

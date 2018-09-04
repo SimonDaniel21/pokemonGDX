@@ -1,10 +1,13 @@
 package net.simondaniel.pokes;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class Pokemon {
+	
+	public static Pokemon[] pokemon;
 	
 	public static Pokemon 
 			squirtle,
@@ -19,13 +22,20 @@ public class Pokemon {
 	public static void loadFromFile() {
 		XmlReader r = new XmlReader();
 		Element root = r.parse(Gdx.files.internal("Pokemons.xml"));
-		for(int i = 0; i < root.getChildCount(); i++) {
+		
+		pokemon = new Pokemon[root.getChildCount()];
+		
+		for(int i = 0; i < pokemon.length; i++) {
 			Element e = root.getChild(i);
 			String fieldName = e.getName();
 			
 			try {
 				Pokemon p = new Pokemon(e);
 				Pokemon.class.getField(fieldName).set(null, p);
+				pokemon[i] = p;
+				if(!p.isComplete())
+					System.err.println("---------------------------------------------");
+			
 			} catch (IllegalArgumentException ex) {
 				ex.printStackTrace();
 			} catch (IllegalAccessException ex) {
@@ -37,6 +47,7 @@ public class Pokemon {
 			}
 		}
 	}
+	
 	
 	public final int ID; // PokedexNumber
 	public final String name;
@@ -59,5 +70,45 @@ public class Pokemon {
 		this.name = name;
 		type1 = t1;
 		type2 = t2;
+	}
+	
+	public String getPreviewPicturePath() {
+		return "gfx/pokemon/" + name + "/" + name + "_preview128.png";
+	}
+	
+	public String getAtlasPath() {
+		return "gfx/pokemon/" + name + "/" + name +  ".atlas";
+	}
+	
+	/**
+	 * checks if all neccessary values are set and all assets are loaded for a specific Pokemon(mainly debug purpose)
+	 * @return
+	 */
+	public boolean isComplete() {
+		boolean complete = true;
+		if(ID <= 0 || ID > 1000) {
+			complete = false;
+		}
+		
+		if(name == null || name.equals("")) complete = false;
+		
+		if(type1 == null) complete = false;
+		
+		FileHandle fh = Gdx.files.internal(getPreviewPicturePath());
+		
+		if(!fh.exists()) {
+			System.err.println("Pokemon (" + name + ") is missing a preview Picture");
+			complete = false;
+		}
+		
+		fh = Gdx.files.internal(getAtlasPath());
+		
+		if(!fh.exists()) {
+			System.err.println("Pokemon (" + name + ") is missing a Atlas");
+			complete = false;
+		}
+		
+		
+		return complete;
 	}
 }

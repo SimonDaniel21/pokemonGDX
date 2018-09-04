@@ -12,6 +12,7 @@ public class LobbyMaskInfo extends ShowMaskInfo{
 	public String[][] others;
 	public GameMode mode;
 	public GameClient gc;
+	public boolean joinLobby;
 	
 	public UserTracker userTracker;
 	

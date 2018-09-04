@@ -22,7 +22,7 @@ import net.simondaniel.network.server.UserConnection;
 
 public class Lobby implements MyServerlistener{
 
-	public static final int STARTING_TIME = 2, EXTRA_TIME = 1;
+	public static final int STARTING_TIME = 10, EXTRA_TIME = 1;
 	
 	public final String NAME;
 
@@ -277,6 +277,14 @@ public class Lobby implements MyServerlistener{
 		}
 		
 		return count >= maxCount;
+	}
+	
+	public boolean isEmpty() {
+		for(UserConnection u : userSlots) {
+			if(u != null)
+				return false;
+		}
+		return users.isEmpty();
 	}
 	
 	public boolean contains(UserConnection c) {

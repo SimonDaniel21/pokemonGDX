@@ -37,8 +37,8 @@ public class Assets {
 	}
 	
 	public static enum Atlas{
-		PIKACHU("gfx/atlases/pika/pika_atlas2.atlas"),
-		SQUIRTLE("gfx/atlases/squirtle/squirtle.atlas");
+		PIKACHU("gfx/pokemon/pikachu/pika_atlas2.atlas"),
+		SQUIRTLE("gfx/pokemon/squirtle/squirtle.atlas");
 		
 		public final String path;
 		public final AssetDescriptor<TextureAtlas> assetDescriptor;

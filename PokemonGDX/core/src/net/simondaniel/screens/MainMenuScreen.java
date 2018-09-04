@@ -47,21 +47,18 @@ public class MainMenuScreen implements Screen{
 		serverSelection.show(stage);
 		
 		if(autoLogin) {
-			PokemonChooseMaskInfo info = new PokemonChooseMaskInfo();
-			PokemonChooseMask mask = new PokemonChooseMask(info, skin);
-			serverSelection.switchTo(mask);
-//			GameMenu m = new GameMenu(skin);
-//			
-//			GameClient gc = new GameClient("localhost", "AutoConnectServer");
-//			gc.sendConnectRequest();
-//			if(gc.waitForConnection()) {
-//				gc.sendLoginRequest("user " + MyRandom.random.nextInt(1000), "development");
-//				if(gc.waitForLogin()) {
-//					PokemonGDX.game.client = gc;
-//					m.getInfo().client = gc;
-//					serverSelection.switchTo(m);
-//				}
-//			}
+			GameMenu m = new GameMenu(skin);
+			
+			GameClient gc = new GameClient("localhost", "AutoConnectServer");
+			gc.sendConnectRequest();
+			if(gc.waitForConnection()) {
+				gc.sendLoginRequest("user " + MyRandom.random.nextInt(1000), "development");
+				if(gc.waitForLogin()) {
+					PokemonGDX.game.client = gc;
+					m.getInfo().client = gc;
+					serverSelection.switchTo(m);
+				}
+			}
 		}
 		
 	
