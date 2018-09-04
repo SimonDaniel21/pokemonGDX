@@ -1,8 +1,6 @@
 package net.simondaniel.game.client.ui.masks;
 
 
-import java.util.Arrays;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -32,7 +30,6 @@ import net.simondaniel.network.server.Response.LobbyStartTimerS;
 import net.simondaniel.network.server.Response.LobbyUserJoinedS;
 import net.simondaniel.network.server.Response.StartGameS;
 import net.simondaniel.network.server.Response.TeamJoinedS;
-import net.simondaniel.network.server.Response.UserLeftS;
 import net.simondaniel.network.server.Response.UserReadyS;
 import net.simondaniel.screens.IngameScreen;
 
@@ -120,17 +117,22 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if(!isActive()) return;
-				for(String s : undecided.getItems()) {
-					if(s.equals(info.gc.userName())){
-						beep();
-						return;
-					}
-				}
-				UserReadyC p = new UserReadyC();
-				p.ready = !ready;
-				info.gc.send(p);
-				deactivateUntilResponse();
+				
+				PokemonChooseMaskInfo info = new PokemonChooseMaskInfo();
+				PokemonChooseMask m = new PokemonChooseMask(info, getSkin());
+				switchTo(m);
+				
+//				if(!isActive()) return;
+//				for(String s : undecided.getItems()) {
+//					if(s.equals(info.gc.userName())){
+//						beep();
+//						return;
+//					}
+//				}
+//				UserReadyC p = new UserReadyC();
+//				p.ready = !ready;
+//				info.gc.send(p);
+//				deactivateUntilResponse();
 			}
 			
 		});

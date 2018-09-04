@@ -13,6 +13,8 @@ import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.Test;
 import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.game.client.ui.masks.GameMenu;
+import net.simondaniel.game.client.ui.masks.PokemonChooseMask;
+import net.simondaniel.game.client.ui.masks.PokemonChooseMaskInfo;
 import net.simondaniel.game.client.ui.masks.ServerSelection;
 import net.simondaniel.network.client.GameClient;
 
@@ -45,18 +47,21 @@ public class MainMenuScreen implements Screen{
 		serverSelection.show(stage);
 		
 		if(autoLogin) {
-			GameMenu m = new GameMenu(skin);
-			
-			GameClient gc = new GameClient("localhost", "AutoConnectServer");
-			gc.sendConnectRequest();
-			if(gc.waitForConnection()) {
-				gc.sendLoginRequest("user " + MyRandom.random.nextInt(1000), "development");
-				if(gc.waitForLogin()) {
-					PokemonGDX.game.client = gc;
-					m.getInfo().client = gc;
-					serverSelection.switchTo(m);
-				}
-			}
+			PokemonChooseMaskInfo info = new PokemonChooseMaskInfo();
+			PokemonChooseMask mask = new PokemonChooseMask(info, skin);
+			serverSelection.switchTo(mask);
+//			GameMenu m = new GameMenu(skin);
+//			
+//			GameClient gc = new GameClient("localhost", "AutoConnectServer");
+//			gc.sendConnectRequest();
+//			if(gc.waitForConnection()) {
+//				gc.sendLoginRequest("user " + MyRandom.random.nextInt(1000), "development");
+//				if(gc.waitForLogin()) {
+//					PokemonGDX.game.client = gc;
+//					m.getInfo().client = gc;
+//					serverSelection.switchTo(m);
+//				}
+//			}
 		}
 		
 	

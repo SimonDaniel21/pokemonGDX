@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Pokemon>
+	<bulbasaur>
+		<name>bulbasaur</name>
+		<id>1</id>
+		<firstType>grass</firstType>
+	</bulbasaur>
+	<squirtle>
+		<name>squirtle</name>
+		<id>7</id>
+		<firstType>water</firstType>
+	</squirtle>
+	<kyogre>
+		<name>kyogre</name>
+		<id>382</id>
+		<firstType>water</firstType>
+	</kyogre>
+	<rayquaza>
+		<name>rayquaza</name>
+		<id>384</id>
+		<firstType>dragon</firstType>
+		<secondType>flying</secondType>
+	</rayquaza>
+	<charmander>
+		<name>charmander</name>
+		<id>4</id>
+		<firstType>fire</firstType>
+	</charmander>
+	<pikachu>
+		<name>pikachu</name>
+		<id>25</id>
+		<firstType>electric</firstType>
+	</pikachu>
+	<mewto>
+		<name>mewto</name>
+		<id>219</id>
+		<firstType>psychic</firstType>
+	</mewto>
+	<pidgey>
+		<name>pidgey</name>
+		<id>15</id>
+		<firstType>dragon</firstType>
+	</pidgey>
+</Pokemon>
