@@ -16,6 +16,7 @@ import net.simondaniel.network.client.Request.InviteAnswerC;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
 import net.simondaniel.network.client.Request.LobbyCreateC;
 import net.simondaniel.network.client.Request.LobbyJoinC;
+import net.simondaniel.network.client.Request.LobbyLeaveC;
 import net.simondaniel.network.client.Request.LobbyListC;
 import net.simondaniel.network.client.Request.LoginC;
 import net.simondaniel.network.client.Request.MessageC;
@@ -158,6 +159,14 @@ public class GameServerManager extends Listener{
 			Lobby l = getLobby(p.lobbyName);
 			if(l != null) {
 				l.addUser(c);
+			}
+		}
+		else if(o instanceof LobbyLeaveC) {
+			LobbyLeaveC p = (LobbyLeaveC) o;
+			Lobby l = c.user.lobby;
+			
+			if(l != null) {
+				l.removeUser(c);
 			}
 		}
 		else if(o instanceof InviteUserToLobbyC) {

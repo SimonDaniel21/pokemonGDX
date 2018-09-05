@@ -22,12 +22,14 @@ import net.simondaniel.network.UserTracker.UserTrackerListener;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.MyListener;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
+import net.simondaniel.network.client.Request.LobbyLeaveC;
 import net.simondaniel.network.client.Request.TeamJoinC;
 import net.simondaniel.network.client.Request.UserReadyC;
 import net.simondaniel.network.server.Response.InviteAnswerS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyStartTimerS;
 import net.simondaniel.network.server.Response.LobbyUserJoinedS;
+import net.simondaniel.network.server.Response.LobbyUserLeftS;
 import net.simondaniel.network.server.Response.StartGameS;
 import net.simondaniel.network.server.Response.TeamJoinedS;
 import net.simondaniel.network.server.Response.UserReadyS;
@@ -133,12 +135,6 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 				info.gc = ref.info.gc;
 				PokemonChooseMask m = new PokemonChooseMask(info, getSkin());
 				switchTo(m);
-				
-			
-//				UserReadyC p = new UserReadyC();
-//				p.ready = !ready;
-//				info.gc.send(p);
-//				deactivateUntilResponse();
 			}
 			
 		});
@@ -146,7 +142,19 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		add(readyButton).width(210).row();
 		add().colspan(2);
 		timer = new Label("", s);
-		add(timer);
+		add(timer).row();
+		TextButton leave = new TextButton("leave", s);
+		leave.addListener(new ChangeListener(){
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if(!isActive())return;
+				LobbyLeaveC p = new LobbyLeaveC();
+				info.gc.send(p);
+				deactivateUntilResponse();
+			}
+		});
+		add(leave);
+		
 	}
 	
 	public void setPokemon(Pokemon p) {
@@ -189,7 +197,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	}
 	
 	/**
-	 * adds player Strings to the Lobby if they arent null
+	 * removes player Strings from the Lobby if they arent null
 	 * @param playersNames name of player, may be null
 	 */
 	public void removePlayerFromLobby(String name) {
@@ -379,6 +387,11 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	@Override
 	public void enter() {
 		
+		final GameClient gc = info.gc;
+		
+		gc.addMyListener(listener);
+		info.userTracker.addListener(userTrackerListener);
+		
 		if(!info.joinLobby) {
 //			for(String s : undecided.getItems()) {
 //				if(s.equals(info.gc.userName())){
@@ -386,6 +399,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 //					return;
 //				}
 //			}
+			
 			UserReadyC p = new UserReadyC();
 			p.ready = true;
 			info.gc.send(p);
@@ -397,14 +411,9 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		
 		title.setText(info.lobbyName + " (" +  info.mode + ")");
 		
-		final GameClient gc = info.gc;
-		
-		gc.addMyListener(listener);
-		
 		tw1.set("Team 1", info.mode.maxPlayersInTeam(0), 1,gc);
 		tw2.set("Team 2",info. mode.maxPlayersInTeam(1), 2, gc);
 	
-		info.userTracker.addListener(userTrackerListener);
 		for(String s : info.userTracker.getUsers()) {
 			if(!s.equals(info.gc.userName()))
 				inviteList.addName(s);
@@ -432,6 +441,16 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 				//System.out.println("RECEIVED LOBBYJOIN " + info.gc.userName());
 				LobbyUserJoinedS p = (LobbyUserJoinedS) o;
 				addPlayerToLobby(p.name);
+			}
+			else if(o instanceof LobbyUserLeftS) {
+				LobbyUserLeftS p = (LobbyUserLeftS) o;
+				if(p.name.equals(info.gc.userName())) {
+					reActivateUI();
+					goBack();
+				}
+				else {
+					removePlayerFromLobby(p.name);
+				}
 			}
 			
 			if(o instanceof TeamJoinedS) {

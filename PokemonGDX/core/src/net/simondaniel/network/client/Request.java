@@ -35,6 +35,9 @@ public class Request {
 		public String lobbyName;
 	}
 	
+	public static class LobbyLeaveC{
+	}
+	
 	public static class TeamJoinC{
 		public int teamID; // if zero undecided
 	}

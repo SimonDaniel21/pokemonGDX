@@ -17,6 +17,7 @@ import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyJoinS;
 import net.simondaniel.network.server.Response.LobbyStartTimerS;
 import net.simondaniel.network.server.Response.LobbyUserJoinedS;
+import net.simondaniel.network.server.Response.LobbyUserLeftS;
 import net.simondaniel.network.server.Response.UserReadyS;
 import net.simondaniel.network.server.UserConnection;
 
@@ -178,9 +179,10 @@ public class Lobby implements MyServerlistener{
 			removed = users.remove(c);
 		
 		if(removed) {
-//			LobbyUserLeftS p = new LobbyUserLeftS();
-//			p.name = c.user.name;
-//			sendToAllTCP(p);
+			LobbyUserLeftS p = new LobbyUserLeftS();
+			p.name = c.user.name;
+			sendToAllTCP(p);
+			c.sendTCP(p);
 		}
 	}
 

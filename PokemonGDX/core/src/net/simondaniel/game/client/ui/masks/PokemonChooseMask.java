@@ -144,6 +144,10 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 				public void changed(ChangeEvent event, Actor actor) {
 					if(isInAnimation) beep();
 				
+					nameLBL.setText("");
+					typeLBL.setText("");
+					loreLBL.setText("");
+					
 					if(selected == ref) {
 						moveBack();
 						selected = null;

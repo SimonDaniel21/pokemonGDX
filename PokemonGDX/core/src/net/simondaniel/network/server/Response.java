@@ -23,6 +23,10 @@ public class Response {
 		public String name;
 	}
 	
+	public static class LobbyUserLeftS{
+		public String name;
+	}
+	
 	public static class TeamJoinedS{
 		public String name;
 		public int id, slotID;
