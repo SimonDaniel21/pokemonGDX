@@ -17,7 +17,7 @@ allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
 
-    version = '1.0'
+    version = getDate()
     ext {
         appName = "PokemonGDX"
         gdxVersion = '1.9.8'
@@ -58,9 +58,17 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.ashley:ashley:1.7.0"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+
+	compile fileTree(dir: 'lib', include: '*.jar')
     }
 }
 
 tasks.eclipse.doLast {
     delete ".project"
+}
+
+def getDate(){
+	def date  = new Date()
+	def formattedDate = date.format('yyyMMddHHmmss')
+	return formattedDate
 }
