@@ -15,7 +15,7 @@ import net.simondaniel.screens.MainMenuScreen;
 public class ClientLoggedIn {
 
 
-	public static void main(String[] arg) {
+	public static void start() {
 		
 		
 		Gdx.files = new LwjglFiles();

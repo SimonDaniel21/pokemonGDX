@@ -12,7 +12,7 @@ import net.simondaniel.network.server.GameServer;
 
 public class ServerLauncher {
 
-	public static void main(String[] args) {
+	public static void start() {
 		Gdx.files = new LwjglFiles();
 		GameServer server;
 		try {

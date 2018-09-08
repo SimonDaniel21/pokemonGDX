@@ -19,7 +19,7 @@ import net.simondaniel.screens.MainMenuScreen;
 
 public class ClientLauncher {
 
-	public static void main(String[] arg) {
+	public static void start() {
 		
 		Gdx.files = new LwjglFiles();
 		Config.init();

@@ -133,7 +133,6 @@ public class MainMenu extends JFrame {
 		login(textField_2.getText(), txtSimon.getText(), textField_1.getText());
 	}
 	
-	private ClientFrame cf;
 	private boolean validClient = false;
 	
 	public void login(final String ip, final String name, final String pw){
@@ -144,41 +143,19 @@ public class MainMenu extends JFrame {
 			@Override
 			public void run() {
 				GameClient client = new GameClient(ip, "server");
-				ClientFrame cFrame = new ClientFrame(client);
-				m.cf = cFrame;
-				client.bindMonitor(cFrame);
+			
 				client.errorMsg = "server timed out after 2000ms";
 				if(client.waitForLogin()) {
-					cFrame.LoggedInServer();
-					cFrame.show();
+					
 					frame.dispose();
 					validClient = true;
 				}
 				else {
-					cFrame.dispose();
 					JOptionPane.showMessageDialog(frame, client.errorMsg);
 				}
 			}
 		});
 		t.start();
-	}
-	
-	public ClientFrame getClientWhenReady(int timeout) {
-		long start = System.currentTimeMillis();
-		long duration = 0;
-		
-		while(!validClient) {
-			try {
-				duration = System.currentTimeMillis() - start;
-				if(duration >= timeout) {
-					return null;
-				}
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		return cf;
 	}
 	
 	public void startServer(){
@@ -188,7 +165,7 @@ public class MainMenu extends JFrame {
 			server.bindMonitor(new ServerFrame(server));
 			server.openConsole();
 			server.start();
-			DesktopLauncher.launchServer(server);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
