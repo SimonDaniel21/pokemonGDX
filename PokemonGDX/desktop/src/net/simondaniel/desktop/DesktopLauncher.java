@@ -49,6 +49,7 @@ public class DesktopLauncher {
 			ClientLauncher.start();
 			break;
 		case DEBUG_SERVER:
+			ServerLauncher.start();
 			break;
 		default:
 			break;

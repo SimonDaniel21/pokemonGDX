@@ -2,6 +2,8 @@ package net.simondaniel.game.client;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
+import net.simondaniel.Assets;
 import net.simondaniel.entities.Entity;
 import net.simondaniel.entities.OnlinePlayer;
 import net.simondaniel.game.client.gfx.AnimationLayout;
@@ -27,7 +29,7 @@ public class OneVsOneGame extends GameInstance{
 		super.initBoth();
 		
 		if(!isServer) {
-			TextureAtlas atlas = new TextureAtlas("gfx/atlases/squirtle/squirtle.atlas");
+			TextureAtlas atlas = Assets.manager.get("squirtle.atlas");
 			PokemonAnimation anim = new PokemonAnimation(AnimationLayout.PokemonAnimationLayout.squirtle.LAYOUT, atlas);
 			DrawComponent dc = new DrawComponent();
 			dc.drawable = anim;

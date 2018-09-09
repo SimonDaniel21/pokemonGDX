@@ -4,7 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
+import net.simondaniel.pokes.Pokemon;
 
 public class Assets {
 
@@ -18,6 +21,7 @@ public class Assets {
 		for(Texture a : Texture.values()) {
 			manager.load(a.path, com.badlogic.gdx.graphics.Texture.class);
 		}
+		loadPokemonAtlases();
 		manager.finishLoading();
 	}
 	public static void dispose() {
@@ -36,6 +40,16 @@ public class Assets {
 		}
 	}
 	
+	private static void loadPokemonAtlases() {
+		for(Pokemon p : Pokemon.pokemon) {
+			FileHandle fh = Gdx.files.internal(p.getAtlasPath());
+			if(!fh.exists()) continue;
+			
+			AssetDescriptor<TextureAtlas> ad = new AssetDescriptor<TextureAtlas>(fh, TextureAtlas.class);
+			manager.load(ad);
+		}
+	}
+		
 	public static enum Atlas{
 		PIKACHU("gfx/pokemon/pikachu/pika_atlas2.atlas"),
 		SQUIRTLE("gfx/pokemon/squirtle/squirtle.atlas");
