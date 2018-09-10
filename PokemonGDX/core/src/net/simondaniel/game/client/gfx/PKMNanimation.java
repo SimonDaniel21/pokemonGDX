@@ -9,7 +9,7 @@ import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
 public class PKMNanimation extends AnimatedSprite{
 
 	public PKMNanimation(TextureAtlas textureAtlas) {
-		super(textureAtlas, getNamesPlusDirection(PokemonAnimationLayout.squirtle.LAYOUT.animationNames));
+		super(textureAtlas, getNamesPlusDirection(PokemonAnimationLayout.rayquaza.LAYOUT.animationNames));
 	}
 	
 	static String[] getNamesPlusDirection(String[] sa) {

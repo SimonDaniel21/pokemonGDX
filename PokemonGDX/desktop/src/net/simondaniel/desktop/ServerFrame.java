@@ -32,6 +32,9 @@ public class ServerFrame extends JFrame implements ServerMonitor{
 	
 	int lobbysActive = 0;
 	
+	int packetsReceived = 0;
+	long startTime;
+	
 	/**
 	 * Create the frame.
 	 */
@@ -117,6 +120,8 @@ public class ServerFrame extends JFrame implements ServerMonitor{
 		JLabel lblNewLabel_1 = new JLabel("Lobbys:");
 		lblNewLabel_1.setBounds(258, 31, 110, 14);
 		contentPane.add(lblNewLabel_1);
+		
+		startTime = System.currentTimeMillis();
 	}
 
 	@Override
@@ -156,6 +161,22 @@ public class ServerFrame extends JFrame implements ServerMonitor{
 				lobbyList.remove(s);
 		
 		lblGames.setText(lobbysActive+ "");
+	}
+
+	@Override
+	public void packetReceived() {
+		packetsReceived++;
+		long timeDelta = System.currentTimeMillis() - startTime;
+		float seconds = timeDelta / 1000.0f;
+		float packetsPerSecond = packetsReceived / seconds;
+		packetsPerSecond =  (float) (Math.round(packetsPerSecond* 100.0) / 100.0);
+		setTitle("Server Contro (in: " + packetsReceived + ", " + packetsPerSecond + "/s)");
+	}
+
+	@Override
+	public void packetSend() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.esotericsoftware.kryonet.Connection;
 
+import net.simondaniel.Assets;
 import net.simondaniel.entities.Entity;
 import net.simondaniel.entities.EntityInformation;
 import net.simondaniel.entities.OnlinePlayer;
@@ -48,6 +49,7 @@ import net.simondaniel.network.server.MyServerlistener;
 import net.simondaniel.network.server.UserConnection;
 import net.simondaniel.network.server.Response.AddEntityS;
 import net.simondaniel.network.server.Response.MoveToS;
+import net.simondaniel.pokes.Pokemon;
 
 public class GameInstance implements MyListener, MyServerlistener{
 
@@ -141,7 +143,7 @@ public class GameInstance implements MyListener, MyServerlistener{
 		LogicMap lm = TiledMapLogicLoader.loadCollisionDataFromXML("maps/arena.tmx");
 		makeGeometry(lm);
 		if(!isServer) {
-			anim = new PKMNanimation(new TextureAtlas("gfx/atlases/squirtle/squirtle.atlas"));
+			anim = new PKMNanimation(Assets.getPokeAtlas(Pokemon.rayquaza));
 			anim.scale(1.5f);
 			anim.runAnimation(4);
 			TiledMap map = new TmxMapLoader().load("maps/arena.tmx");
@@ -351,7 +353,8 @@ public class GameInstance implements MyListener, MyServerlistener{
 		if (o instanceof MoveToS) {
 			MoveToS p = (MoveToS) o;
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			entities.get(p.id).moveTo(p.x, p.y);
+			
+			player.moveTo(p.x, p.y);
 			//System.out.println("processed moved message on client @" + timestamp);
 		}
 		if(o instanceof AddEntityS) {

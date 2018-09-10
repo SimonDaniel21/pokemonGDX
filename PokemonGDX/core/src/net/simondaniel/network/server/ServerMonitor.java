@@ -16,4 +16,7 @@ public interface ServerMonitor {
 
 	void removedLobby(String nAME);
 	
+	void packetReceived();
+	void packetSend();
+	
 }

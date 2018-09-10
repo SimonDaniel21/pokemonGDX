@@ -1,5 +1,9 @@
 package net.simondaniel.network.server;
 
+import java.awt.image.BufferedImage;
+
+import com.badlogic.gdx.graphics.Pixmap;
+
 import net.simondaniel.entities.EntityInformation;
 
 /**
@@ -120,5 +124,11 @@ public class Response {
 	}
 	public static class LobbyStopTimerS{
 		public long start;
+	}
+	
+	public static class FileTransferS{
+		public byte[] data;
+		public int index;
+		public String fileName;
 	}
 }

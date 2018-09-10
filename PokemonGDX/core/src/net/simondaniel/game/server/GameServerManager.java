@@ -2,44 +2,19 @@ package net.simondaniel.game.server;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
-
 import net.simondaniel.fabio.GameMode;
-import net.simondaniel.network.UserTracker.UserTrackerListener;
-import net.simondaniel.network.client.Request.AccountActivationC;
-import net.simondaniel.network.client.Request.InviteAnswerC;
-import net.simondaniel.network.client.Request.InviteUserToLobbyC;
-import net.simondaniel.network.client.Request.LobbyCreateC;
-import net.simondaniel.network.client.Request.LobbyJoinC;
-import net.simondaniel.network.client.Request.LobbyLeaveC;
-import net.simondaniel.network.client.Request.LobbyListC;
-import net.simondaniel.network.client.Request.LoginC;
-import net.simondaniel.network.client.Request.MessageC;
-import net.simondaniel.network.client.Request.MoveToC;
-import net.simondaniel.network.client.Request.RegisterUserC;
-import net.simondaniel.network.client.Request.TeamJoinC;
-import net.simondaniel.network.client.Request.UserListC;
-import net.simondaniel.network.client.Request.UserReadyC;
+import net.simondaniel.network.FileTransfer;
+import net.simondaniel.network.client.Request.*;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.UserConnection;
-import net.simondaniel.network.server.Response.InviteAnswerS;
-import net.simondaniel.network.server.Response.InviteUserToLobbyS;
-import net.simondaniel.network.server.Response.LobbyJoinS;
-import net.simondaniel.network.server.Response.LobbyListS;
-import net.simondaniel.network.server.Response.LobbyUserJoinedS;
-import net.simondaniel.network.server.Response.LoginS;
-import net.simondaniel.network.server.Response.MessageS;
-import net.simondaniel.network.server.Response.MoveToS;
-import net.simondaniel.network.server.Response.PlayerListS;
-import net.simondaniel.network.server.Response.TeamJoinedS;
-import net.simondaniel.network.server.Response.UserJoinedS;
-import net.simondaniel.network.server.User;
-
+import net.simondaniel.network.server.Response.*;
 public class GameServerManager extends Listener{
 	
 	static int c = 0;
@@ -60,6 +35,8 @@ public class GameServerManager extends Listener{
 	public void received(Connection con, Object o) {
 		
 		UserConnection c = (UserConnection) con;
+		
+		gs.window.packetReceived();
 
 		if(o instanceof LoginC) {
 			
@@ -67,6 +44,8 @@ public class GameServerManager extends Listener{
 			LoginS r = new LoginS();
 			r.response = gs.login(c, p.name, p.pw);
 			c.sendTCP(r);
+			
+			//FileTransfer.sendFile(c, Gdx.files.internal("gfx/tim_hero.png"), "gfx/userPics/testTransfer.png");
 		}
 		else if(o instanceof RegisterUserC) {
 			RegisterUserC p = (RegisterUserC) o;
@@ -128,31 +107,7 @@ public class GameServerManager extends Listener{
 		}
 		else if(o instanceof LobbyCreateC){
 			LobbyCreateC p = (LobbyCreateC) o;
-			String name = p.name;
-			boolean exists = false;
-			for(Lobby l : lobbys) {
-				if(l.NAME.equalsIgnoreCase(name)){
-					MessageS m = new MessageS();
-					m.sender = "server";
-					m.message = "lobby name already exists";
-					m.type = 1;
-					c.sendTCP(m);
-					exists = true;
-					break;
-				}
-			}
-			if(!exists) {
-				Lobby l = new Lobby(name, GameMode.valueOf(p.gameMode), gs);
-				lobbys.add(l);
-				l.addUser(c);
-				
-				gs.window.addedLobby(name);
-				LobbyListS lls = new LobbyListS();
-				lls.lobbys = new String[lobbys.size()];
-				for(int i = 0; i < lobbys.size(); i++)
-					lls.lobbys[i] = lobbys.get(i).NAME;
-				gs.sendAllOutsideLobbyTCP(lls);
-			}
+		
 		}
 		else if(o instanceof LobbyJoinC) {
 			LobbyJoinC p = (LobbyJoinC) o;
@@ -197,6 +152,33 @@ public class GameServerManager extends Listener{
 			if(l != null) {
 				l.ready(c, p.ready);
 			}
+		}
+	}
+	
+	private void addLobby(String name) {
+		boolean exists = false;
+		for(Lobby l : lobbys) {
+			if(l.NAME.equalsIgnoreCase(name)){
+				MessageS m = new MessageS();
+				m.sender = "server";
+				m.message = "lobby name already exists";
+				m.type = 1;
+				c.sendTCP(m);
+				exists = true;
+				break;
+			}
+		}
+		if(!exists) {
+			Lobby l = new Lobby(name, GameMode.valueOf(p.gameMode), gs);
+			lobbys.add(l);
+			l.addUser(c);
+			
+			gs.window.addedLobby(name);
+			LobbyListS lls = new LobbyListS();
+			lls.lobbys = new String[lobbys.size()];
+			for(int i = 0; i < lobbys.size(); i++)
+				lls.lobbys[i] = lobbys.get(i).NAME;
+			gs.sendAllOutsideLobbyTCP(lls);
 		}
 	}
 	

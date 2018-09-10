@@ -1,5 +1,9 @@
 package net.simondaniel.network;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.ComponentColorModel;
+
+import com.badlogic.gdx.graphics.Pixmap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
@@ -21,6 +25,8 @@ public class Network {
 		kryo.register(String[].class);
 		kryo.register(String[][].class);
 		kryo.register(UserJoinedS[].class);
+		kryo.register(byte[].class);
+
 		
 		for(Class<?> c : Request.class.getClasses()) {
 			kryo.register(c);

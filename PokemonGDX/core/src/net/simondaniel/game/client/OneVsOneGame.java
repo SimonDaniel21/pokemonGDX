@@ -29,10 +29,7 @@ public class OneVsOneGame extends GameInstance{
 		super.initBoth();
 		
 		if(!isServer) {
-			TextureAtlas atlas = Assets.manager.get("squirtle.atlas");
-			PokemonAnimation anim = new PokemonAnimation(AnimationLayout.PokemonAnimationLayout.squirtle.LAYOUT, atlas);
-			DrawComponent dc = new DrawComponent();
-			dc.drawable = anim;
+			
 		}
 	
 	}

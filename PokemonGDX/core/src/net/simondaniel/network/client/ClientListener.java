@@ -1,12 +1,20 @@
 package net.simondaniel.network.client;
 
+import java.nio.file.FileSystem;
+import java.util.Arrays;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.Listener;
 
+import net.simondaniel.network.FileTransfer;
 import net.simondaniel.network.client.GameClient.Packet;
 import net.simondaniel.network.client.GameClient.State;
 import net.simondaniel.network.server.Response.EndConnectionS;
+import net.simondaniel.network.server.Response.FileTransferS;
 import net.simondaniel.network.server.Response.LobbyUserJoinedS;
 import net.simondaniel.network.server.Response.LoginS;
 import net.simondaniel.network.server.Response.MessageS;
@@ -37,6 +45,7 @@ public class ClientListener extends Listener{
 			return;
 		}
 		
+		
 		if(o instanceof LoginS){
 			LoginS p = (LoginS) o;
 			System.out.println("client received login answer: " + p.response);
@@ -55,6 +64,10 @@ public class ClientListener extends Listener{
 			MessageS r = (MessageS) o;
 			//client.window.messageReceived(r.sender, r.message);
 			client.packetBuffer.add(new Packet(c, o));
+		}
+		else if(o instanceof FileTransferS) {
+			FileTransferS p = (FileTransferS) o;
+			FileTransfer.receivedFileFrame(p);
 		}
 		else{
 			client.packetBuffer.add(new Packet(c, o));

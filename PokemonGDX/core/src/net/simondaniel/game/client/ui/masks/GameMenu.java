@@ -188,9 +188,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 						@Override
 						public void changed(ChangeEvent event, Actor actor) {
 							String lobbyName = b.getText().toString();
-							LobbyJoinC p = new LobbyJoinC();
-							p.lobbyName = lobbyName;
-							info.client.send(p);
+							info.client.sendLobbyJoinRequest(lobbyName);
 						}
 					});
 					b.setColor(Color.GREEN);

@@ -19,6 +19,7 @@ import net.simondaniel.fabio.GameMode;
 import net.simondaniel.network.Network;
 import net.simondaniel.network.Network_interface;
 import net.simondaniel.network.client.Request.LobbyCreateC;
+import net.simondaniel.network.client.Request.LobbyJoinC;
 import net.simondaniel.network.client.Request.LoginC;
 import net.simondaniel.network.client.Request.MovementC;
 import net.simondaniel.network.client.Request.MovementChandler;
@@ -272,6 +273,12 @@ public class GameClient extends Client implements Network_interface {
 		LobbyCreateC p = new LobbyCreateC();
 		p.name = lobbyName;
 		p.gameMode = mode.ordinal();
+		send(p);
+	}
+	
+	public void sendLobbyJoinRequest(String lobbyName) {
+		LobbyJoinC p = new LobbyJoinC();
+		p.lobbyName = lobbyName;
 		send(p);
 	}
 	

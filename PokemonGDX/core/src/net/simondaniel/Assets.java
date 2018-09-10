@@ -1,5 +1,7 @@
 package net.simondaniel;
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
@@ -12,6 +14,8 @@ import net.simondaniel.pokes.Pokemon;
 public class Assets {
 
 	public static final AssetManager manager = new AssetManager();
+	
+	public static HashMap<Pokemon, AssetDescriptor<TextureAtlas>> PokeAtlases;
 	
 	public static void load() {
 		for(Atlas a : Atlas.values()) {
@@ -41,13 +45,21 @@ public class Assets {
 	}
 	
 	private static void loadPokemonAtlases() {
+		
+		PokeAtlases = new HashMap<Pokemon, AssetDescriptor<TextureAtlas>>();
+		
 		for(Pokemon p : Pokemon.pokemon) {
 			FileHandle fh = Gdx.files.internal(p.getAtlasPath());
 			if(!fh.exists()) continue;
 			
 			AssetDescriptor<TextureAtlas> ad = new AssetDescriptor<TextureAtlas>(fh, TextureAtlas.class);
+			PokeAtlases.put(p, ad);
 			manager.load(ad);
 		}
+	}
+	
+	public static TextureAtlas getPokeAtlas(Pokemon p) {
+		return manager.get(PokeAtlases.get(p));
 	}
 		
 	public static enum Atlas{

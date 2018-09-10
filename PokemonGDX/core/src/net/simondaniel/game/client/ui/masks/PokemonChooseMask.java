@@ -68,7 +68,6 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 
 	@Override
 	public void enter() {
-		Pokemon.loadFromFile();
 		Image image = new Image(new TextureRegion(new Texture("gfx/pokeFrame2.png")));
 		buttons = new PokemonButton[6];
 		
