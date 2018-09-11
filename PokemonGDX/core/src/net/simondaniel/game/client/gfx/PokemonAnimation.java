@@ -8,8 +8,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import net.simondaniel.Assets;
 import net.simondaniel.game.client.gfx.AnimationLayout.AnimationNotSupportedException;
+import net.simondaniel.game.client.gfx.AnimationLayout.PokemonAnimationLayout;
 import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
+import net.simondaniel.pokes.Pokemon;
 
 public class PokemonAnimation{
 
@@ -58,10 +61,15 @@ public class PokemonAnimation{
 		for(String s : layout.animationNames) {
 			
 		}
+		sprite.setSize(width, height);
 		
 		currentAnimation = this.animations[0];
 	}
 	
+	public PokemonAnimation(Pokemon pokemon) {
+		this(PokemonAnimationLayout.squirtle.LAYOUT, Assets.getPokeAtlas(pokemon));
+	}
+
 	public void update(float delta) {
 		if(!halted) {
 			elapsedTime += delta;
@@ -76,7 +84,6 @@ public class PokemonAnimation{
 		//sb.draw(currentAnimation.getKeyFrame(elapsedTime), x - (width/2), y - (height/2) );
 		
 		sprite.setRegion(currentAnimation.getKeyFrame(elapsedTime));
-		sprite.setSize(300, 200);
 		sprite.setOriginCenter();
 		sprite.setOriginBasedPosition(x, y);
 		sprite.draw(sb);
@@ -118,6 +125,10 @@ public class PokemonAnimation{
 		update(0.005f);
 		this.setPosition(x, y);
 		render(sb);
+	}
+
+	public void setScale(float f) {
+		sprite.setScale(f);
 	}
 
 }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 
 import net.simondaniel.Config;
 import net.simondaniel.GameConfig;
+import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.MyRandom;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.network.UpdateDialog;
@@ -33,7 +34,6 @@ public class ClientLauncher {
 		config.width = 1280;
 		config.height = 720;
 		
-		MainMenuScreen menu = new MainMenuScreen();
-		new LwjglApplication(new PokemonGDX(menu), config);
+		new LwjglApplication(new PokemonGDX(LaunchConfiguration.DEBUG_CLIENT), config);
 	}
 }

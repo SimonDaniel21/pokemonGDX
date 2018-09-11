@@ -36,7 +36,6 @@ public class ClientListener extends Listener{
 		client.packetsReceived++;
 		
 		if(o instanceof LobbyUserJoinedS) {
-			System.out.println("RECEIVED LOBBYJOIN but didnt forward");
 		}
 		
 		if(o instanceof Ping){
@@ -58,19 +57,19 @@ public class ClientListener extends Listener{
 		else if(o instanceof EndConnectionS){
 			EndConnectionS p = (EndConnectionS)o;
 			client.disconnect(p.reason);
-			client.packetBuffer.add(new Packet(c, o));
+			client.addPacket(c, o);
 		}
 		else if(o instanceof MessageS){
 			MessageS r = (MessageS) o;
 			//client.window.messageReceived(r.sender, r.message);
-			client.packetBuffer.add(new Packet(c, o));
+			client.addPacket(c, o);
 		}
 		else if(o instanceof FileTransferS) {
 			FileTransferS p = (FileTransferS) o;
 			FileTransfer.receivedFileFrame(p);
 		}
 		else{
-			client.packetBuffer.add(new Packet(c, o));
+			client.addPacket(c, o);
 		}
 	}
 
@@ -79,7 +78,7 @@ public class ClientListener extends Listener{
 		if(client.getState() != State.DISCONNECTED) {
 			EndConnectionS p = new EndConnectionS();
 			p.reason = "connection lost";
-			client.packetBuffer.add(new Packet(connection, p));
+			client.addPacket(connection, p);
 			client.disconnect(p.reason);
 		}
 		

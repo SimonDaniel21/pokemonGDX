@@ -57,7 +57,7 @@ public class GameInstance implements MyListener, MyServerlistener{
 	
 	OnlinePlayer player; // client field;
 	
-	public final float PIXELS_PER_METER = 32;
+	public final static float PIXELS_PER_METER = 32;
 
 	final boolean isServer;
 
@@ -143,20 +143,20 @@ public class GameInstance implements MyListener, MyServerlistener{
 		LogicMap lm = TiledMapLogicLoader.loadCollisionDataFromXML("maps/arena.tmx");
 		makeGeometry(lm);
 		if(!isServer) {
-			anim = new PKMNanimation(Assets.getPokeAtlas(Pokemon.rayquaza));
-			anim.scale(1.5f);
-			anim.runAnimation(4);
+//			anim = new PKMNanimation(Assets.getPokeAtlas(Pokemon.rayquaza));
+//			anim.scale(1.5f);
+//			anim.runAnimation(4);
 			TiledMap map = new TmxMapLoader().load("maps/arena.tmx");
 			renderer = new OrthogonalTiledMapRenderer(map, 2);
 			debugRenderer = new Box2DDebugRenderer();
 			ui.show(stage);
-			OnlinePlayerInfo info = new OnlinePlayerInfo();
-			info.id = 20;
-			info.name = "simon";
-			info.radius = 0.5f;
-			info.x = 8;
-			info.y = 8;
-			player = new OnlinePlayer(world, info);
+//			OnlinePlayerInfo info = new OnlinePlayerInfo();
+//			info.id = 20;
+//			info.name = "simon";
+//			info.radius = 0.5f;
+//			info.x = 8;
+//			info.y = 8;
+//			player = new OnlinePlayer(world, info);
 		}
 	}
 
@@ -186,43 +186,22 @@ public class GameInstance implements MyListener, MyServerlistener{
 	boolean last = false;
 
 	public void update(float deltaTime) {
-		if(isServer)
-			System.out.println("updating lobby: " + lobby.NAME);
 
 		Vector2 dir = new Vector2();
 		
 		if(!isServer && last == false && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			MoveToC p = new MoveToC();
 			p.id = player.id;
+			System.out.println("PLAYER ID IS " + p.id);
 			
 			p.x = input.getWorldX()/ 32;
 			p.y = input.getWorldY() / 32;
 			client.send(p);
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			System.out.println("sent @" + timestamp);
+			//System.out.println("sent @" + timestamp);
 		}
 		if(!isServer) {
 			last = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
-
-			if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-				dir.add(0, 1);
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-				dir.add(0, -1);
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-				dir.add(-1, 0);
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-				dir.add(1, 0);
-			}
-			if (!dir.isZero()) {
-				//b.setLinearVelocity(dir.nor().scl(5));
-				if(player != null) {
-					
-					player.body().setLinearVelocity(dir.nor().scl(5));
-				}
-			}
 		}
 
 		
@@ -248,10 +227,7 @@ public class GameInstance implements MyListener, MyServerlistener{
 			stage.act(deltaTime);
 		// engine.update(deltaTime);
 		if (!isServer && player != null) {
-			anim.update(deltaTime);
-			Body b = player.body();
-			anim.setPosition(b.getPosition().cpy().scl(PIXELS_PER_METER));
-			
+		
 			if(player != null) {
 				cam.position.x = player.body().getPosition().x * PIXELS_PER_METER;
 				cam.position.y = player.body().getPosition().y * PIXELS_PER_METER;
@@ -265,10 +241,10 @@ public class GameInstance implements MyListener, MyServerlistener{
 			sb.setProjectionMatrix(cam.combined);
 			sr.setProjectionMatrix(cam.combined);
 			sb.begin();
-			anim.draw(sb);
+			//anim.draw(sb);
 			sb.end();
 			sr.begin();
-			anim.drawOutline(sr);
+			//anim.drawOutline(sr);
 			sr.end();
 			debugRenderer.render(world, cameraBox2D);
 			stage.draw();
@@ -321,6 +297,7 @@ public class GameInstance implements MyListener, MyServerlistener{
 		EntityInformation info = e.getInfo();
 		AddEntityS p = new AddEntityS();
 		p.info = info;
+		System.out.println("SERVER " + ((OnlinePlayerInfo)info).x);
 		server.sendToAllTCP(p);
 	}
 	
@@ -331,11 +308,17 @@ public class GameInstance implements MyListener, MyServerlistener{
 	public void addEntity(EntityInformation info) {
 		if(isServer)
 			return;
+		
 		Entity e = Entity.createFromInfo(world, info);
-		e.setDrawer(new TestDrawer((OnlinePlayer) e));
+	
+		e.activate(info.id);
 		entities.put(e.id, e);
 		if(e instanceof OnlinePlayer) {
-			player = (OnlinePlayer) e;
+			OnlinePlayer p = (OnlinePlayer) e;
+			p.setDrawer(new TestDrawer(p));
+			if(p.getName().equals(client.userName())){
+				player = p;
+			}
 		}
 	}
 
@@ -354,7 +337,8 @@ public class GameInstance implements MyListener, MyServerlistener{
 			MoveToS p = (MoveToS) o;
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			
-			player.moveTo(p.x, p.y);
+			//player.moveTo(p.x, p.y);
+			entities.get(p.id).moveTo(p.x, p.y);
 			//System.out.println("processed moved message on client @" + timestamp);
 		}
 		if(o instanceof AddEntityS) {
@@ -376,6 +360,25 @@ public class GameInstance implements MyListener, MyServerlistener{
 			lobby.sendToAllTCP(s);
 			server.sendToAllTCP(s);
 		}
+//		if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+//		dir.add(0, 1);
+//	}
+//	if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+//		dir.add(0, -1);
+//	}
+//	if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+//		dir.add(-1, 0);
+//	}
+//	if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+//		dir.add(1, 0);
+//	}
+//	if (!dir.isZero()) {
+//		//b.setLinearVelocity(dir.nor().scl(5));
+//		if(player != null) {
+//			
+//			player.body().setLinearVelocity(dir.nor().scl(5));
+//		}
+//	}
 		//Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		//System.out.println("processed message on server @" + timestamp);
 	}

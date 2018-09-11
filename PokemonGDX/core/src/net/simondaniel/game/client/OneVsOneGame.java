@@ -4,12 +4,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import net.simondaniel.Assets;
+import net.simondaniel.MyRandom;
 import net.simondaniel.entities.Entity;
 import net.simondaniel.entities.OnlinePlayer;
 import net.simondaniel.game.client.gfx.AnimationLayout;
 import net.simondaniel.game.client.gfx.PokemonAnimation;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.server.GameServer;
+import net.simondaniel.network.server.UserConnection;
 import net.simondaniel.pokes.PokeDef;
 import net.simondaniel.pokes.Pokemon;
 import net.simondaniel.pokes.PokemonStats;
@@ -47,12 +49,16 @@ public class OneVsOneGame extends GameInstance{
 		PokeDef test = new PokeDef();
 		test.pokemon = Pokemon.squirtle;
 		test.exp = 1;
-		test.stats = new PokemonStats();
 		test.level = 100;
+		test.stats = new PokemonStats();
 		
-		Entity e = new OnlinePlayer(lobby.getUser(0).user.name, world, test);
-		addEntity(e);
-		//System.out.println("SERVER SENT ENTITY " + users[0].user.name);
+		Entity e;
+		for(UserConnection c : lobby.getUsers()) {
+			int r = MyRandom.random.nextInt(12)+1;
+			e = new OnlinePlayer(c.user.name, world, test);
+			e.setPosition(r, 1);
+			addEntity(e);
+		}
 	}
 
 }

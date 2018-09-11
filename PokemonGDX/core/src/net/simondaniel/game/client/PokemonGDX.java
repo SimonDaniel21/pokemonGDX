@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.simondaniel.Assets;
+import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.pokes.Pokemon;
 import net.simondaniel.screens.IngameScreen;
@@ -14,6 +15,8 @@ import net.simondaniel.screens.MainMenuScreen;
 public class PokemonGDX extends Game {
 
 	public static String VERSION;
+	
+	public static LaunchConfiguration CONFIGURATION;
 
 	public static void init() {
 		FileHandle fh = Gdx.files.internal("version");
@@ -25,21 +28,14 @@ public class PokemonGDX extends Game {
 	SpriteBatch batch;
 	public GameClient client;
 	public static PokemonGDX game;
-	
-	Screen initialScreen = null;
 
-	public PokemonGDX() {
+	public PokemonGDX(LaunchConfiguration config) {
 		super();
 		game = this;
+		CONFIGURATION = config;
 		// this.client = client;
 	}
 
-
-	public PokemonGDX(Screen initialScreen) {
-		this();
-		this.initialScreen = initialScreen;
-	}
-	
 	int i = 0;
 
 	int mb = 1024*1024;
@@ -71,12 +67,9 @@ public class PokemonGDX extends Game {
 //		else {
 //			System.err.println("no connect");
 //		}
-		if(initialScreen == null) {
-			this.setScreen(new MainMenuScreen());
-		}
-		else {
-			this.setScreen(initialScreen);
-		}
+	
+		this.setScreen(new MainMenuScreen());
+		
 		
 	}
 

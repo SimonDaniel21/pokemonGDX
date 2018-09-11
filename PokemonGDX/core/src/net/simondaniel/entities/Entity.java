@@ -72,22 +72,12 @@ public abstract class Entity{
 	}
 	
 	public void update(float delta) {
-		body.setLinearVelocity(0, 0);
-		if(dest != null) {
-			float dist = body.getPosition().dst(dest);
-			if(lastdist != -1 && lastdist - dist < 0.0001f) {
-				dest = null;
-				lastdist = -1;
-				return;
-			}
-			lastdist = dist;
-			//System.out.println("trying to move to " + dest);
-			Vector2 v = dest.cpy().sub(body.getPosition());
-			v.nor();
-			v.scl(4);
-			body.setLinearVelocity(v);
-		}
 		
+		
+	}
+	
+	public void setPosition(float x, float y) {
+		body.setTransform(x, y, 0);
 	}
 	
 	Vector2 dest;

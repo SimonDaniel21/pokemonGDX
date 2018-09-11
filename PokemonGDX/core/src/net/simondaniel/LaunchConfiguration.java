@@ -1,4 +1,4 @@
-package net.simondaniel.desktop;
+package net.simondaniel;
 
 public enum LaunchConfiguration {
 
@@ -9,6 +9,8 @@ public enum LaunchConfiguration {
 	LOGGED_IN("l"); 
 	
 	public final String command;
+	
+	public static LaunchConfiguration config;
 	
 	private LaunchConfiguration(String com) {
 		this.command = com;

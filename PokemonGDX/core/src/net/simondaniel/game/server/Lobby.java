@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.fabio.GameMode;
 import net.simondaniel.game.client.OneVsOneGame;
 import net.simondaniel.network.server.GameServer;
@@ -23,7 +24,7 @@ import net.simondaniel.network.server.UserConnection;
 
 public class Lobby implements MyServerlistener{
 
-	public static final int STARTING_TIME = 10, EXTRA_TIME = 1;
+	public static int STARTING_TIME = 10*1000, EXTRA_TIME = 1*1000;
 	
 	public final String NAME;
 
@@ -44,6 +45,10 @@ public class Lobby implements MyServerlistener{
 	
 	
 	public Lobby(String name, GameMode mode, GameServer gs) {
+		if(LaunchConfiguration.config == LaunchConfiguration.DEBUG_SERVER) {
+			STARTING_TIME = 100;
+			EXTRA_TIME = 10;
+		}
 		users = new ArrayList<UserConnection>();
 		invitedUsers = new HashMap<UserConnection, Integer>();
 		this.NAME = name;
@@ -77,6 +82,7 @@ public class Lobby implements MyServerlistener{
 			if(u == null) return false;
 		}
 		gameInstance.start(this);
+		gameInstance.server.window.startLobby(NAME);
 		return true;
 	}
 
@@ -212,9 +218,18 @@ public class Lobby implements MyServerlistener{
 		return names;
 	}
 	
-	public static final int NO_SUCH_USER = -1, LOBBY_FULL = -2;
+	public static final int NO_SUCH_USER = -1, LOBBY_FULL = -2, NEXT_FREE_TEAM = -3;
 
 	public int joinTeam(UserConnection user, int id) {
+		if(id == NEXT_FREE_TEAM) {
+			for(int i = 0; i < teamCount; i++) {
+				if(!isTeamFull(i)) {
+					id = i+1;
+					break;
+				}
+					
+			}
+		}
 		if(id < 0 || id > teamCount) return -1;
 		if(id == 0) {
 			for(int i = 0; i < userSlots.length; i++) {
@@ -386,17 +401,27 @@ public class Lobby implements MyServerlistener{
 
 	private void startTimer() {
 		LobbyStartTimerS p = new LobbyStartTimerS();
-		p.start = System.currentTimeMillis() + STARTING_TIME*1000;
+		p.start = System.currentTimeMillis() + STARTING_TIME;
 		sendToAllTCP(p);
 		timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				System.out.println("STARTING GAME");
+				//System.out.println("STARTING GAME");
 				startGameInstance();
 				timer.cancel();
 			}
-		}, 1000*(STARTING_TIME + EXTRA_TIME));
+		}, (STARTING_TIME + EXTRA_TIME));
 	}
 	
+	public boolean isTeamFull(int i) {
+		
+		for(int j = 0; j < teamSizes[i]; j++) {
+			int index = j + teamindexStart[i];
+			if(userSlots[index] == null) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

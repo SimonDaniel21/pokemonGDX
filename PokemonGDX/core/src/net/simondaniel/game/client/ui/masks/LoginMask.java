@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.esotericsoftware.kryonet.Connection;
 
 import net.simondaniel.GameConfig;
+import net.simondaniel.LaunchConfiguration;
+import net.simondaniel.MyRandom;
 import net.simondaniel.fabio.GameMode;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
@@ -194,6 +196,9 @@ public class LoginMask extends UImask<LoginMaskInfo>{
 		remindPW.setChecked(GameConfig.gameConfig.KEEP_PASSWORD);
 		name_tf.selectAll();
 		getStage().setKeyboardFocus(name_tf);
+		if(PokemonGDX.CONFIGURATION == LaunchConfiguration.LOGGED_IN) {
+			loginRequest("user " + MyRandom.random.nextInt(1000), "development");
+		}
 	}
 
 	@Override

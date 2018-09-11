@@ -19,4 +19,6 @@ public interface ServerMonitor {
 	void packetReceived();
 	void packetSend();
 	
+	void startLobby(String l);
+	void stopLobby(String l);
 }

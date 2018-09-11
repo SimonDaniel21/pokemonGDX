@@ -7,7 +7,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Client;
@@ -15,6 +17,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener.LagListener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 
+import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.fabio.GameMode;
 import net.simondaniel.network.Network;
 import net.simondaniel.network.Network_interface;
@@ -43,7 +46,7 @@ public class GameClient extends Client implements Network_interface {
 
 	String userName;
 
-	HashSet<Packet> packetBuffer;
+	private HashSet<Packet> packetBuffer;
 
 	public String errorMsg;
 
@@ -54,7 +57,7 @@ public class GameClient extends Client implements Network_interface {
 	long startTime;
 
 	Thread connectThread;
-	
+
 	public GameClient(String ip, String name) {
 		super();
 		startTime = System.currentTimeMillis();
@@ -72,10 +75,10 @@ public class GameClient extends Client implements Network_interface {
 		Network.register(this);
 
 		// ThreadedListener runs the listener methods on a different thread.
-		//this.addListener(new ThreadedListener(new ClientListener(this)));
+		// this.addListener(new ThreadedListener(new ClientListener(this)));
 		this.addListener(new LagListener(10, 20, new ClientListener(this)));
-	
-		//extra thread handling the connection timeout
+
+		// extra thread handling the connection timeout
 		connectThread = new Thread(new Runnable() {
 
 			@Override
@@ -107,35 +110,36 @@ public class GameClient extends Client implements Network_interface {
 
 		System.out.println("end");
 	}
-	
+
 	public boolean isConnecting() {
 		return state == State.CONNECTING;
 	}
+
 	public boolean isConnectionFinished() {
 		return state == State.CANT_ESTABLISH_CONNECTION || state == State.ESTABLISHED_CONNECTION;
 	}
-	
+
 	public void resetConnection() {
 		close();
 		state = State.IDLE;
 	}
-	
+
 	public boolean isLoggingIn() {
 		return state == State.LOGGING_IN;
 	}
+
 	public boolean isLoginFinished() {
 		return state == State.LOGGED_IN || state == State.DECLINED;
 	}
-	
+
 	public void resetLogin() {
-		if(state == State.DECLINED)
+		if (state == State.DECLINED)
 			state = State.ESTABLISHED_CONNECTION;
 	}
-	
+
 	public boolean isLoggedIn() {
 		return (state == State.LOGGED_IN);
 	}
-
 
 	public void sendLoginRequest(String name, String pw) {
 		if (state != State.ESTABLISHED_CONNECTION) {
@@ -168,7 +172,7 @@ public class GameClient extends Client implements Network_interface {
 		}
 		return isConnected();
 	}
-	
+
 	/**
 	 * pauses the current thread until the client recieved a login response from the
 	 * server and returns weather or not it has been accepted
@@ -188,7 +192,8 @@ public class GameClient extends Client implements Network_interface {
 	}
 
 	public enum State {
-		IDLE, ESTABLISHED_CONNECTION, CANT_ESTABLISH_CONNECTION, CONNECTING, LOGGING_IN, LOGGED_IN, DECLINED, DISCONNECTED;
+		IDLE, ESTABLISHED_CONNECTION, CANT_ESTABLISH_CONNECTION, CONNECTING, LOGGING_IN, LOGGED_IN, DECLINED,
+		DISCONNECTED;
 	}
 
 	public String userName() {
@@ -199,12 +204,14 @@ public class GameClient extends Client implements Network_interface {
 
 	public int packetsReceived;
 
-	
-
 	public void disconnect(String reason) {
 		errorMsg = reason;
 		state = State.DISCONNECTED;
 		close();
+		if(LaunchConfiguration.config == LaunchConfiguration.LOGGED_IN ||
+				LaunchConfiguration.config == LaunchConfiguration.DEBUG_CLIENT) {
+			Gdx.app.exit();
+		}
 	}
 
 	public State getState() {
@@ -221,27 +228,46 @@ public class GameClient extends Client implements Network_interface {
 		Connection con;
 	}
 
+	ReentrantLock packetLock = new ReentrantLock();
+
+	public void addPacket(Connection con, Object o) {
+		packetLock.lock();
+ 
+		try {
+			packetBuffer.add(new Packet(con, o));
+		} finally {
+			packetLock.unlock();
+
+		}
+	}
+
 	public void handlePacketBuffer() {
 		Object o;
 		Connection c;
-		for (Packet p : packetBuffer) {
-			o = p.o;
-			c = p.con;
-			for (MyListener ml : myListeners) {
-				ml.received(c, o);
-			}
+		packetLock.lock();
+	
+		try {
+			for (Packet p : packetBuffer) {
+				o = p.o;
+				c = p.con;
+				for (MyListener ml : myListeners) {
+					ml.received(c, o);
+				}
 
-			//myListeners.addAll(addedMyListeners);
-			for (MyListener ml : addedMyListeners) {
-				ml.received(c, o);
-				myListeners.add(ml);
+				//myListeners.addAll(addedMyListeners);
+				for (MyListener ml : addedMyListeners) {
+					ml.received(c, o);
+					myListeners.add(ml);
+				}
+				myListeners.removeAll(removedMyListeners);
+				addedMyListeners.clear();
+				removedMyListeners.clear();
 			}
-			myListeners.removeAll(removedMyListeners);
-			addedMyListeners.clear();
-			removedMyListeners.clear();
-
+			packetBuffer.clear();
 		}
-		packetBuffer.clear();
+		finally {
+			packetLock.unlock();
+		}
 	}
 
 	public void addMyListener(MyListener ml) {
@@ -275,11 +301,11 @@ public class GameClient extends Client implements Network_interface {
 		p.gameMode = mode.ordinal();
 		send(p);
 	}
-	
+
 	public void sendLobbyJoinRequest(String lobbyName) {
 		LobbyJoinC p = new LobbyJoinC();
 		p.lobbyName = lobbyName;
 		send(p);
 	}
-	
+
 }

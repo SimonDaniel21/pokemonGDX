@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import net.simondaniel.Config;
+import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.masks.GameMenu;
 import net.simondaniel.network.client.GameClient;
@@ -25,11 +26,10 @@ public class ClientLoggedIn {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
-		PokemonGDX gdx = new PokemonGDX();
 		MainMenuScreen menu = new MainMenuScreen(true);		
 	
 	
-		new LwjglApplication(new PokemonGDX(menu), config);
+		new LwjglApplication(new PokemonGDX(LaunchConfiguration.LOGGED_IN), config);
 		
 		
 		

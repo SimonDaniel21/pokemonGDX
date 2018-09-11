@@ -21,6 +21,8 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
 import net.simondaniel.MyRandom;
+import net.simondaniel.fabio.GameMode;
+import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.Network;
 import net.simondaniel.network.client.Request.MovementC;
 import net.simondaniel.network.client.Request.MovementChandler;
@@ -28,6 +30,7 @@ import net.simondaniel.network.client.Request.RequestAreaC;
 import net.simondaniel.network.client.Request.RequestAreaChandler;
 import net.simondaniel.network.server.Response.EndConnectionS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
+import net.simondaniel.network.server.Response.LobbyListS;
 import net.simondaniel.network.server.Response.MessageS;
 import net.simondaniel.network.server.Response.UserJoinedS;
 import net.simondaniel.network.server.Response.UserLeftS;
@@ -44,10 +47,13 @@ public class GameServer extends Server{
 	List<User> loggedIn = new ArrayList<User>();
 	List<UserConnection> usersTrackingUsers;
 	
+	public List<Lobby> lobbys;
+	
 	DatabaseInerface database;
 
 	public GameServer() throws IOException {
 
+		lobbys = new ArrayList<Lobby>();
 		usersTrackingUsers = new ArrayList<UserConnection>();
 		database = new LocalFileDatabase("database.deseus");
 		Collection<NotActivatedDO> nots = database.loadNotActivatedNames();
@@ -355,5 +361,55 @@ public class GameServer extends Server{
 
 	public void startTracking(UserConnection c) {
 		usersTrackingUsers.add(c);
+	}
+	
+	public String[] getLobbyList() {
+		String[] sa = new String[lobbys.size()];
+		for(int i = 0; i < lobbys.size(); i++)
+			sa[i] = lobbys.get(i).NAME;
+		return sa;
+	}
+	
+	public boolean isLobbyNameTaken(String name ) {
+		for(Lobby l : lobbys) {
+			if(l.NAME.equalsIgnoreCase(name)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Lobby addLobby(String name, int gameMode) {
+		boolean exists = isLobbyNameTaken(name);
+		
+		if(!exists) {
+			Lobby l = new Lobby(name, GameMode.valueOf(gameMode), this);
+			lobbys.add(l);
+			
+			
+			window.addedLobby(name);
+			LobbyListS lls = new LobbyListS();
+			lls.lobbys = new String[lobbys.size()];
+			for(int i = 0; i < lobbys.size(); i++)
+				lls.lobbys[i] = lobbys.get(i).NAME;
+			sendAllOutsideLobbyTCP(lls);
+			return l;
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param name lobbyName
+	 * @return lobby with the given name or null if no such lobby exists
+	 */
+	public Lobby getLobby(String name) {
+		
+		for(Lobby l : lobbys) {
+			if(l.NAME.equals(name)) {
+				return l;
+			}
+		}
+		return null;
 	}
 }

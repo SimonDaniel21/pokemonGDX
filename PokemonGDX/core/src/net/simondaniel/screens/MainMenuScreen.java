@@ -56,7 +56,6 @@ public class MainMenuScreen implements Screen{
 				if(gc.waitForLogin()) {
 					PokemonGDX.game.client = gc;
 					m.getInfo().client = gc;
-					gc.sendLobbyJoinRequest("new lobby");
 					serverSelection.switchTo(m);
 				}
 			}

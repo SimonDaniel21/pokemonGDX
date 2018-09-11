@@ -10,6 +10,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import net.simondaniel.Config;
 import net.simondaniel.GameConfig;
+import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.server.GameServerManager;
 import net.simondaniel.network.Download;
@@ -34,6 +35,8 @@ public class DesktopLauncher {
 			config = LaunchConfiguration.RELEASE_CLIENT;
 		else
 			config = LaunchConfiguration.configuration(args[0]);
+		
+		LaunchConfiguration.config = config;
 		
 		switch (config) {
 		case RELEASE_CLIENT:
@@ -62,7 +65,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
-		new LwjglApplication(new PokemonGDX(), config);
+		new LwjglApplication(new PokemonGDX(LaunchConfiguration.DEBUG_CLIENT), config);
 	}
 	
 	public static void launchClientRelease() {

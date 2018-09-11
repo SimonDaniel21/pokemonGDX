@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import com.esotericsoftware.kryonet.Listener.LagListener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 
+import net.simondaniel.fabio.GameMode;
 import net.simondaniel.game.server.GameServerManager;
 import net.simondaniel.network.server.GameServer;
 
@@ -18,6 +19,7 @@ public class ServerLauncher {
 		try {
 			server = new GameServer();
 			server.bindMonitor(new ServerFrame(server));
+			server.addLobby("testLobby", GameMode.ONE_VS_ONE.ordinal());
 			server.openConsole();
 			server.start();
 			

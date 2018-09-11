@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Connection;
 
+import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.InviteList;
@@ -175,8 +176,6 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
 	public void addPlayerToLobby(String playersName) {
 
-		
-		System.out.println("---------adding: " + playersName);
 		undecided.getItems().add(playersName);
 		
 		if(playersName.equals(info.gc.userName())) {
@@ -423,7 +422,21 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		
 		addPlayersToTeam(tw1, info.others[1]);
 		addPlayersToTeam(tw2, info.others[2]);
-		
+		if(PokemonGDX.CONFIGURATION == LaunchConfiguration.LOGGED_IN) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			TeamJoinC p = new TeamJoinC();
+			p.teamID = Lobby.NEXT_FREE_TEAM;
+			gc.sendTCP(p);
+			UserReadyC p2 = new UserReadyC();
+			p2.ready = true;
+			info.gc.send(p2);
+			deactivateUntilResponse();
+		}
 	}
 
 	@Override

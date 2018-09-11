@@ -179,4 +179,16 @@ public class ServerFrame extends JFrame implements ServerMonitor{
 		
 	}
 
+	@Override
+	public void startLobby(String l) {
+		lobbyList.remove(l);
+		lobbyList.add(l + " (+)");
+	}
+
+	@Override
+	public void stopLobby(String l) {
+		lobbyList.remove(l + " (+)");
+		lobbyList.add(l);
+	}
+
 }

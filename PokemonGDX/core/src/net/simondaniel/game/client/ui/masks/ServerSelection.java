@@ -25,7 +25,10 @@ import com.badlogic.gdx.utils.Align;
 
 import net.simondaniel.Config;
 import net.simondaniel.GameConfig;
+import net.simondaniel.LaunchConfiguration;
+import net.simondaniel.MyRandom;
 import net.simondaniel.fabio.GameMode;
+import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.ButtonOption;
@@ -222,6 +225,9 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 	public void enter() {
 		if(!info.greetingMessage.equals("")) {
 			InfoDialog.show(info.greetingMessage, getStage());
+		}
+		if(PokemonGDX.CONFIGURATION == LaunchConfiguration.LOGGED_IN) {
+			connectRequest("localhost", "AutoConnectServer");
 		}
 	}
 

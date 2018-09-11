@@ -2,6 +2,7 @@ package net.simondaniel.pokes;
 
 public class PokemonInstance {
 	
+	private Pokemon pokemon;
 	int hp;
 	public float size;
 	
@@ -11,5 +12,9 @@ public class PokemonInstance {
 			return;
 		}
 		size = pokedef.pokemon.size;
+	}
+	
+	public Pokemon getPokemon() {
+		return pokemon;
 	}
 }
