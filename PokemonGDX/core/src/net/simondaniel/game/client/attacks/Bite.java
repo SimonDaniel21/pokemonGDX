@@ -31,18 +31,18 @@ public class Bite extends Attack{
 		animation = animations[this.dir.ordinal()];
 	}
 
-	@Override
+
 	public void render(SpriteBatch sb) {
 		//sb.draw(animation.getKeyFrame(elapsed), 80, 80);
 		TextureRegion frame = animation.getKeyFrame(elapsed);
-		sb.draw(frame, getScreenX() - (frame.getRegionWidth() >> 1) +8, getScreenY() - (frame.getRegionHeight() >> 1) + 8);
+		sb.draw(frame, 666 - (frame.getRegionWidth() >> 1) +8, 666 - (frame.getRegionHeight() >> 1) + 8);
 	}
 
-	@Override
+
 	public void update(float delta) {
 		elapsed += delta;
 		if(animation.isAnimationFinished(elapsed)){
-			kill();
+			//kill();
 		}
 	}
 

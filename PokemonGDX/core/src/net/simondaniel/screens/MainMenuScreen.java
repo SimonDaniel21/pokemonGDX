@@ -10,11 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import net.simondaniel.MyRandom;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
-import net.simondaniel.game.client.ui.Test;
 import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.game.client.ui.masks.GameMenu;
-import net.simondaniel.game.client.ui.masks.PokemonChooseMask;
-import net.simondaniel.game.client.ui.masks.PokemonChooseMaskInfo;
 import net.simondaniel.game.client.ui.masks.ServerSelection;
 import net.simondaniel.network.client.GameClient;
 
@@ -71,13 +68,7 @@ public class MainMenuScreen implements Screen{
 		InfoDialog.init(skin);
 		//stage.setDebugAll(true);
 		Gdx.input.setInputProcessor(stage);
-		//serverSelection.setBounds(0, 0, 200, 200);
-		Test t = new Test(skin);
-		//t.show(stage);
-		//GameMenu menu = new GameMenu(skin);
-		//menu.show(stage);
-		
-		//serverSelection.tryToConnectTo("testserver", "127.0.0.1");
+
 	}
 
 	@Override

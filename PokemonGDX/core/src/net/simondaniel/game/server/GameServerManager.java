@@ -1,16 +1,8 @@
 package net.simondaniel.game.server;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import net.simondaniel.fabio.GameMode;
-import net.simondaniel.network.FileTransfer;
 import net.simondaniel.network.client.Request.*;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.UserConnection;

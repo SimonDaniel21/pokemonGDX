@@ -1,4 +1,4 @@
-package net.simondaniel.game.client.battle.input;
+package net.simondaniel.fabio.input;
 
 import javax.crypto.spec.SecretKeySpec;
 

@@ -10,12 +10,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 
 import net.simondaniel.MyRandom;
-import net.simondaniel.fabio.DrawObject;
+import net.simondaniel.entities.Drawer;
+import net.simondaniel.fabio.input.BattleInput;
 import net.simondaniel.fabio.input.InputHandler;
-import net.simondaniel.game.client.battle.input.BattleInput;
 import net.simondaniel.screens.MainMenuScreen;
 
-public class PokemonSelection implements DrawObject, InputHandler<BattleInput>{
+public class PokemonSelection implements Drawer, InputHandler<BattleInput>{
 
 	int x, y;
 	

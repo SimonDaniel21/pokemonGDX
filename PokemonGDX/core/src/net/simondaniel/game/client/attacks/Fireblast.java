@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.simondaniel.MyInterpolation;
 import net.simondaniel.entities.Entity;
-import net.simondaniel.game.client.battle.BattleEntity;
+
 import net.simondaniel.game.client.battle.Pikachu;
 import net.simondaniel.game.client.battle.Position;
 import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
@@ -32,8 +32,8 @@ public class Fireblast extends Attack{
 	Position start, dest;
 	float maxFlyTime = 4.0f;
 	
-	public Fireblast(BattleEntity e, float dir, int x, int y) {
-		super(e.getX(), e.getY());
+	public Fireblast(float dir, int x, int y) {
+		super(x, y);
 		start = new Position(this.x, this.y);
 		dest = new Position(x, y);
 		this.dir = dir;
@@ -45,7 +45,6 @@ public class Fireblast extends Attack{
 		current = fireblast;
 	}
 
-	@Override
 	public void update(float delta) {
 		elapsed += delta;
 		if(!exploded){
@@ -57,21 +56,20 @@ public class Fireblast extends Attack{
 		}
 		else{
 			if(explosion.isAnimationFinished(elapsed)){
-				kill();
+				//kill();
 			}
 		}
 	}
-	
-	@Override
+
 	public void render(SpriteBatch sb) {
-		if(!isAlive()) return;
-		TextureRegion frame = current.getKeyFrame(elapsed);
-		sb.draw(frame, getScreenX() - (frame.getRegionWidth() >> 1) +8, getScreenY() - (frame.getRegionHeight() >> 1) + 8);
+//		if(!isAlive()) return;
+//		TextureRegion frame = current.getKeyFrame(elapsed);
+//		sb.draw(frame, getScreenX() - (frame.getRegionWidth() >> 1) +8, getScreenY() - (frame.getRegionHeight() >> 1) + 8);
 	}
 	
 	public void render(ShapeRenderer sr) {
 		sr.setColor(Color.ORANGE);
-		sr.rect(getScreenX() + 2, getScreenY() + 2, 14, 14);
+		//sr.rect(getScreenX() + 2, getScreenY() + 2, 14, 14);
 	}
 	
 	private void explode(){

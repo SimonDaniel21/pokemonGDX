@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import net.simondaniel.Assets;
-import net.simondaniel.fabio.DrawObject;
+import net.simondaniel.entities.Drawer;
 
-public class SkillBar implements DrawObject{
+public class SkillBar implements Drawer{
 	
 	Skillicon icon1, icon2, icon3, icon4;
 	

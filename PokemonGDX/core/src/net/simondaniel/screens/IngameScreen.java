@@ -1,47 +1,20 @@
 package net.simondaniel.screens;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.esotericsoftware.kryonet.Connection;
-
-import net.simondaniel.myMapRenderer;
-import net.simondaniel.control.Controller;
-import net.simondaniel.control.PlayerController;
-import net.simondaniel.control.PokemonControl;
-import net.simondaniel.control.PokemonController;
-import net.simondaniel.entities.Entity;
-import net.simondaniel.fabio.input.FabioInput;
 import net.simondaniel.game.client.GameInstance;
 import net.simondaniel.game.client.OneVsOneGame;
-import net.simondaniel.game.client.PokemonGDX;
-import net.simondaniel.game.client.ui.masks.IngameMenu;
 import net.simondaniel.network.client.GameClient;
-import net.simondaniel.network.client.MyListener;
-import net.simondaniel.network.client.Request.MoveToC;
-import net.simondaniel.network.client.Request.RequestAreaC;
-import net.simondaniel.network.server.Response.MoveToS;
 
 public class IngameScreen extends GameScreen{
 
@@ -53,7 +26,6 @@ public class IngameScreen extends GameScreen{
 	SpriteBatch batch;
 	ShapeRenderer sr;
 	Texture img;
-	myMapRenderer renderer;
 	OrthographicCamera cam, staticCam;
 	Texture t;
 	BitmapFont font = new BitmapFont();
@@ -139,7 +111,7 @@ public class IngameScreen extends GameScreen{
 	public void dispose() {
 		batch.dispose();
 		img.dispose();
-		renderer.dispose();
+		//renderer.dispose();
 		game.dispose();
 		
 	}

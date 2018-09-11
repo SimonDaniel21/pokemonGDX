@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.simondaniel.MyInterpolation;
 import net.simondaniel.entities.Entity;
-import net.simondaniel.game.client.battle.BattleEntity;
 import net.simondaniel.game.client.battle.Position;
 
 public class HydroPump extends Attack{
@@ -30,8 +29,8 @@ public class HydroPump extends Attack{
 	Position start, dest;
 	float maxFlyTime = 3.0f;
 	
-	public HydroPump(BattleEntity e, float dir, int x, int y) {
-		super(e.getX(), e.getY());
+	public HydroPump(float dir, int x, int y) {
+		super(x, y);
 		start = new Position(this.x, this.y);
 		dest = new Position(x, y);
 		this.dir = dir;
@@ -44,7 +43,7 @@ public class HydroPump extends Attack{
 		current = shoot;
 	}
 
-	@Override
+
 	public void update(float delta) {
 		elapsed += delta;
 		if(!exploded){
@@ -59,22 +58,22 @@ public class HydroPump extends Attack{
 		}
 		else{
 			if(explosion.isAnimationFinished(elapsed)){
-				kill();
+				//kill();
 			}
 		}
 	}
 	
-	@Override
+
 	public void render(SpriteBatch sb) {
-		if(!isAlive()) return;
-		TextureRegion frame = current.getKeyFrame(elapsed);
-		sb.draw(frame, getScreenX() - (frame.getRegionWidth() >> 1) +8, getScreenY() - (frame.getRegionHeight() >> 1) + 8);
-		System.out.println("draw hydro!");
+//		if(!isAlive()) return;
+//		TextureRegion frame = current.getKeyFrame(elapsed);
+//		sb.draw(frame, getScreenX() - (frame.getRegionWidth() >> 1) +8, getScreenY() - (frame.getRegionHeight() >> 1) + 8);
+//		System.out.println("draw hydro!");
 	}
 	
 	public void render(ShapeRenderer sr) {
 		sr.setColor(Color.ORANGE);
-		sr.rect(getScreenX() + 2, getScreenY() + 2, 14, 14);
+		//sr.rect(getScreenX() + 2, getScreenY() + 2, 14, 14);
 	}
 	
 	private void explode(){

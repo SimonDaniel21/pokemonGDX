@@ -17,14 +17,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import net.simondaniel.Assets;
 import net.simondaniel.Assets.Atlas;
 import net.simondaniel.entities.Entity;
+import net.simondaniel.fabio.input.BattleInput;
 import net.simondaniel.fabio.input.InputHandler;
+import net.simondaniel.fabio.input.BattleInput.BattleInputType;
 import net.simondaniel.MyInterpolation;
 import net.simondaniel.game.client.MoveAction;
 import net.simondaniel.game.client.attacks.Bite;
 import net.simondaniel.game.client.attacks.Fireblast;
 import net.simondaniel.game.client.attacks.HydroPump;
-import net.simondaniel.game.client.battle.input.BattleInput;
-import net.simondaniel.game.client.battle.input.BattleInput.BattleInputType;
 import net.simondaniel.game.client.gfx.AnimatedSprite;
 import net.simondaniel.game.client.gfx.AnimationLayout;
 import net.simondaniel.game.client.gfx.AnimationLayout.PokemonAnimationLayout;
@@ -80,7 +80,7 @@ public class Schiggy extends MovingEntity implements MovementShandler, InputHand
 			//this.y = input.getWorldY();
 			System.err.println("schiggy moved to: " + input.getWorldX() + " - " + input.getWorldY() + " - " );
 			dest.set(input.getWorldX(), input.getWorldY());
-			source.set(x, y);
+			//source.set(x, y);
 			float dist =  source.distance(dest);
 			totalTime = dist * (1 / speed);
 			moving = true;
@@ -88,78 +88,76 @@ public class Schiggy extends MovingEntity implements MovementShandler, InputHand
 			pkmn.runAnimation(AnimationType.MOVEMENT, AnimationDirection.fromAngle(source.angleTo(dest)));
 		}
 		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && cd > 5){
-			pumps.add(new HydroPump(this, 0, input.getWorldX(), input.getWorldY()));
+			//pumps.add(new HydroPump(this, 0, input.getWorldX(), input.getWorldY()));
 			cd = 0;
 			System.out.println("hydro!");
 		}
 		
 	}
 	
-	@Override
 	public void update(float delta) {
-		pkmn.update(delta);
-		List<Fireblast> dead = new ArrayList<Fireblast>();
-		List<Bite> dead1 = new ArrayList<Bite>();
-		List<HydroPump> dead2 = new ArrayList<HydroPump>();
-		for(Fireblast b : blasts){
-			b.update(delta);
-			if(!b.isAlive()){
-				dead.add(b);
-			}
-		}
-		for(Bite b : bites) {
-			b.update(delta);
-			if(!b.isAlive()){
-				dead1.add(b);
-			}
-		}
-		for(HydroPump b : pumps) {
-			b.update(delta);
-			if(!b.isAlive()){
-				dead2.add(b);
-			}
-		}
-		for(Fireblast b : dead){
-			blasts.remove(b);
-		}
-		dead.clear();
-		for(Bite b : dead1){
-			bites.remove(b);
-		}
-		dead1.clear();
-		for(HydroPump b : dead2){
-			pumps.remove(b);
-		}
-		dead1.clear();
-		//this.fireblast.setFrameDuration(elapsed);
-
-		if(Gdx.input.isKeyJustPressed(Input.Keys.X) && cd > 5){
-			bites.add(new Bite(this.x, this.y, AnimationDirection.DOWN));
-			cd = 0;
-		}
-		
-		cd++;
-		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			move.execute(new Position(Gdx.input.getX(), Gdx.input.getY()));
-		}
-		
-		//move.update(delta);
-		if(moving) {
-			x = MyInterpolation.linear(elapsedTime / totalTime, source.x, dest.x);
-			y = MyInterpolation.linear(elapsedTime / totalTime, source.y, dest.y);
-			//System.err.println("step: " + e.x + " | " + e.y + " @" + (elapsedTime / totalTime) + "  -  " + source.x + " | " + dest.x);
-			elapsedTime += delta;
-			if(elapsedTime >= totalTime) {
-				moving = false;
-				pkmn.haltAnimation(1);
-			}
-		}
-		pkmn.setPosition(getScreenX(), getScreenY());
+//		pkmn.update(delta);
+//		List<Fireblast> dead = new ArrayList<Fireblast>();
+//		List<Bite> dead1 = new ArrayList<Bite>();
+//		List<HydroPump> dead2 = new ArrayList<HydroPump>();
+//		for(Fireblast b : blasts){
+//			b.update(delta);
+//			if(!b.isAlive()){
+//				dead.add(b);
+//			}
+//		}
+//		for(Bite b : bites) {
+//			b.update(delta);
+//			if(!b.isAlive()){
+//				dead1.add(b);
+//			}
+//		}
+//		for(HydroPump b : pumps) {
+//			b.update(delta);
+//			if(!b.isAlive()){
+//				dead2.add(b);
+//			}
+//		}
+//		for(Fireblast b : dead){
+//			blasts.remove(b);
+//		}
+//		dead.clear();
+//		for(Bite b : dead1){
+//			bites.remove(b);
+//		}
+//		dead1.clear();
+//		for(HydroPump b : dead2){
+//			pumps.remove(b);
+//		}
+//		dead1.clear();
+//		//this.fireblast.setFrameDuration(elapsed);
+//
+//		if(Gdx.input.isKeyJustPressed(Input.Keys.X) && cd > 5){
+//			bites.add(new Bite(this.x, this.y, AnimationDirection.DOWN));
+//			cd = 0;
+//		}
+//		
+//		cd++;
+//		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+//			move.execute(new Position(Gdx.input.getX(), Gdx.input.getY()));
+//		}
+//		
+//		//move.update(delta);
+//		if(moving) {
+//			x = MyInterpolation.linear(elapsedTime / totalTime, source.x, dest.x);
+//			y = MyInterpolation.linear(elapsedTime / totalTime, source.y, dest.y);
+//			//System.err.println("step: " + e.x + " | " + e.y + " @" + (elapsedTime / totalTime) + "  -  " + source.x + " | " + dest.x);
+//			elapsedTime += delta;
+//			if(elapsedTime >= totalTime) {
+//				moving = false;
+//				pkmn.haltAnimation(1);
+//			}
+//		}
+//		pkmn.setPosition(getScreenX(), getScreenY());
 	}
 
-	@Override
 	public void render(SpriteBatch sb) {
-		font.draw(sb, "hier text", getScreenX(), getScreenY() + 32);
+		//font.draw(sb, "hier text", getScreenX(), getScreenY() + 32);
 		
 		pkmn.render(sb);
 		
@@ -180,8 +178,8 @@ public class Schiggy extends MovingEntity implements MovementShandler, InputHand
 	public void render(ShapeRenderer sr) {
 		sr.set(ShapeType.Line);
 		sr.setColor(Color.BLUE);
-		sr.circle(getScreenX(), getScreenY(), 16, 16);
-		sr.rect(getScreenX(), getScreenY(), pkmn.getAnimationWidth(), pkmn.getAnimationHeight());
+		//sr.circle(getScreenX(), getScreenY(), 16, 16);
+		//sr.rect(getScreenX(), getScreenY(), pkmn.getAnimationWidth(), pkmn.getAnimationHeight());
 		
 		//Gdx.gl20.glLineWidth(10);
 		//sr.curve(getScreenX() + 8, getScreenY() + 8, Gdx.input.getX(), Gdx.input.getY(), 10, 10, 10, 10, 1000);

@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.simondaniel.MyRandom;
-import net.simondaniel.fabio.DrawObject;
+import net.simondaniel.entities.Drawer;
 
-public class Statusbar implements DrawObject{
+public class Statusbar implements Drawer{
 
 	private static TextureRegion barTex;
 	private int x, y, hx, hy, ex, ey;

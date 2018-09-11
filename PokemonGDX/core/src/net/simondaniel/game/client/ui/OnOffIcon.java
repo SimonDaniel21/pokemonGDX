@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-import net.simondaniel.game.client.battle.input.BattleInput;
+import net.simondaniel.fabio.input.BattleInput;
 
 public class OnOffIcon extends Image{
 

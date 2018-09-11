@@ -3,11 +3,11 @@ package net.simondaniel.game.client.ui;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import net.simondaniel.fabio.DrawObject;
+import net.simondaniel.entities.Drawer;
+import net.simondaniel.fabio.input.BattleInput;
 import net.simondaniel.fabio.input.InputHandler;
-import net.simondaniel.game.client.battle.input.BattleInput;
 
-public abstract class UIitem implements DrawObject, InputHandler<BattleInput>{
+public abstract class UIitem implements Drawer, InputHandler<BattleInput>{
 
 	protected int x, y, w, h;
 	

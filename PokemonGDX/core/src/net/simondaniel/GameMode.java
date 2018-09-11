@@ -1,4 +1,4 @@
-package net.simondaniel.fabio;
+package net.simondaniel;
 
 public enum GameMode {
 	ONE_VS_ONE("1v1", new int[] {1,1}),

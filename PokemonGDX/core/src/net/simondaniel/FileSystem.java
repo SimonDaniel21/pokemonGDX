@@ -12,7 +12,6 @@ public class FileSystem {
 	private static String LOCATION;
 	
 	static {
-		//LOCATION = System.getProperty("user.home") + File.separator + ".sdeseus" + File.separator + "KartenspielData";
 		LOCATION = ".sdeseus" + File.separator + "pokemonGDX";
 		File dir = new File(LOCATION);
 		if(!dir.exists()) {

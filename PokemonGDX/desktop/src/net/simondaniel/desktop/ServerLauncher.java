@@ -7,7 +7,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import com.esotericsoftware.kryonet.Listener.LagListener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 
-import net.simondaniel.fabio.GameMode;
+import net.simondaniel.GameMode;
 import net.simondaniel.game.server.GameServerManager;
 import net.simondaniel.network.server.GameServer;
 

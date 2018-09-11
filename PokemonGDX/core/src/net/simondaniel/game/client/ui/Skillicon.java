@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.simondaniel.MyRandom;
-import net.simondaniel.fabio.DrawObject;
+import net.simondaniel.entities.Drawer;
 import net.simondaniel.screens.MainMenuScreen;
 
-public class Skillicon implements DrawObject{
+public class Skillicon implements Drawer{
 
 	
 	private static final int ICON_WIDTH = 64, BORDER = 2;

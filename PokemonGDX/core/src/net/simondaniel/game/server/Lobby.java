@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.fabio.GameMode;
 import net.simondaniel.game.client.OneVsOneGame;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.GameServer.Packet;

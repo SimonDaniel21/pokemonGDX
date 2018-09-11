@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import net.simondaniel.control.Controller;
 import net.simondaniel.entities.EntityInformation.OnlinePlayerInfo;
-import net.simondaniel.fabio.DrawObject;
 import net.simondaniel.game.client.DrawableObject;
 import net.simondaniel.game.server.GameObjectS;
 

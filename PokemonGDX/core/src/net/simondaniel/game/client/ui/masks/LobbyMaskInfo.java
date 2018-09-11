@@ -2,7 +2,7 @@ package net.simondaniel.game.client.ui.masks;
 
 import java.util.List;
 
-import net.simondaniel.fabio.GameMode;
+import net.simondaniel.GameMode;
 import net.simondaniel.network.UserTracker;
 import net.simondaniel.network.client.GameClient;
 

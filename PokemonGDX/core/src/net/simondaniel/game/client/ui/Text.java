@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import net.simondaniel.game.client.battle.input.BattleInput;
+import net.simondaniel.fabio.input.BattleInput;
 
 public class Text extends UIitem{
 

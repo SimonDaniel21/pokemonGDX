@@ -1,5 +1,10 @@
 package net.simondaniel.game.client.gfx;
 
+/**
+ * legt Fest welche eine Animationen ein Pokemon besitzt und in welcher Weise sie eingesetzt werden
+ * @author simon
+ *
+ */
 public class AnimationLayout {
 	
 	public final SpecialAnimationType sat;
@@ -148,6 +153,11 @@ public class AnimationLayout {
 	}
 	
 	public static class AnimationNotSupportedException extends Exception{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public AnimationNotSupportedException(AnimationType t){
 			super("the current layout does not support animations of type " + t + " !");
 		}

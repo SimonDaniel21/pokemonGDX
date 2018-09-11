@@ -17,8 +17,8 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener.LagListener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 
+import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.fabio.GameMode;
 import net.simondaniel.network.Network;
 import net.simondaniel.network.Network_interface;
 import net.simondaniel.network.client.Request.LobbyCreateC;

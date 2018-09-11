@@ -17,9 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.esotericsoftware.kryonet.Connection;
 
 import net.simondaniel.GameConfig;
+import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.MyRandom;
-import net.simondaniel.fabio.GameMode;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.NamingDialog;

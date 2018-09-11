@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import net.simondaniel.fabio.input.BattleInput;
 import net.simondaniel.fabio.input.FabioInput.BattleInputType;
-import net.simondaniel.game.client.battle.input.BattleInput;
 
 public abstract class MyButton extends UIitem{
 

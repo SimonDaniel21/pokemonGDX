@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import net.simondaniel.game.client.battle.input.BattleInput;
+import net.simondaniel.fabio.input.BattleInput;
 
 public class MyTable extends UIitem{
 

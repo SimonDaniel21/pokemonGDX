@@ -29,8 +29,8 @@ public class MoveToAction extends ReversableAction<Position, MovingEntity>{
 		this.speed = speed;
 		this.e = this.object;
 		
-		xServer = e.getX();
-		yServer = e.getY();
+//		xServer = e.getX();
+//		yServer = e.getY();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class MoveToAction extends ReversableAction<Position, MovingEntity>{
 		}
 		elapsedTime = 0;
 		
-		this.source = new Position(e.x, e.y);
+		//this.source = new Position(e.x, e.y);
 		this.dest = dest;
 		float dist = source.distance(dest);
 		totalTime = dist * (1 / speed);
@@ -72,9 +72,9 @@ public class MoveToAction extends ReversableAction<Position, MovingEntity>{
 		}
 
 		if(playing) {
-			e.x = MyInterpolation.linear(elapsedTime / totalTime, source.x, dest.x);
-			e.y = MyInterpolation.linear(elapsedTime / totalTime, source.y, dest.y);
-			System.err.println("step: " + e.x + " | " + e.y + " @" + (elapsedTime / totalTime) + "  -  " + source.x + " | " + dest.x);
+//			e.x = MyInterpolation.linear(elapsedTime / totalTime, source.x, dest.x);
+//			e.y = MyInterpolation.linear(elapsedTime / totalTime, source.y, dest.y);
+//			System.err.println("step: " + e.x + " | " + e.y + " @" + (elapsedTime / totalTime) + "  -  " + source.x + " | " + dest.x);
 			elapsedTime += delta;
 			if(elapsedTime >= totalTime) {
 				playing = false;
