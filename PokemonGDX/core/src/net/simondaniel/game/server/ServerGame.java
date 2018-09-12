@@ -9,7 +9,6 @@ import net.simondaniel.network.client.Request.MovementC;
 import net.simondaniel.network.client.Request.RequestAreaC;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.Response.StartGameS;
-import net.simondaniel.network.server.User;
 import net.simondaniel.network.server.UserConnection;
 import net.simondaniel.network.server.GameServer.Packet;
 
@@ -131,7 +130,7 @@ public class ServerGame implements Runnable{
 		
 		p.players = new String[lobby.size()];
 		for(int i = 0; i < lobby.size(); i++)
-			p.players[i] = lobby.getUsers()[i].user.name;
+			p.players[i] = lobby.getUsers()[i].name;
 		
 		lobby.sendToAllTCP(p);
 		

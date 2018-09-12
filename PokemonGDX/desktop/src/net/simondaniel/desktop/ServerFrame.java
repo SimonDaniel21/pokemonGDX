@@ -17,7 +17,6 @@ import javax.swing.border.EmptyBorder;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.Response.EndConnectionS;
 import net.simondaniel.network.server.ServerMonitor;
-import net.simondaniel.network.server.User;
 
 public class ServerFrame extends JFrame implements ServerMonitor{
 
@@ -125,12 +124,12 @@ public class ServerFrame extends JFrame implements ServerMonitor{
 	}
 
 	@Override
-	public void connected(User u) {
-		userList.add(u.getName());
+	public void connected(String u) {
+		userList.add(u);
 	}
 	@Override
-	public void disConnected(User u) {
-		userList.remove(u.getName());
+	public void disConnected(String u) {
+		userList.remove(u);
 	}
 
 	@Override

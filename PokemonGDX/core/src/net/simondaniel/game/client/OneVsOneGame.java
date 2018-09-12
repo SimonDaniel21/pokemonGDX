@@ -55,7 +55,7 @@ public class OneVsOneGame extends GameInstance{
 		Entity e;
 		for(UserConnection c : lobby.getUsers()) {
 			int r = MyRandom.random.nextInt(12)+1;
-			e = new OnlinePlayer(c.user.name, world, test);
+			e = new OnlinePlayer(c.name, world, test);
 			e.setPosition(r, 1);
 			addEntity(e);
 		}

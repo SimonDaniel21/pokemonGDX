@@ -8,8 +8,8 @@ import com.esotericsoftware.kryonet.Listener.LagListener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 
 import net.simondaniel.GameMode;
-import net.simondaniel.game.server.GameServerManager;
 import net.simondaniel.network.server.GameServer;
+import net.simondaniel.network.server.ServerListener;
 
 public class ServerLauncher {
 
@@ -26,10 +26,10 @@ public class ServerLauncher {
 			boolean lag = true;
 			
 			if(lag) {
-				server.addListener(new LagListener(50, 200, new GameServerManager(server)));
+				server.addListener(new LagListener(50, 200, new ServerListener(server)));
 			}
 			else {
-				server.addListener(new ThreadedListener(new GameServerManager(server)));
+				server.addListener(new ThreadedListener(new ServerListener(server)));
 			}
 			
 			System.out.println("launched server!");

@@ -1,18 +1,18 @@
-package net.simondaniel.game.server;
+package net.simondaniel.network.server;
 
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+
+import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.client.Request.*;
-import net.simondaniel.network.server.GameServer;
-import net.simondaniel.network.server.UserConnection;
 import net.simondaniel.network.server.Response.*;
-public class GameServerManager extends Listener{
+public class ServerListener extends Listener{
 	
 	//int id;
 	
 	private GameServer gs;
-	public GameServerManager(GameServer gs) {
+	public ServerListener(GameServer gs) {
 
 		this.gs = gs;
 		//lobbys.add(new Lobby("existing lobby", GameMode.ONE_VS_ONE, gs));
@@ -43,8 +43,8 @@ public class GameServerManager extends Listener{
 			gs.activateUser(c, p.name, p.code);
 		}
 		else {
-			if(c.user != null && c.user.lobby != null)
-				c.user.lobby.receivedFromClient(c, o);
+			if(c != null && c.lobby != null)
+				c.lobby.receivedFromClient(c, o);
 		}
 		if(o instanceof LobbyListC) {
 			LobbyListS lls = new LobbyListS();
@@ -67,7 +67,7 @@ public class GameServerManager extends Listener{
 			MessageC p = (MessageC) o;
 			MessageS s = new MessageS();
 			s.message = p.message;
-			s.sender = c.user.name;
+			s.sender = c.name;
 			gs.window.messageReceived(s.sender, s.message);
 			gs.sendToAllTCP(s);
 		}
@@ -75,7 +75,7 @@ public class GameServerManager extends Listener{
 		if(o instanceof TeamJoinC) {
 			TeamJoinC t = (TeamJoinC) o;
 			
-			int teamSlot = c.user.lobby.joinTeam(c, t.teamID);
+			int teamSlot = c.lobby.joinTeam(c, t.teamID);
 			//System.out.println("trying to add to team " + t.teamID + " got slot " + teamSlot);
 			
 			if(teamSlot == Lobby.LOBBY_FULL || teamSlot == Lobby.NO_SUCH_USER) {
@@ -86,9 +86,9 @@ public class GameServerManager extends Listener{
 			else {
 				TeamJoinedS p = new TeamJoinedS();
 				p.id = t.teamID;
-				p.name = c.user.name;
+				p.name = c.name;
 				p.slotID = teamSlot;
-				c.user.lobby.sendToAllTCP(p);
+				c.lobby.sendToAllTCP(p);
 			}
 		}
 		else if(o instanceof LobbyCreateC){
@@ -115,7 +115,7 @@ public class GameServerManager extends Listener{
 		}
 		else if(o instanceof LobbyLeaveC) {
 			LobbyLeaveC p = (LobbyLeaveC) o;
-			Lobby l = c.user.lobby;
+			Lobby l = c.lobby;
 			
 			if(l != null) {
 				l.removeUser(c);
@@ -131,7 +131,7 @@ public class GameServerManager extends Listener{
 				System.out.println("lobby is not null");
 				
 				if(user != null) {
-					l.invite(user, c.user.name);
+					l.invite(user, c.name);
 				}
 			}
 		}
@@ -145,7 +145,7 @@ public class GameServerManager extends Listener{
 		}
 		else if(o instanceof UserReadyC) {
 			UserReadyC p = (UserReadyC) o;
-			Lobby l = c.user.lobby;
+			Lobby l = c.lobby;
 			if(l != null) {
 				l.ready(c, p.ready);
 			}
@@ -157,9 +157,9 @@ public class GameServerManager extends Listener{
 	public void disconnected(Connection c) {
 		UserConnection user = (UserConnection) c;
 		gs.logout(user);
-		if(user.user != null) {
-			Lobby l = user.user.lobby;
-			System.out.println("removing user " + user.user.getName());
+		if(user != null) {
+			Lobby l = user.lobby;
+			System.out.println("removing user " + user.getName());
 			if(l != null) {
 				l.removeUser(user);
 				if(l.isEmpty()) {

@@ -12,10 +12,10 @@ import net.simondaniel.Config;
 import net.simondaniel.GameConfig;
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
-import net.simondaniel.game.server.GameServerManager;
 import net.simondaniel.network.Download;
 import net.simondaniel.network.UpdateDialog;
 import net.simondaniel.network.server.GameServer;
+import net.simondaniel.network.server.ServerListener;
 
 public class DesktopLauncher {
 	public static void main(String[] args) {
@@ -102,7 +102,7 @@ public class DesktopLauncher {
 		Gdx.files = new LwjglFiles();
 		// PokemonGDXS serverProgram = new PokemonGDXS(server);
 		// serverProgram.start();
-		server.addListener(new GameServerManager(server));
+		server.addListener(new ServerListener(server));
 		System.out.println("launching server!");
 	}
 	
@@ -110,7 +110,7 @@ public class DesktopLauncher {
 		Gdx.files = new LwjglFiles();
 		// PokemonGDXS serverProgram = new PokemonGDXS(server);
 		// serverProgram.start();
-		server.addListener(new GameServerManager(server));
+		server.addListener(new ServerListener(server));
 		System.out.println("launching server!");
 	} 
 }

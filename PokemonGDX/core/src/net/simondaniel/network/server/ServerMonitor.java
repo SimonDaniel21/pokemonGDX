@@ -2,13 +2,13 @@ package net.simondaniel.network.server;
 
 public interface ServerMonitor {
 
-	void connected(User u);
+	void connected(String u);
 
 	void setVisible(boolean b);
 
 	void updateUPS(float aCTUAL_UPS);
 
-	void disConnected(User user);
+	void disConnected(String user);
 
 	void messageReceived(String sender, String message);
 

@@ -3,7 +3,6 @@ package net.simondaniel.game.server;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import net.simondaniel.network.server.GameServer;
-import net.simondaniel.network.server.User;
 
 public class PokemonGDXS{
 	

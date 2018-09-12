@@ -35,7 +35,6 @@ import net.simondaniel.network.server.Response.LoadAreaShandler;
 import net.simondaniel.network.server.Response.MovementS;
 import net.simondaniel.network.server.Response.MovementShandler;
 import net.simondaniel.network.server.ServerMonitor;
-import net.simondaniel.network.server.User;
 import net.simondaniel.network.server.UserConnection;
 
 public class GameClient extends Client implements Network_interface {

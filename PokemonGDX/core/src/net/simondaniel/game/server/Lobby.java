@@ -136,7 +136,7 @@ public class Lobby implements MyServerlistener{
 		ArrayList<String> l = new ArrayList<String>();
 		for(UserConnection s : invitedUsers.keySet()) {
 			if(invitedUsers.get(s) == state)
-				l.add(s.user.name);
+				l.add(s.name);
 		}
 		String[] sa = new String[l.size()];
 		for(int i = 0; i < l.size(); i++) {
@@ -146,7 +146,7 @@ public class Lobby implements MyServerlistener{
 	}
 	
 	public void addUser(UserConnection c) {
-		System.out.println("Lobby adds user " + c.user.name);
+		System.out.println("Lobby adds user " + c.name);
 		LobbyJoinS ps = new LobbyJoinS();
 		
 		if(isFull()) {
@@ -155,9 +155,9 @@ public class Lobby implements MyServerlistener{
 		else {
 			users.add(c);
 			
-			c.user.lobby = this;
+			c.lobby = this;
 			LobbyUserJoinedS luj = new LobbyUserJoinedS();
-			luj.name = c.user.name;
+			luj.name = c.name;
 			sendToAllTCPexcept(luj, c);
 			
 			ps.name = NAME;
@@ -186,7 +186,7 @@ public class Lobby implements MyServerlistener{
 		
 		if(removed) {
 			LobbyUserLeftS p = new LobbyUserLeftS();
-			p.name = c.user.name;
+			p.name = c.name;
 			sendToAllTCP(p);
 			c.sendTCP(p);
 		}
@@ -201,7 +201,7 @@ public class Lobby implements MyServerlistener{
 		
 		names[0] = new String[users.size()];
 		for(int i = 0; i < names[0].length; i++) {
-			names[0][i] = users.get(i).user.name;
+			names[0][i] = users.get(i).name;
 		}
 		
 		int index = 0;
@@ -209,7 +209,7 @@ public class Lobby implements MyServerlistener{
 			names[i] = new String[teamSizes[i-1]];
 			for(int j = 0; j < teamSizes[j]; j++) {
 				if(userSlots[index] != null)
-					names[i][j] = userSlots[index].user.name;
+					names[i][j] = userSlots[index].name;
 				else
 					names[i][j] = null;
 				index++;
@@ -330,7 +330,7 @@ public class Lobby implements MyServerlistener{
 		
 		InviteUserToLobbyS p = new InviteUserToLobbyS();
 		p.lobby = NAME;
-		p.name = c.user.name;
+		p.name = c.name;
 		sendToAllTCP(p);
 		p.sender = sender;
 		c.sendTCP(p);
@@ -344,7 +344,7 @@ public class Lobby implements MyServerlistener{
 		
 		InviteAnswerS s = new InviteAnswerS();
 		s.answer = answer;
-		s.name = c.user.name;
+		s.name = c.name;
 		sendToAllTCP(s);
 		if(answer)
 			addUser(c);
@@ -387,7 +387,7 @@ public class Lobby implements MyServerlistener{
 			if(userSlots[i] == c && readys[i] != ready) {
 				readys[i] = ready;
 				UserReadyS p = new UserReadyS();
-				p.user =  c.user.name;
+				p.user =  c.name;
 				p.ready = ready;
 				sendToAllTCP(p);
 				if(!ready)

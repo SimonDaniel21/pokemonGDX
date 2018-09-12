@@ -44,7 +44,7 @@ public class GameServer extends Server{
 
 	public ServerMonitor window;
 	
-	List<User> loggedIn = new ArrayList<User>();
+	List<UserConnection> loggedIn = new ArrayList<UserConnection>();
 	List<UserConnection> usersTrackingUsers;
 	
 	public List<Lobby> lobbys;
@@ -66,7 +66,7 @@ public class GameServer extends Server{
 			database.save();
 		}
 		
-		loggedIn.add(new User("Marco"));
+		loggedIn.add(new UserConnection("Marco"));
 		
 		// For consistency, the classes to be sent over the network are
 		// registered by the same method for both the client and server.
@@ -120,7 +120,7 @@ public class GameServer extends Server{
 	 */
 	public String login(UserConnection c, String name, String pw) {
 
-		for (User u : loggedIn) {
+		for (UserConnection u : loggedIn) {
 			if (u.getName().equalsIgnoreCase(name)) {
 				return "a user with the name " + u.getName() + " is already logged into the server";
 			}
@@ -129,9 +129,8 @@ public class GameServer extends Server{
 		String res = checkPw(name, pw);
 
 		if (res.equals("success")) {
-			User u = new User(name);
 			
-			c.user = u;
+			c.login(name);
 			
 			UserJoinedS p = new UserJoinedS();
 			p.user = name;
@@ -139,8 +138,8 @@ public class GameServer extends Server{
 				con.sendTCP(p);
 			}
 			
-			loggedIn.add(u);
-			window.connected(u);
+			loggedIn.add(c);
+			window.connected(c.name);
 		}
 		
 		return res;
@@ -148,13 +147,13 @@ public class GameServer extends Server{
 	
 
 	public void logout(UserConnection user) {
-		if(loggedIn.remove(user.user)){
+		if(loggedIn.remove(user)){
 			UserLeftS p = new UserLeftS();
-			p.user = user.user.name;
+			p.user = user.name;
 			for(UserConnection con : usersTrackingUsers) {
 				con.sendTCP(p);
 			}
-			window.disConnected(user.user);
+			window.disConnected(user.name);
 		}
 	}
 
@@ -182,7 +181,7 @@ public class GameServer extends Server{
 	public UserConnection getUser(String name) {
 		for (Connection c : getConnections()) {
 			UserConnection uc = (UserConnection)c;
-			if (uc.user.getName().equals(name))
+			if (uc.getName().equals(name))
 				return uc;
 		}
 		return null;
@@ -202,7 +201,7 @@ public class GameServer extends Server{
 	}
 	
 	
-	public List<User> getUsers() {
+	public List<UserConnection> getUsers() {
 		return loggedIn;
 	}
 	
@@ -210,7 +209,7 @@ public class GameServer extends Server{
 		for(Connection c : getConnections()) {
 			
 			UserConnection u = (UserConnection) c;
-			if(u.user != null && u.user.lobby == null)
+			if(u != null && u.lobby == null)
 				u.sendTCP(o);
 		}
 	}
