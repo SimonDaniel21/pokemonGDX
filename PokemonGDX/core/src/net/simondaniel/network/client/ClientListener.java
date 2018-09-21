@@ -31,46 +31,26 @@ public class ClientListener extends Listener{
 	public void connected (Connection connection) {
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void received (Connection c, Object o) {
 		client.packetsReceived++;
-		
-		if(o instanceof LobbyUserJoinedS) {
-		}
-		
-		if(o instanceof Ping){
-			Ping p = (Ping)o;
-			//System.err.println(c.getReturnTripTime());
+		if(true != false)
 			return;
-		}
 		
-		
-		if(o instanceof LoginS){
-			LoginS p = (LoginS) o;
-			System.out.println("client received login answer: " + p.response);
-			client.errorMsg = p.response;
-			client.verify(p.response.equals("success"));
-			if(client.state == State.DECLINED){
-				//c.close();
-			}
-		}
-		else if(o instanceof EndConnectionS){
+		if(o instanceof EndConnectionS){
 			EndConnectionS p = (EndConnectionS)o;
 			client.disconnect(p.reason);
 			client.addPacket(c, o);
 		}
-		else if(o instanceof MessageS){
-			MessageS r = (MessageS) o;
-			//client.window.messageReceived(r.sender, r.message);
-			client.addPacket(c, o);
-		}
-		else if(o instanceof FileTransferS) {
-			FileTransferS p = (FileTransferS) o;
-			FileTransfer.receivedFileFrame(p);
-		}
 		else{
 			client.addPacket(c, o);
 		}
+//		else if(o instanceof FileTransferS) {
+//			FileTransferS p = (FileTransferS) o;
+//			FileTransfer.receivedFileFrame(p);
+//		}
+		
 	}
 
 	@Override

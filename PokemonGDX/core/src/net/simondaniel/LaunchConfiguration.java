@@ -24,4 +24,16 @@ public enum LaunchConfiguration {
 		}
 		return RELEASE_CLIENT;
 	}
+	
+	public boolean isServer() {
+		switch (this) {
+		case DEBUG_CLIENT:
+		case LOGGED_IN:
+		case RELEASE_CLIENT:
+			return false;
+
+		default:
+			return true;
+		}
+	}
 }

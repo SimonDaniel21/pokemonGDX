@@ -24,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -69,7 +70,7 @@ public class GameInstance implements MyListener, MyServerlistener{
 	GameServer server;
 
 	SpriteBatch sb;
-	OrthographicCamera cam;
+	OrthographicCamera cam, UIcam;
 	Viewport view;
 
 	FabioInput input;
@@ -95,20 +96,21 @@ public class GameInstance implements MyListener, MyServerlistener{
 		sr = new ShapeRenderer();
 		sr.setAutoShapeType(true);
 		this.client = client;
-		client.addMyListener(this);
+		//TODO
+		//client.addMyListener(this);
 		this.sb = sb;
 		cam = new OrthographicCamera();
+		UIcam = new OrthographicCamera();
 		view = new FitViewport(1280, 720, cam);
 		view.setScreenSize(1280, 720);
-		stage = new Stage(view);
+		
+		stage = new Stage(new StretchViewport(1280, 720, UIcam));
 		handler = new UImaskHandler(null);
 		Skin skin = new Skin(Gdx.files.internal("skins/sgx/sgx-ui.json"));
 		ui = new IngameMenu(skin);
 		stage.addActor(ui);
 		ui.debug();
 
-		// view.apply(true);
-		// view.apply();
 		input = new FabioInput(view);
 
 		InputMultiplexer inmul = new InputMultiplexer();
@@ -149,7 +151,10 @@ public class GameInstance implements MyListener, MyServerlistener{
 			TiledMap map = new TmxMapLoader().load("maps/arena.tmx");
 			renderer = new OrthogonalTiledMapRenderer(map, 2);
 			debugRenderer = new Box2DDebugRenderer();
+			
 			ui.show(stage);
+			
+			
 //			OnlinePlayerInfo info = new OnlinePlayerInfo();
 //			info.id = 20;
 //			info.name = "simon";
@@ -178,7 +183,7 @@ public class GameInstance implements MyListener, MyServerlistener{
 		if (isServer) {
 
 		} else {
-			client.removeMyListener(this);
+			//client.removeMyListener(this);
 		}
 
 	}
@@ -196,7 +201,7 @@ public class GameInstance implements MyListener, MyServerlistener{
 			
 			p.x = input.getWorldX()/ 32;
 			p.y = input.getWorldY() / 32;
-			client.send(p);
+			//client.send(p);
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			//System.out.println("sent @" + timestamp);
 		}

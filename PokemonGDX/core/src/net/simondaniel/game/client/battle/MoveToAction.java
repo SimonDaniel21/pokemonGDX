@@ -93,7 +93,7 @@ public class MoveToAction extends ReversableAction<Position, MovingEntity>{
 		//m.dir = Direction.DOWN;
 		m.corrections = corrections;
 		m.id = -1;
-		client.send(m);
+		//client.send(m);
 	}
 
 	@Override

@@ -5,12 +5,9 @@ import java.util.HashSet;
 import java.util.Random;
 
 import net.simondaniel.game.client.GameInstance;
-import net.simondaniel.network.client.Request.MovementC;
-import net.simondaniel.network.client.Request.RequestAreaC;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.Response.StartGameS;
 import net.simondaniel.network.server.UserConnection;
-import net.simondaniel.network.server.GameServer.Packet;
 
 /**
  * basic abstract blueprint of a runnable game with a random number of players involved.
@@ -24,7 +21,7 @@ public class ServerGame implements Runnable{
 	
 	private GameInstance instance;
 	
-	HashSet<Packet> packetBuffer;
+	//HashSet<ServerPacket> packetBuffer;
 	
 	private Lobby lobby;
 	final private int minUsers, maxUsers;
@@ -47,7 +44,7 @@ public class ServerGame implements Runnable{
 	
 	public ServerGame(GameServer server,  GameInstance instance){
 		VERSION = "invalid";
-		packetBuffer = new HashSet<GameServer.Packet>();
+		//packetBuffer = new HashSet<ServerPacket>();
 		this.server = server;
 		this.minUsers = 2;
 		this.maxUsers = 2;
@@ -66,12 +63,12 @@ public class ServerGame implements Runnable{
 		Object o;
 		UserConnection c;
 		//System.out.println("handling " + packetBuffer.size() + "packets");
-		for(Packet p : packetBuffer){
-			c = p.con;
-			o = p.o;
-			instance.receivedFromClient(c, o);
-		}
-		packetBuffer.clear();
+//		for(ServerPacket p : packetBuffer){
+//			c = p.con;
+//			o = p.o;
+//			instance.receivedFromClient(c, o);
+//		}
+//		packetBuffer.clear();
 	}
 	
 	private void gameLoop(){

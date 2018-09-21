@@ -11,7 +11,6 @@ import com.esotericsoftware.kryonet.Connection;
 
 import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.MyRandom;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.Friendlist;
 import net.simondaniel.game.client.ui.Inbox;
@@ -22,10 +21,11 @@ import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.network.UserTracker;
 import net.simondaniel.network.UserTracker.UserTrackerListener;
+import net.simondaniel.network.chanels.MessageChannel;
+import net.simondaniel.network.client.ChanelListener;
+import net.simondaniel.network.client.ChanelListenerList;
 import net.simondaniel.network.client.GameClient;
-import net.simondaniel.network.client.MyListener;
 import net.simondaniel.network.client.Request.InviteAnswerC;
-import net.simondaniel.network.client.Request.LobbyJoinC;
 import net.simondaniel.network.client.Request.LobbyListC;
 import net.simondaniel.network.server.Response.EndConnectionS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
@@ -42,7 +42,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	Friendlist fl;
 	LobbyMask lobbyMask;
 	
-	MyListener listener;
+	ChanelListener listener;
 	
 	Inbox inbox;
 	
@@ -55,11 +55,9 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	public GameMenu(final Skin skin) {
 		super(new LoginMaskInfo(), skin);
 		
-		listener = new GameMenuListener();
 		gameInviteListener = new GameInviteListener();
 		
-		userTracker = new UserTracker();
-		userTrackerListener = new UserListener();
+	
 		lobbyMask  = new LobbyMask(skin);
 		
 		
@@ -140,10 +138,13 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	
 		gc.sendTCP(new LobbyListC());
 		
+		userTracker = new UserTracker(info.client.myListeners);
+		userTrackerListener = new UserListener();
 		userTracker.addListener(userTrackerListener);
 		userTracker.startTracking(gc);
 		
-		gc.addMyListener(listener);
+		listener = new GameMenuListener(info.client.myListeners);
+		gc.addChanelListener(listener);
 		
 		if(PokemonGDX.CONFIGURATION == LaunchConfiguration.LOGGED_IN) {
 			info.client.sendLobbyJoinRequest("testLobby");
@@ -152,14 +153,19 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 
 	@Override
 	public void leave() {
-		info.client.removeMyListener(listener);
+		info.client.removeChanelListener(listener);
 		userTracker.removeListener(userTrackerListener);
 	}
 	
-	private class GameMenuListener implements MyListener{
+	private class GameMenuListener extends ChanelListener{
 		
+		public GameMenuListener(ChanelListenerList list) {
+			super(MessageChannel.gameMenuState, false, list);
+		}
+
+
 		@Override
-		public void received(Connection c, Object o) {
+		protected void channelReceive(Connection c, Object o) {
 			if(o instanceof EndConnectionS) {
 				EndConnectionS p = (EndConnectionS) o;
 				InfoDialog.show(p.reason, getStage());
@@ -216,7 +222,6 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 							gameInviteListener);
 				}
 			}
-		
 		}
 		
 	}
@@ -229,7 +234,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			InviteAnswerC p = new InviteAnswerC();
 			p.lobby = data[0];
 			p.answer = true;
-			info.client.send(p);
+			info.client.send(MessageChannel.initialChannel, p);
 			deactivateUntilResponse();
 		}
 

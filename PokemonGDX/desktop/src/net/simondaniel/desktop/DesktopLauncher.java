@@ -14,6 +14,7 @@ import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.network.Download;
 import net.simondaniel.network.UpdateDialog;
+import net.simondaniel.network.chanels.MessageChannel;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.ServerListener;
 
@@ -37,6 +38,8 @@ public class DesktopLauncher {
 			config = LaunchConfiguration.configuration(args[0]);
 		
 		LaunchConfiguration.config = config;
+		
+		MessageChannel.initCommunication(config.isServer());
 		
 		switch (config) {
 		case RELEASE_CLIENT:

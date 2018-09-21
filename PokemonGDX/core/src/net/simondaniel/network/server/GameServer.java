@@ -18,16 +18,21 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import net.simondaniel.GameMode;
 import net.simondaniel.MyRandom;
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.Network;
+import net.simondaniel.network.chanels.MessageChannel;
+import net.simondaniel.network.chanels.Protocol;
 import net.simondaniel.network.client.Request.MovementC;
 import net.simondaniel.network.client.Request.MovementChandler;
 import net.simondaniel.network.client.Request.RequestAreaC;
 import net.simondaniel.network.client.Request.RequestAreaChandler;
+import net.simondaniel.network.protocols.InitialListener;
+import net.simondaniel.network.protocols.InitialProtocol;
 import net.simondaniel.network.server.Response.EndConnectionS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyListS;
@@ -53,6 +58,7 @@ public class GameServer extends Server{
 
 	public GameServer() throws IOException {
 
+		MessageChannel.setServerRef(this);
 		lobbys = new ArrayList<Lobby>();
 		usersTrackingUsers = new ArrayList<UserConnection>();
 		database = new LocalFileDatabase("database.deseus");
@@ -101,7 +107,9 @@ public class GameServer extends Server{
 	protected Connection newConnection() {
 		// By providing our own connection implementation, we can store per
 		// connection state without a connection ID to state look up.
-		return new UserConnection();
+		UserConnection c = new UserConnection();
+		c.addListener(new InitialListener(this, c.channelListeners));
+		return c;
 	}
 	
 	public void disconnect(UserConnection c) {
@@ -135,7 +143,7 @@ public class GameServer extends Server{
 			UserJoinedS p = new UserJoinedS();
 			p.user = name;
 			for(UserConnection con : usersTrackingUsers) {
-				con.sendTCP(p);
+				con.sendTCPS(p);
 			}
 			
 			loggedIn.add(c);
@@ -151,7 +159,7 @@ public class GameServer extends Server{
 			UserLeftS p = new UserLeftS();
 			p.user = user.name;
 			for(UserConnection con : usersTrackingUsers) {
-				con.sendTCP(p);
+				con.sendTCPS(p);
 			}
 			window.disConnected(user.name);
 		}
@@ -191,14 +199,7 @@ public class GameServer extends Server{
 		window.setVisible(true);
 	}
 	
-	public static class Packet{
-		public Packet(UserConnection con, Object o) {
-			this.con = con;
-			this.o = o;
-		}
-		public Object o;
-		public UserConnection con;
-	}
+	
 	
 	
 	public List<UserConnection> getUsers() {
@@ -210,30 +211,30 @@ public class GameServer extends Server{
 			
 			UserConnection u = (UserConnection) c;
 			if(u != null && u.lobby == null)
-				u.sendTCP(o);
+				u.sendTCPS(o);
 		}
 	}
 	
 	public void kickUser(UserConnection user) {
 		EndConnectionS p = new EndConnectionS();
 		p.reason = "kicked by server";
-		user.sendTCP(p);
+		user.sendTCPS(p);
 		user.close();
 	}
 
-	public void registerUser(Connection c, String name, String pw, String email) {
+	public void registerUser(UserConnection c, String name, String pw, String email) {
 		MessageS response = new MessageS();
 		response.sender = "server";
 		response.type = 0;
 		
 		if(name.length() < 3) {
 			response.message = "names have to be at least 3 characters long";
-			c.sendTCP(response);
+			c.sendTCPS(response);
 			return;
 		}
 		if(pw.length() < 3) {
 			response.message = "passwords have to be at least 3 characters long";
-			c.sendTCP(response);
+			c.sendTCPS(response);
 			return;
 		}
 		UserProfileDO updo = new UserProfileDO();
@@ -258,10 +259,10 @@ public class GameServer extends Server{
 				response.type = 1;
 			}
 		}
-		c.sendTCP(response);
+		c.sendTCPS(response);
 	}
 	
-	public void activateUser(Connection c, String name, String code) {
+	public void activateUser(UserConnection c, String name, String code) {
 		MessageS p = new MessageS();
 		p.sender = "server";
 		p.type = 0;
@@ -288,7 +289,7 @@ public class GameServer extends Server{
 			database.removeNotActivatedName(name);
 			database.save();
 		}
-		c.sendTCP(p);
+		c.sendTCPS(p);
 	}
 	
 	private static boolean sendActivationMail(String email, String name, String code) {
@@ -354,7 +355,7 @@ public class GameServer extends Server{
 		UserConnection c = getUser(user);
 		if(c == null) return false;
 		
-		c.sendTCP(o);
+		c.sendTCPS(o);
 		return true;
 	}
 

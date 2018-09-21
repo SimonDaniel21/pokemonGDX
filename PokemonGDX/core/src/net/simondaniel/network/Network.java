@@ -16,6 +16,7 @@ public class Network {
 	static public final int port = 54555;
 
 	// This registers objects that are going to be sent over the network.
+
 	static public void register (EndPoint endPoint) {
 		
 		Kryo kryo = endPoint.getKryo();
@@ -26,6 +27,7 @@ public class Network {
 		kryo.register(String[][].class);
 		kryo.register(UserJoinedS[].class);
 		kryo.register(byte[].class);
+		kryo.register(Message.class);
 
 		
 		for(Class<?> c : Request.class.getClasses()) {

@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.esotericsoftware.kryonet.Connection;
 
+import net.simondaniel.network.chanels.MessageChannel;
+import net.simondaniel.network.client.ChanelListener;
+import net.simondaniel.network.client.ChanelListenerList;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.MyListener;
 import net.simondaniel.network.client.Request.LobbyListC;
@@ -13,7 +16,7 @@ import net.simondaniel.network.server.Response.PlayerListS;
 import net.simondaniel.network.server.Response.UserJoinedS;
 import net.simondaniel.network.server.Response.UserLeftS;
 
-public class UserTracker implements MyListener{
+public class UserTracker extends ChanelListener{
 
 	private List<String> users;
 	private List<UserTrackerListener> listeners;
@@ -22,7 +25,8 @@ public class UserTracker implements MyListener{
 	
 	private boolean active;
 	
-	public UserTracker() {
+	public UserTracker(ChanelListenerList list) {
+		super(MessageChannel.userTrackChanel, false, list);
 		users = new ArrayList<String>();
 		listeners = new ArrayList<UserTrackerListener>();
 		active = false;
@@ -30,7 +34,7 @@ public class UserTracker implements MyListener{
 	
 	public void startTracking(GameClient gc) {
 		if(active) return;
-		gc.addMyListener(this);
+		gc.addChanelListener(this);
 		
 		for(UserTrackerListener l : listeners)
 			l.reset();
@@ -43,10 +47,29 @@ public class UserTracker implements MyListener{
 	
 	public void stopTracking() {
 		if(!active) return;
-		trackedClient.removeMyListener(this);
+		trackedClient.removeChanelListener(this);
+	}
+
+	public void addListener(UserTrackerListener l) {
+		listeners.add(l);
 	}
 	
-	public void received(Connection c, Object o) {
+	public void removeListener(UserTrackerListener l) {
+		listeners.remove(l);
+	}
+	
+	public List<String> getUsers(){
+		return users;
+	}
+	
+	public static interface UserTrackerListener{
+		public void userJoined(String name);
+		public void userLeft(String name);
+		public void reset();
+	}
+
+	@Override
+	public void channelReceive(Connection c, Object o) {
 		if(o instanceof PlayerListS) {
 			PlayerListS p = (PlayerListS)o;
 			for(UserJoinedS ujs : p.joined) {
@@ -67,23 +90,5 @@ public class UserTracker implements MyListener{
 			for(UserTrackerListener l : listeners) 
 				l.userLeft(p.user);
 		}
-	}
-
-	public void addListener(UserTrackerListener l) {
-		listeners.add(l);
-	}
-	
-	public void removeListener(UserTrackerListener l) {
-		listeners.remove(l);
-	}
-	
-	public List<String> getUsers(){
-		return users;
-	}
-	
-	public static interface UserTrackerListener{
-		public void userJoined(String name);
-		public void userLeft(String name);
-		public void reset();
 	}
 }

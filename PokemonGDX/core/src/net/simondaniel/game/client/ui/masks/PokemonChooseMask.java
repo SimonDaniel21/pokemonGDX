@@ -71,7 +71,7 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 		Image image = new Image(new TextureRegion(new Texture("gfx/pokeFrame2.png")));
 		buttons = new PokemonButton[6];
 		
-		info.gc.addMyListener(info.lobbyMask.listener);
+		info.gc.addChanelListener(info.lobbyMask.listener);
 		info.lobbyMask.getInfo().userTracker.addListener(info.lobbyMask.userTrackerListener);
 		
 		List<Pokemon> taken = new ArrayList<Pokemon>();
@@ -113,7 +113,7 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 
 	@Override
 	public void leave() {
-		info.gc.removeMyListener(info.lobbyMask.listener);
+		info.gc.removeChanelListener(info.lobbyMask.listener);
 		info.lobbyMask.getInfo().userTracker.removeListener(info.lobbyMask.userTrackerListener);
 	}
 

@@ -104,7 +104,7 @@ public class MoveAction extends ReversableAction<AnimationDirection, Entity>{
 		//m.dir = dir;
 		m.corrections = corrections;
 		m.id = -1;
-		client.send(m);
+		//client.send(m);
 	}
 
 	@Override

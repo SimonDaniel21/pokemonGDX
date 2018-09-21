@@ -11,7 +11,6 @@ import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.OneVsOneGame;
 import net.simondaniel.network.server.GameServer;
-import net.simondaniel.network.server.GameServer.Packet;
 import net.simondaniel.network.server.MyServerlistener;
 import net.simondaniel.network.server.Response.InviteAnswerS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
@@ -88,7 +87,7 @@ public class Lobby implements MyServerlistener{
 
 	@Override
 	public void receivedFromClient(UserConnection con, Object o) {
-		gameInstance.packetBuffer.add(new Packet(con, o));
+	
 	}
 
 	public UserConnection getUser(int i) {

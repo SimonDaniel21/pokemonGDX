@@ -20,8 +20,10 @@ import net.simondaniel.game.client.ui.InviteList;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.UserTracker.UserTrackerListener;
+import net.simondaniel.network.chanels.MessageChannel;
+import net.simondaniel.network.client.ChanelListener;
+import net.simondaniel.network.client.ChanelListenerList;
 import net.simondaniel.network.client.GameClient;
-import net.simondaniel.network.client.MyListener;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
 import net.simondaniel.network.client.Request.LobbyLeaveC;
 import net.simondaniel.network.client.Request.TeamJoinC;
@@ -62,7 +64,6 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		s.getFont("title").getData().markupEnabled = true;
 		debug();
 		//this.right();
-		listener = new LobbyMaskListener();
 		userTrackerListener = new UserListener();
 		title = new Label(null, s);
 		add(title).colspan(2).center();
@@ -387,8 +388,8 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	public void enter() {
 		
 		final GameClient gc = info.gc;
-		
-		gc.addMyListener(listener);
+		listener = new LobbyMaskListener(info.gc.myListeners);
+		gc.addChanelListener(listener);
 		info.userTracker.addListener(userTrackerListener);
 		
 		if(!info.joinLobby) {
@@ -441,15 +442,20 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 
 	@Override
 	public void leave() {
-		info.gc.removeMyListener(listener);
+		info.gc.removeChanelListener(listener);
 		info.userTracker.removeListener(userTrackerListener);
 	}
 	
 	
-	private class LobbyMaskListener implements MyListener{
+	private class LobbyMaskListener extends ChanelListener{
+
+		public LobbyMaskListener(ChanelListenerList list) {
+			super(MessageChannel.lobbyState, false, list);
+		}
+
 
 		@Override
-		public void received(Connection c, Object o) {
+		protected void channelReceive(Connection c, Object o) {
 			if(o instanceof LobbyUserJoinedS) {
 				//System.out.println("RECEIVED LOBBYJOIN " + info.gc.userName());
 				LobbyUserJoinedS p = (LobbyUserJoinedS) o;

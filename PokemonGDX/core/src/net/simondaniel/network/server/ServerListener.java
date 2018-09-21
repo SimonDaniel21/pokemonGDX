@@ -5,6 +5,10 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import net.simondaniel.game.server.Lobby;
+import net.simondaniel.network.chanels.MessageChannel;
+import net.simondaniel.network.chanels.MessageChannelEnd.InvalidMessageTypeError;
+import net.simondaniel.network.chanels.MessageChannelEnd.MessageNotHandledError;
+import net.simondaniel.network.chanels.Protocol;
 import net.simondaniel.network.client.Request.*;
 import net.simondaniel.network.server.Response.*;
 public class ServerListener extends Listener{
@@ -18,12 +22,35 @@ public class ServerListener extends Listener{
 		//lobbys.add(new Lobby("existing lobby", GameMode.ONE_VS_ONE, gs));
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public void received(Connection con, Object o) {
 		
 		UserConnection c = (UserConnection) con;
 		
 		gs.window.packetReceived();
+		
+		if(true != false)
+			return;
+		try {
+			int handled = 0;
+			for(Protocol p : c.protocols) {
+				if(p.canReceive(o)) {
+					p.chanelReceive(c, o);
+				}
+			}
+			if(handled != 1) {
+				throw new MessageNotHandledError(o.getClass().getName(), c.protocols);
+			}
+			
+		} catch (InvalidMessageTypeError e) {
+			e.printStackTrace();
+		} catch (MessageNotHandledError e) {
+			e.printStackTrace();
+		}
+		
+		boolean ttrue = true;
+		if(ttrue) return;
 
 		if(o instanceof LoginC) {
 			
