@@ -272,13 +272,15 @@ public class GameClient extends Client implements Network_interface {
 	}
 
 	public void addChanelListener(ChanelListener ml) {
-		removedMyListeners.remove(ml);
-		myListeners.add(ml);
+//		removedMyListeners.remove(ml);
+//		myListeners.add(ml);
+		addListener(ml);
 	}
 
 	public void removeChanelListener(ChanelListener ml) {
-		addedMyListeners.remove(ml);
-		removedMyListeners.add(ml);
+//		addedMyListeners.remove(ml);
+//		removedMyListeners.add(ml);
+		removeListener(ml);
 	}
 
 	public int packetCount() {

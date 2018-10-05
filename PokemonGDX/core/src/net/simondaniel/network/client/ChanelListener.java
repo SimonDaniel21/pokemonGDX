@@ -12,7 +12,6 @@ import net.simondaniel.network.chanels.MessageChannelEnd.MessageNotHandledError;
 import net.simondaniel.network.server.Response.LoginS;
 
 public abstract class ChanelListener extends Listener{
-
 	
 	private ChanelListenerList list;
 	MessageChannel channel;
@@ -25,7 +24,7 @@ public abstract class ChanelListener extends Listener{
 		this.isServer = role;
 		this.list = list;
 	}
-	
+
 	public void setRole(boolean serverRole) {
 		this.isServer = serverRole;
 	}

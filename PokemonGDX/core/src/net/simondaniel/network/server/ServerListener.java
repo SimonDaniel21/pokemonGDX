@@ -32,22 +32,6 @@ public class ServerListener extends Listener{
 		
 		if(true != false)
 			return;
-		try {
-			int handled = 0;
-			for(Protocol p : c.protocols) {
-				if(p.canReceive(o)) {
-					p.chanelReceive(c, o);
-				}
-			}
-			if(handled != 1) {
-				throw new MessageNotHandledError(o.getClass().getName(), c.protocols);
-			}
-			
-		} catch (InvalidMessageTypeError e) {
-			e.printStackTrace();
-		} catch (MessageNotHandledError e) {
-			e.printStackTrace();
-		}
 		
 		boolean ttrue = true;
 		if(ttrue) return;

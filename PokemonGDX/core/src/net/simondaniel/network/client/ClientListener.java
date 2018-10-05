@@ -35,6 +35,7 @@ public class ClientListener extends Listener{
 	@Override
 	public void received (Connection c, Object o) {
 		client.packetsReceived++;
+		
 		if(true != false)
 			return;
 		

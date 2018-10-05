@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -18,7 +17,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import net.simondaniel.GameMode;
@@ -26,13 +24,7 @@ import net.simondaniel.MyRandom;
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.Network;
 import net.simondaniel.network.chanels.MessageChannel;
-import net.simondaniel.network.chanels.Protocol;
-import net.simondaniel.network.client.Request.MovementC;
-import net.simondaniel.network.client.Request.MovementChandler;
-import net.simondaniel.network.client.Request.RequestAreaC;
-import net.simondaniel.network.client.Request.RequestAreaChandler;
 import net.simondaniel.network.protocols.InitialListener;
-import net.simondaniel.network.protocols.InitialProtocol;
 import net.simondaniel.network.server.Response.EndConnectionS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyListS;
@@ -143,7 +135,7 @@ public class GameServer extends Server{
 			UserJoinedS p = new UserJoinedS();
 			p.user = name;
 			for(UserConnection con : usersTrackingUsers) {
-				con.sendTCPS(p);
+				con.sendTCP(p);
 			}
 			
 			loggedIn.add(c);
@@ -159,7 +151,7 @@ public class GameServer extends Server{
 			UserLeftS p = new UserLeftS();
 			p.user = user.name;
 			for(UserConnection con : usersTrackingUsers) {
-				con.sendTCPS(p);
+				con.sendTCP(p);
 			}
 			window.disConnected(user.name);
 		}
@@ -211,14 +203,14 @@ public class GameServer extends Server{
 			
 			UserConnection u = (UserConnection) c;
 			if(u != null && u.lobby == null)
-				u.sendTCPS(o);
+				u.sendTCP(o);
 		}
 	}
 	
 	public void kickUser(UserConnection user) {
 		EndConnectionS p = new EndConnectionS();
 		p.reason = "kicked by server";
-		user.sendTCPS(p);
+		user.sendTCP(p);
 		user.close();
 	}
 
@@ -229,12 +221,12 @@ public class GameServer extends Server{
 		
 		if(name.length() < 3) {
 			response.message = "names have to be at least 3 characters long";
-			c.sendTCPS(response);
+			c.sendTCP(response);
 			return;
 		}
 		if(pw.length() < 3) {
 			response.message = "passwords have to be at least 3 characters long";
-			c.sendTCPS(response);
+			c.sendTCP(response);
 			return;
 		}
 		UserProfileDO updo = new UserProfileDO();
@@ -259,7 +251,7 @@ public class GameServer extends Server{
 				response.type = 1;
 			}
 		}
-		c.sendTCPS(response);
+		c.sendTCP(response);
 	}
 	
 	public void activateUser(UserConnection c, String name, String code) {
@@ -289,7 +281,7 @@ public class GameServer extends Server{
 			database.removeNotActivatedName(name);
 			database.save();
 		}
-		c.sendTCPS(p);
+		c.sendTCP(p);
 	}
 	
 	private static boolean sendActivationMail(String email, String name, String code) {
@@ -355,7 +347,7 @@ public class GameServer extends Server{
 		UserConnection c = getUser(user);
 		if(c == null) return false;
 		
-		c.sendTCPS(o);
+		c.sendTCP(o);
 		return true;
 	}
 

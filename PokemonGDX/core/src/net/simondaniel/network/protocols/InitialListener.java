@@ -30,6 +30,7 @@ public class InitialListener extends ChanelListener{
 			LoginC p = (LoginC) o;
 			LoginS r = new LoginS();
 			r.response = gs.login(c, p.name, p.pw);
+			System.err.println("!!SErver responded : " + r.response);
 			c.sendTCP(r);
 		
 		} else if (o instanceof RegisterUserC) {

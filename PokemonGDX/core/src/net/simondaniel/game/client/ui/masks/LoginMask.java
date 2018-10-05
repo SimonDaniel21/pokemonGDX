@@ -253,6 +253,8 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 
 		@Override
 		protected void channelReceive(Connection c, Object o) {
+			
+			System.err.println("CLIENT CHANEL RECEIVE");
 
 			if (o instanceof LoginS) {
 				LoginS p = (LoginS) o;
