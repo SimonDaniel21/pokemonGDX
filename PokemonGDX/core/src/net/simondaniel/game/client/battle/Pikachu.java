@@ -50,7 +50,7 @@ public class Pikachu extends MovingEntity implements MovementShandler, InputHand
 		this.name = name;
 		move = new MoveToAction(this, 0.25f);
 
-		pkmn = new PokemonAnimation(PokemonAnimationLayout.pikachu.LAYOUT, Assets.manager.get(Atlas.PIKACHU.assetDescriptor));
+	//	pkmn = new PokemonAnimation(PokemonAnimationLayout.pikachu.LAYOUT, Assets.manager.get(Atlas.PIKACHU.assetDescriptor));
 		blasts = new ArrayList<Fireblast>();
 		bites = new ArrayList<Bite>();
 	}
@@ -65,7 +65,7 @@ public class Pikachu extends MovingEntity implements MovementShandler, InputHand
 	public void render(SpriteBatch sb) {
 		//font.draw(sb, "hier text", getScreenX(), getScreenY() + 32);
 		
-		pkmn.render(sb);
+		//pkmn.render(sb);
 		
 		for(Fireblast b : blasts){
 			b.render(sb);

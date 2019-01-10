@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -38,7 +39,6 @@ import net.simondaniel.fabio.input.FabioInput;
 import net.simondaniel.fabio.phisx.Geometry;
 import net.simondaniel.fabio.phisx.LogicMap;
 import net.simondaniel.fabio.phisx.TiledMapLogicLoader;
-import net.simondaniel.game.client.gfx.PKMNanimation;
 import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.game.client.ui.masks.IngameMenu;
 import net.simondaniel.game.server.Lobby;
@@ -86,7 +86,6 @@ public class GameInstance implements MyListener, MyServerlistener{
 
 	private Matrix4 cameraBox2D;
 	
-	PKMNanimation anim;
 
 	ShapeRenderer sr;
 	

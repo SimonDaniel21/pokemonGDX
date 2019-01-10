@@ -30,6 +30,11 @@ public class ServerListener extends Listener{
 		
 		gs.window.packetReceived();
 		
+		if(o instanceof ListenToChannelC) {
+			ListenToChannelC p = (ListenToChannelC) o;
+			
+		}
+		
 		if(true != false)
 			return;
 		

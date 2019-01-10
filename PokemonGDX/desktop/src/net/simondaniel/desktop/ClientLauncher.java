@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
@@ -35,5 +36,6 @@ public class ClientLauncher {
 		config.height = 720;
 		
 		new LwjglApplication(new PokemonGDX(LaunchConfiguration.DEBUG_CLIENT), config);
+		//new HeadlessApplication(new PokemonGDX(LaunchConfiguration.DEBUG_CLIENT));
 	}
 }

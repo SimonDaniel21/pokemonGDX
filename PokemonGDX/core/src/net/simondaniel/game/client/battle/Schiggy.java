@@ -64,7 +64,7 @@ public class Schiggy extends MovingEntity implements MovementShandler, InputHand
 	public Schiggy(int x, int y, String name) {
 		this.name = name;
 		move = new MoveToAction(this, 100.0f);
-		pkmn = new PokemonAnimation(PokemonAnimationLayout.squirtle.LAYOUT, Assets.manager.get(Atlas.SQUIRTLE.assetDescriptor));
+		//pkmn = new PokemonAnimation(PokemonAnimationLayout.squirtle.LAYOUT, Assets.manager.get(Atlas.SQUIRTLE.assetDescriptor));
 		blasts = new ArrayList<Fireblast>();
 		bites = new ArrayList<Bite>();
 		pumps = new ArrayList<HydroPump>();
@@ -159,7 +159,7 @@ public class Schiggy extends MovingEntity implements MovementShandler, InputHand
 	public void render(SpriteBatch sb) {
 		//font.draw(sb, "hier text", getScreenX(), getScreenY() + 32);
 		
-		pkmn.render(sb);
+		//pkmn.render(sb);
 		
 		for(Fireblast b : blasts){
 			b.render(sb);
@@ -214,7 +214,7 @@ public class Schiggy extends MovingEntity implements MovementShandler, InputHand
 	
 	@Override
 	public void stopMove(){
-		pkmn.haltAnimation(1);
+		//pkmn.haltAnimation(1);
 	}
 
 	public String getName() {

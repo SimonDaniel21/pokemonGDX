@@ -11,6 +11,7 @@ import net.simondaniel.network.client.GameClient;
 import net.simondaniel.pokes.Pokemon;
 import net.simondaniel.screens.IngameScreen;
 import net.simondaniel.screens.MainMenuScreen;
+import net.simondaniel.screens.NeuerGameScreen;
 
 public class PokemonGDX extends Game {
 
@@ -68,7 +69,7 @@ public class PokemonGDX extends Game {
 //			System.err.println("no connect");
 //		}
 	
-		this.setScreen(new MainMenuScreen());
+		this.setScreen(new NeuerGameScreen());
 		
 		
 	}

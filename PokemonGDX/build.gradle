@@ -58,6 +58,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.ashley:ashley:1.7.0"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile 'com.badlogicgames.gdx:gdx-backend-headless:1.9.9'
 
 	compile fileTree(dir: 'lib', include: '*.jar')
     }

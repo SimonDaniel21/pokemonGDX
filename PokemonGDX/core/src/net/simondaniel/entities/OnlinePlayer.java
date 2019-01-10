@@ -71,7 +71,7 @@ public class OnlinePlayer extends Entity {
 			if(lastdist != -1 && lastdist - dist < 0.0001f) {
 				dest = null;
 				lastdist = -1;
-				drawer.anim.haltAnimation(1);
+				//.anim.haltAnimation(1);
 				return;
 			}
 			lastdist = dist;

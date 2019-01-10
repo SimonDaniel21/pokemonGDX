@@ -5,6 +5,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 
+import net.simondaniel.game.client.gfx.AnimationLayout;
+
 public class Pokemon {
 	
 	public static Pokemon[] pokemon;
@@ -54,6 +56,8 @@ public class Pokemon {
 	public final PokemonType type1, type2;
 	public float size;
 	
+	public int layout;
+	
 	
 	public Pokemon(Element e) {
 		ID = e.getInt("id");
@@ -63,6 +67,9 @@ public class Pokemon {
 			type2 = PokemonType.fromString(e.get("secondType"));
 		else
 			type2 = null;
+		
+		layout = e.getInt("animationLayout");
+		
 	}
 	
 	public Pokemon(int id, String name, PokemonType t1, PokemonType t2) {

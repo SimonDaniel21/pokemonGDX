@@ -63,7 +63,7 @@ public class Assets {
 	}
 		
 	public static enum Atlas{
-		PIKACHU("gfx/pokemon/pikachu/pika_atlas2.atlas"),
+		//PIKACHU("gfx/pokemon/pikachu/pika_atlas2.atlas"),
 		SQUIRTLE("gfx/pokemon/squirtle/squirtle.atlas");
 		
 		public final String path;

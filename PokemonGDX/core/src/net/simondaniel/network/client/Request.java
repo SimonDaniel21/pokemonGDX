@@ -9,6 +9,10 @@ import net.simondaniel.network.server.UserConnection;
  */
 public class Request {
 
+	public static class ListenToChannelC{
+		public String ChannelName;
+	}
+	
 	public static class LoginC{
 		public String name, pw;
 	}

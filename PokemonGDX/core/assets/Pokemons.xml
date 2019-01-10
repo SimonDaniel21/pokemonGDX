@@ -4,41 +4,49 @@
 		<name>bulbasaur</name>
 		<id>1</id>
 		<firstType>grass</firstType>
+		<animationLayout>0</animationLayout>
 	</bulbasaur>
 	<squirtle>
 		<name>squirtle</name>
 		<id>7</id>
 		<firstType>water</firstType>
+		<animationLayout>1</animationLayout>
 	</squirtle>
 	<kyogre>
 		<name>kyogre</name>
 		<id>382</id>
 		<firstType>water</firstType>
+		<animationLayout>0</animationLayout>
 	</kyogre>
 	<rayquaza>
 		<name>rayquaza</name>
 		<id>384</id>
 		<firstType>dragon</firstType>
 		<secondType>flying</secondType>
+		<animationLayout>2</animationLayout>
 	</rayquaza>
 	<charmander>
 		<name>charmander</name>
 		<id>4</id>
 		<firstType>fire</firstType>
+		<animationLayout>0</animationLayout>
 	</charmander>
 	<pikachu>
 		<name>pikachu</name>
 		<id>25</id>
 		<firstType>electric</firstType>
+		<animationLayout>0</animationLayout>
 	</pikachu>
 	<mewto>
 		<name>mewto</name>
 		<id>219</id>
 		<firstType>psychic</firstType>
+		<animationLayout>0</animationLayout>
 	</mewto>
 	<pidgey>
 		<name>pidgey</name>
 		<id>15</id>
-		<firstType>flying</firstType>
+		<firstType>fly</firstType>
+		<animationLayout>0</animationLayout>
 	</pidgey>
 </Pokemon>
