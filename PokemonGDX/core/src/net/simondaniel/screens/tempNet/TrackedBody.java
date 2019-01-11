@@ -5,15 +5,17 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class TrackedBody {
+	
+	int trackID;
+	
 	Body b;
 
 	boolean inactive;
 
 	Vector2 lastPos;
 
-	float timer = 0,  delay = 0.5f;
 
-	public TrackedBody(Body b) {
+	public TrackedBody(Body b, int trackID) {
 		this.b = b;
 		inactive = true;
 		lastPos = new Vector2(b.getPosition());
@@ -21,29 +23,13 @@ public class TrackedBody {
 
 	public void sync(float delta) {
 		Vector2 newPos = b.getPosition();
-		//System.out.println(newPos);
-
-		if (inactive) {
-			if (!lastPos.equals(newPos)) {
-				inactive = false;
-			}
-			else {
-				lastPos.set(newPos);
-				timer = 0;
-			}
-			
-		} else {
-			timer += delta;
-			if(timer >= delay) {
-				inactive = true;
-				notify(newPos, timer);
-				timer -= delay;
-				lastPos.set(newPos);
-			}
+		if(!lastPos.equals(newPos)) {
+			System.err.println("body moved to " + newPos);
+			lastPos.set(newPos);
+		}
+		else {
+			System.out.println("body didnt move");
 		}
 	}
-	
-	private void notify(Vector2 newPos, float duration) {
-		System.err.println("moving" + newPos + "  for " + duration);
-	}
+
 }

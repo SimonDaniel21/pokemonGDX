@@ -40,7 +40,7 @@ public class ServerScreen implements Screen {
 		BodyDef def = new BodyDef();
 		def.position.set(1f, 1f);
 		def.type = BodyType.DynamicBody;
-		b = world.createBody(def);
+		b = world.createTrackedBody(def, 3);
 		CircleShape cs = new CircleShape();
 		cs.setRadius(0.8f);
 		FixtureDef fdef = new FixtureDef();
@@ -58,10 +58,18 @@ public class ServerScreen implements Screen {
 	float timer = 0;
 	boolean inTransition = false;
 	
+	
+	int i = 0;
 	@Override
 	public void render(float delta) {
+		
+		i = i % 400;
 
-		b.setLinearVelocity(0.1f, 0);
+		if(i < 200)
+			b.setLinearVelocity(0.1f, 0);
+		else
+			b.setLinearVelocity(0, 0);
+		i++;
 		world.step();
 		
 	}
