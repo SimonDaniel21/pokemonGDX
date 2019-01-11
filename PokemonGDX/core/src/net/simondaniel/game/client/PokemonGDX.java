@@ -12,6 +12,7 @@ import net.simondaniel.pokes.Pokemon;
 import net.simondaniel.screens.IngameScreen;
 import net.simondaniel.screens.MainMenuScreen;
 import net.simondaniel.screens.NeuerGameScreen;
+import net.simondaniel.screens.tempNet.ServerScreen;
 
 public class PokemonGDX extends Game {
 
@@ -54,9 +55,7 @@ public class PokemonGDX extends Game {
 
 	@Override
 	public void create() {
-		Pokemon.loadFromFile();
-		Assets.load();
-		batch = new SpriteBatch();
+		
 //		GameClient gc = new GameClient("127.0.0.1", "serva");
 //		if(gc.sendConnectRequest()) {
 //			gc.sendLoginRequest("mario", "development");
@@ -69,7 +68,18 @@ public class PokemonGDX extends Game {
 //			System.err.println("no connect");
 //		}
 	
-		this.setScreen(new NeuerGameScreen());
+		switch (CONFIGURATION) {
+		case DEBUG_CLIENT:
+			Pokemon.loadFromFile();
+			Assets.load();
+			batch = new SpriteBatch();
+			setScreen(new NeuerGameScreen());
+			break;
+		case DEBUG_SERVER:
+			setScreen(new ServerScreen());
+		default:
+			break;
+		}
 		
 		
 	}

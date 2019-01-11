@@ -40,7 +40,6 @@ public class DesktopLauncher {
 		LaunchConfiguration.config = config;
 		
 		MessageChannel.initCommunication(config.isServer());
-		config = LaunchConfiguration.DEBUG_CLIENT;
 		
 		switch (config) {
 		case RELEASE_CLIENT:
