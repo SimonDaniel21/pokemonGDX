@@ -57,6 +57,7 @@ public class NeuerGameScreen implements Screen {
 		
 		world = new World(new Vector2(0, 0), true);
 		p = new Player(Pokemon.pikachu, world);
+		b = p.getBody();
 		// Create a circle shape and set its radius to 6
 
 		LogicMap lm = TiledMapLogicLoader.loadCollisionDataFromXML("maps/arena.tmx");
@@ -66,13 +67,16 @@ public class NeuerGameScreen implements Screen {
 
 	float x = Gdx.graphics.getWidth()/2, y = Gdx.graphics.getHeight()/2, speed = 100;
 
+	Body b;
+	
 	@Override
 	public void render(float delta) {
 
 		p.handleInput(input);
 
 		p.update(delta);
-		cam.position.set(p.getX(), p.getY(), 0);
+		world.step(1/60f, 8, 3);
+		cam.position.set(b.getPosition().x*32, b.getPosition().y, 0*32);
 		cam.update();
 		input.update();
 

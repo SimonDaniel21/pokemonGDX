@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 import net.simondaniel.Assets;
 import net.simondaniel.game.client.gfx.AnimationLayout.AnimationNotSupportedException;
@@ -13,16 +14,16 @@ import net.simondaniel.pokes.Pokemon;
 
 public class PokemonAnimation{
 
-	private Vector2 pos;
+	private Body body;
 	float xOffA, yOffA = 7,
 	scaleX = 1, scaleY = 1;
 	AnimatedSprite animation;
 	Sprite temp;
 	AnimationLayout layout;
 
-	public PokemonAnimation(Pokemon p, Vector2 pos) {
+	public PokemonAnimation(Pokemon p, Body body) {
 
-		this.pos = pos;
+		this.body = body;
 		animation = new AnimatedSprite(Assets.getPokeAtlas(p));
 		layout = AnimationLayout.getLayoutFromIndex(p.layout);
 		temp = new Sprite(new Texture("gfx/underglow_orig.png"));
@@ -49,15 +50,11 @@ public class PokemonAnimation{
 		}
 	}
 
-	public void setPosition(float x, float y) {
-		pos.x = x;
-		pos.y = y;
-		updatePositions();
-	}
-	
 	private void updatePositions() {
-		temp.setOriginBasedPosition(pos.x, pos.y);
-		animation.setPosition(pos.x + xOffA*scaleX, pos.y + yOffA*scaleY);
+		float x = body.getPosition().x;
+		float y = body.getPosition().y;
+		temp.setOriginBasedPosition(x, y);
+		animation.setPosition(x + xOffA*scaleX, y + yOffA*scaleY);
 		
 	}
 	
@@ -74,19 +71,5 @@ public class PokemonAnimation{
 		
 	}
 
-	public void moveTo(float worldX, float worldY) {
-		setPosition(worldX, worldY);
-	}
 
-	public float getX() {
-		return pos.x;
-	}
-	
-	public float getY() {
-		return pos.y;
-	}
-
-	public void move(float xd, float yd) {
-		setPosition(pos.x + xd, pos.y + yd);
-	}
 }

@@ -52,6 +52,7 @@ public class OnlinePlayer extends Entity {
 		cs.setRadius(info.radius);
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = cs;
+		fdef.density = 1;
 		fdef.restitution = 0;
 		body.createFixture(fdef);
 		PokeDef pdef = new PokeDef();

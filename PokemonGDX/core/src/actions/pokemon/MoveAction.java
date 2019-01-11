@@ -11,11 +11,13 @@ public class MoveAction implements Action {
 
 	ActionSequence actions;
 	Player p;
+	//Body b;
 
 	public MoveAction(final Player p, float x, float y) {
 		this.p = p;
-		float angle = getAngle(p.getX(), p.getY(), x, y);
+		//float angle = getAngle(p.getX(), p.getY(), x, y);
 
+		float angle = 0;
 		final AnimationDirection dir = AnimationDirection.fromAngle(angle);
 
 		Action startWalk = new SimpleAction() {
