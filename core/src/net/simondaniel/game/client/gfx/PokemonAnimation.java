@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
 import net.simondaniel.Assets;
+import net.simondaniel.fabio.phisx.PhysicObject;
 import net.simondaniel.game.client.gfx.AnimationLayout.AnimationNotSupportedException;
 import net.simondaniel.game.client.gfx.AnimationLayout.PokemonAnimationLayout;
 import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
@@ -14,16 +15,16 @@ import net.simondaniel.pokes.Pokemon;
 
 public class PokemonAnimation{
 
-	private Body body;
+	private PhysicObject physics;
 	float xOffA, yOffA = 7,
 	scaleX = 1, scaleY = 1;
 	AnimatedSprite animation;
 	Sprite temp;
 	AnimationLayout layout;
 
-	public PokemonAnimation(Pokemon p, Body body) {
+	public PokemonAnimation(Pokemon p, PhysicObject obj) {
 
-		this.body = body;
+		this.physics = obj;
 		animation = new AnimatedSprite(Assets.getPokeAtlas(p));
 		layout = AnimationLayout.getLayoutFromIndex(p.layout);
 		temp = new Sprite(new Texture("gfx/underglow_orig.png"));
@@ -51,8 +52,8 @@ public class PokemonAnimation{
 	}
 
 	private void updatePositions() {
-		float x = body.getPosition().x;
-		float y = body.getPosition().y;
+		float x = physics.getX();
+		float y = physics.getY();
 		temp.setOriginBasedPosition(x, y);
 		animation.setPosition(x + xOffA*scaleX, y + yOffA*scaleY);
 		

@@ -1,14 +1,22 @@
 package net.simondaniel.desktop;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
 import javax.swing.JOptionPane;
+
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import net.simondaniel.Config;
+import net.simondaniel.FileSystem;
 import net.simondaniel.GameConfig;
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
@@ -19,7 +27,44 @@ import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.ServerListener;
 
 public class DesktopLauncher {
+	
+	public static final String GIT_URI = "https://github.com/SimonDaniel21/pokemonGDX.git";
+	
 	public static void main(String[] args) {
+		
+		Gdx.files = new LwjglFiles();
+		
+		
+		
+//		try {
+//			File f = FileSystem.loadFile("repo").file();
+//			String res = Runtime.getRuntime().exec(f.getPath() + "\\gradlew.bat desktop:dist").getOutputStream().toString();
+//
+//			String fetchresult = Git.open(f).pull().call().getFetchResult().getMessages();
+//			System.out.println("blaaa :   " + res);
+//		} catch (InvalidRemoteException e) {
+//			e.printStackTrace();
+//		} catch (TransportException e) {
+//			System.out.println(e.getMessage().equals("Nothing to fetch."));
+//			System.out.println("nothing to fetch :)");
+//		} catch (GitAPIException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		if(true) return;
+//		try {
+//			Git.cloneRepository()
+//			.setURI(GIT_URI)
+//			.setDirectory(FileSystem.loadFile("repo").file())
+//			.call();
+//		} catch (InvalidRemoteException e) {
+//			e.printStackTrace();
+//		} catch (TransportException e) {
+//			e.printStackTrace();
+//		} catch (GitAPIException e) {
+//			e.printStackTrace();
+//		}
 
 		if(args.length > 1) {
 			String commands = "[";
@@ -73,7 +118,6 @@ public class DesktopLauncher {
 	
 	public static void launchClientRelease() {
 
-		Gdx.files = new LwjglFiles();
 		Config.init();
 		PokemonGDX.init();
 

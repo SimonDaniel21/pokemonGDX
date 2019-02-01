@@ -19,6 +19,8 @@ import actions.pokemon.LinInterpolateVecAction;
 import actions.pokemon.MoveAction;
 import actions.pokemon.MoveBodyToAction;
 import net.simondaniel.fabio.input.MyInput;
+import net.simondaniel.fabio.phisx.PhysicObject;
+import net.simondaniel.fabio.phisx.PhysicsWorld;
 import net.simondaniel.game.client.gfx.AnimatedSprite;
 import net.simondaniel.game.client.gfx.AnimationType;
 import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
@@ -37,9 +39,9 @@ public class Player {
 	
 	Pokemon p;
 	
-	Body body;
+	PhysicObject obj;
 	
-	public Player(Pokemon p, World w) {
+	public Player(Pokemon p, PhysicsWorld world) {
 		this.p = p;
 		//pos = new Vector2();
 		
@@ -48,20 +50,20 @@ public class Player {
 		moveQueue = new ActionQueue();
 		actions.runAction(moveQueue);
 		
-		BodyDef def = new BodyDef();
-		def.position.set(1f, 1f);
-		def.type = BodyType.DynamicBody;
-		body = w.createBody(def);
+		obj = world.createPhysicsObject(1, 1);
+		
+		//body = world.createBody(def);
 		CircleShape cs = new CircleShape();
 		cs.setRadius(0.8f);
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = cs;
 		fdef.isSensor = true;
-		body.createFixture(fdef);
-		animation = new PokemonAnimation(p, body);
+		obj.createFixture(fdef);
+		animation = new PokemonAnimation(p, obj);
 		animation.setScale(2.0f);
 		animation.runAnimation(AnimationType.MOVEMENT, AnimationDirection.RIGHT);
 	}
+
 	AnimationDirection lastDir = AnimationDirection.NO_DIRECTION;
 	AnimationDirection newDir = AnimationDirection.NO_DIRECTION;
 	
@@ -69,38 +71,38 @@ public class Player {
 		float amount = 0.4f;
 		
 
-		 float desiredVel = body.getLinearVelocity().x * 0.8f;
-		
-		if (Gdx.input.isKeyPressed(Keys.W)) {
-			//animation.move(0, amount);
-			
-			newDir = AnimationDirection.UP;
-		}
-		if (Gdx.input.isKeyPressed(Keys.A)) {
-			//animation.move(-amount, 0);
-			newDir = AnimationDirection.LEFT;
-			desiredVel = Math.max(body.getLinearVelocity().x - 0.4f, -4);
-		}
-		if (Gdx.input.isKeyPressed(Keys.S)) {
-			//animation.move(0, -amount);
-			newDir = AnimationDirection.DOWN;
-		}
-		 System.out.println(". "+ desiredVel);
-		if (Gdx.input.isKeyPressed(Keys.D)) {
-			//animation.move(amount, 0);
-			newDir = AnimationDirection.RIGHT;
-			//body.applyLinearImpulse(new Vector2(1099, 0), body.getWorldCenter(), true);
-			//body.setLinearVelocity(1,0);
-
-			desiredVel = Math.min(body.getLinearVelocity().x + 0.4f, 4);
-		}
-		Vector2 vel = body.getLinearVelocity();
-		   
-	    float velChange = desiredVel - vel.x;
-	    float impulse =body.getMass()* velChange; //disregard time factor
-	 
-	    body.applyLinearImpulse(new Vector2(impulse, 0), body.getWorldCenter(), true);
-		
+//		 float desiredVel = body.getLinearVelocity().x * 0.8f;
+//		
+//		if (Gdx.input.isKeyPressed(Keys.W)) {
+//			//animation.move(0, amount);
+//			
+//			newDir = AnimationDirection.UP;
+//		}
+//		if (Gdx.input.isKeyPressed(Keys.A)) {
+//			//animation.move(-amount, 0);
+//			newDir = AnimationDirection.LEFT;
+//			desiredVel = Math.max(body.getLinearVelocity().x - 0.4f, -4);
+//		}
+//		if (Gdx.input.isKeyPressed(Keys.S)) {
+//			//animation.move(0, -amount);
+//			newDir = AnimationDirection.DOWN;
+//		}
+//		 System.out.println(". "+ desiredVel);
+//		if (Gdx.input.isKeyPressed(Keys.D)) {
+//			//animation.move(amount, 0);
+//			newDir = AnimationDirection.RIGHT;
+//			//body.applyLinearImpulse(new Vector2(1099, 0), body.getWorldCenter(), true);
+//			//body.setLinearVelocity(1,0);
+//
+//			desiredVel = Math.min(body.getLinearVelocity().x + 0.4f, 4);
+//		}
+//		Vector2 vel = body.getLinearVelocity();
+//		   
+//	    float velChange = desiredVel - vel.x;
+//	    float impulse =body.getMass()* velChange; //disregard time factor
+//	 
+//	    body.applyLinearImpulse(new Vector2(impulse, 0), body.getWorldCenter(), true);
+//		
 		if(newDir != lastDir) {
 			//animation.runAnimation(AnimationType.MOVEMENT, newDir);
 			//lastDir = newDir;
@@ -125,10 +127,6 @@ public class Player {
 	public void move(float x, float y) {
 		
 	}
-
-	public Body getBody() {
-		return body;
-	}
 	
 	public PokemonAnimation getAnimation() {
 		
@@ -140,7 +138,14 @@ public class Player {
 	}
 
 	public Vector2 getPos() {
-		return body.getPosition();
+		return null;
+	}
+
+	public float getX() {
+		return obj.getX();
 	}
 	
+	public float getY() {
+		return obj.getY();
+	}
 }

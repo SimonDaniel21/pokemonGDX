@@ -21,6 +21,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import net.simondaniel.fabio.input.MyInput;
 import net.simondaniel.fabio.phisx.Geometry;
 import net.simondaniel.fabio.phisx.LogicMap;
+import net.simondaniel.fabio.phisx.PhysicsWorld;
+import net.simondaniel.fabio.phisx.RealWorld;
 import net.simondaniel.fabio.phisx.TiledMapLogicLoader;
 import net.simondaniel.pokes.Pokemon;
 
@@ -34,8 +36,10 @@ public class NeuerGameScreen implements Screen {
 	OrthographicCamera cam;
 	MyInput input;
 	
-	World world;
-	Box2DDebugRenderer debugRenderer;
+	//World world;
+	
+	
+	PhysicsWorld world;
 
 	@Override
 	public void show() {
@@ -55,19 +59,17 @@ public class NeuerGameScreen implements Screen {
 		x = 0;
 		y = 0;
 		
-		world = new World(new Vector2(0, 0), true);
+		//world = new World(new Vector2(0, 0), true);
+	
+		world = new RealWorld();
 		p = new Player(Pokemon.pikachu, world);
-		b = p.getBody();
 		// Create a circle shape and set its radius to 6
 
 		LogicMap lm = TiledMapLogicLoader.loadCollisionDataFromXML("maps/arena.tmx");
 		makeGeometry(lm);
-		debugRenderer = new Box2DDebugRenderer();
 	}
 
 	float x = Gdx.graphics.getWidth()/2, y = Gdx.graphics.getHeight()/2, speed = 100;
-
-	Body b;
 	
 	@Override
 	public void render(float delta) {
@@ -75,8 +77,9 @@ public class NeuerGameScreen implements Screen {
 		p.handleInput(input);
 
 		p.update(delta);
-		world.step(1/60f, 8, 3);
-		cam.position.set(b.getPosition().x*32, b.getPosition().y, 0*32);
+		//world.step(1/60f, 8, 3);
+		world.update(delta);
+		cam.position.set(p.getX()*32, p.getY(), 0*32);
 		cam.update();
 		input.update();
 
@@ -94,7 +97,8 @@ public class NeuerGameScreen implements Screen {
 		sr.line(0, 0, 1279, 719);
 		sr.line(0, 719, 1279, 0);
 		sr.end();
-		debugRenderer.render(world, cam.combined.scl(32));
+		
+		world.renderDebug(cam.combined.scl(32));
 	}
 
 	@Override
@@ -128,8 +132,8 @@ public class NeuerGameScreen implements Screen {
 		BodyDef def = new BodyDef();
 		def.position.set(0, 0);
 		def.type = BodyType.StaticBody;
-		Body geo = world.createBody(def);
+		//Body geo = world.createBody(def);
 
-		Geometry.addGeometryFixtures(geo, map.getData(), w);
+		//Geometry.addGeometryFixtures(geo, map.getData(), w);
 	}
 }
