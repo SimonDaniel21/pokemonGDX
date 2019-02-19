@@ -64,7 +64,7 @@ public class PredictedWorld extends PhysicsWorld{
 	}
 
 	public PredictedBody getBody(int i) {
-		System.out.println("trying to get " + i + " - " + idBodyMap.get(i));
+		
 		return idBodyMap.get(i);
 	}
 

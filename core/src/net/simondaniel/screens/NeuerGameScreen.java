@@ -44,7 +44,7 @@ public class NeuerGameScreen implements Screen {
 	
 	
 	PredictedWorld world;
-
+	
 	@Override
 	public void show() {
 		
@@ -59,9 +59,9 @@ public class NeuerGameScreen implements Screen {
 		tmap = new TmxMapLoader().load("maps/arena.tmx");
 		tmRenderer = new OrthogonalTiledMapRenderer(tmap, 2f);
 		PlayClient gc = new PlayClient();
-		AuthenticationService auth = new AuthenticationService(gc);
-		gc.addListener(auth);
-		auth.login("Simon", "1234");
+		
+		while(!gc.isConnected())Thread.yield();
+		gc.authService.login("Simon", "1234");
 		
 		input = new RemoteInput(cam, gc, 5);
 		

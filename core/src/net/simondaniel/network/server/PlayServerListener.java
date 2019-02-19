@@ -16,19 +16,22 @@ public class PlayServerListener extends Listener{
 	AuthenticationListener authListener;
 	
 	public PlayServerListener(PlayServer ref) {
-		authListener = new AuthenticationListener();
+		//authListener = new AuthenticationListener();
 	}
 	
 	@Override
 	public void connected(Connection con) {
-		WorldStateS p = world.getStatePacket();
-		con.sendTCP(p);
-		con.addListener(authListener);
+		//WorldStateS p = world.getStatePacket();
+		//con.sendTCP(p);
+		//con.addListener(authListener);
 		super.connected(con);
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public void received(Connection c, Object o) {
+		
+		if(true)return;
 		
 		if(o instanceof ClientInputC) {
 			ClientInputC p = (ClientInputC) o;
