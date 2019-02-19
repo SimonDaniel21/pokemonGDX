@@ -8,23 +8,24 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 import net.simondaniel.Assets;
 import net.simondaniel.fabio.phisx.PhysicObject;
+import net.simondaniel.fabio.phisx.PredictedBody;
 import net.simondaniel.game.client.gfx.AnimationLayout.AnimationNotSupportedException;
 import net.simondaniel.game.client.gfx.AnimationLayout.PokemonAnimationLayout;
 import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
 import net.simondaniel.pokes.Pokemon;
+import net.simondaniel.screens.tempNet.NetworkedWorld;
 
 public class PokemonAnimation{
 
-	private PhysicObject physics;
+	private PredictedBody body;
 	float xOffA, yOffA = 7,
 	scaleX = 1, scaleY = 1;
 	AnimatedSprite animation;
 	Sprite temp;
 	AnimationLayout layout;
 
-	public PokemonAnimation(Pokemon p, PhysicObject obj) {
+	public PokemonAnimation(Pokemon p) {
 
-		this.physics = obj;
 		animation = new AnimatedSprite(Assets.getPokeAtlas(p));
 		layout = AnimationLayout.getLayoutFromIndex(p.layout);
 		temp = new Sprite(new Texture("gfx/underglow_orig.png"));
@@ -52,8 +53,9 @@ public class PokemonAnimation{
 	}
 
 	private void updatePositions() {
-		float x = physics.getX();
-		float y = physics.getY();
+		if(body == null) return;
+		float x = body.x() * NetworkedWorld.PIXELS_PER_METER;
+		float y = body.y() * NetworkedWorld.PIXELS_PER_METER;
 		temp.setOriginBasedPosition(x, y);
 		animation.setPosition(x + xOffA*scaleX, y + yOffA*scaleY);
 		
@@ -72,5 +74,8 @@ public class PokemonAnimation{
 		
 	}
 
+	public void attachTo(PredictedBody body) {
+		this.body = body;
+	}
 
 }

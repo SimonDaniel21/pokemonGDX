@@ -1,5 +1,6 @@
 package net.simondaniel.network.client;
 
+import net.simondaniel.fabio.input.InputSate.TransmittedInputState;
 import net.simondaniel.network.server.UserConnection;
 
 /**
@@ -8,6 +9,10 @@ import net.simondaniel.network.server.UserConnection;
  *
  */
 public class Request {
+	
+	public static class ClientInputC{
+		public TransmittedInputState[] inputs;
+	}
 
 	public static class ListenToChannelC{
 		public String ChannelName;

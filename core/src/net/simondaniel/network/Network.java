@@ -8,6 +8,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
 import net.simondaniel.entities.EntityInformation;
+import net.simondaniel.fabio.input.InputSate.TransmittedInputState;
+import net.simondaniel.fabio.phisx.SyncBodyInfo;
 import net.simondaniel.network.client.Request;
 import net.simondaniel.network.server.Response;
 import net.simondaniel.network.server.Response.UserJoinedS;
@@ -28,7 +30,11 @@ public class Network {
 		kryo.register(UserJoinedS[].class);
 		kryo.register(byte[].class);
 		kryo.register(Message.class);
-
+		kryo.register(TransmittedInputState.class);
+		kryo.register(TransmittedInputState[].class);
+		kryo.register(boolean[].class);
+		kryo.register(java.util.ArrayList.class);
+		kryo.register(SyncBodyInfo.class);
 		
 		for(Class<?> c : Request.class.getClasses()) {
 			kryo.register(c);

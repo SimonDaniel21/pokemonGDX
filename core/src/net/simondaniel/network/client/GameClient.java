@@ -11,6 +11,7 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener.LagListener;
+import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.network.Message;
@@ -64,8 +65,8 @@ public class GameClient extends Client implements Network_interface {
 		Network.register(this);
 
 		// ThreadedListener runs the listener methods on a different thread.
-		// this.addListener(new ThreadedListener(new ClientListener(this)));
-		this.addListener(new LagListener(10, 20, new ClientListener(this)));
+		this.addListener(new ThreadedListener(new ClientListener(this)));
+		//this.addListener(new LagListener(10, 20, new ClientListener(this)));
 
 		// extra thread handling the connection timeout
 		connectThread = new Thread(new Runnable() {

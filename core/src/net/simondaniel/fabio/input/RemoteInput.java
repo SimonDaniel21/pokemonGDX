@@ -1,14 +1,30 @@
 package net.simondaniel.fabio.input;
 
+import java.util.HashMap;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 
-public class MyInput extends InputAdapter{
+import net.simondaniel.fabio.input.InputSate.TransmittedInputState;
+import net.simondaniel.network.client.GameClient;
+import net.simondaniel.network.client.PlayClient;
+import net.simondaniel.network.client.Request.ClientInputC;
+import net.simondaniel.network.server.GameServer;
+
+public class RemoteInput extends InputAdapter{
+
 	
-	int[] keyBindings;
+	private boolean relevant = true;
+	private HashMap<Integer, Integer> mappingToRemoteInputs;
+	InputSate[] bufferedStates;
+	ClientInputC inputPacket;
+	InputSate currentState;
+	int currentIndex = 0;
 	
 	private int mousePxlX, mousePxlY; // exact pixel position
 	private float mouseX, mouseY; // value from 0 to 1
@@ -25,16 +41,58 @@ public class MyInput extends InputAdapter{
 	
 	OrthographicCamera cam;
 	
+	PlayClient client;
+	
 	public void update(){
 		updateWorldPosition();
+		int old = currentIndex;
+		
+		putCurrentStateToPacket();
+		
+		currentIndex = (currentIndex + 1) % bufferedStates.length;
+		if(currentIndex == 0 && relevant) {
+			for(int i = 0; i < bufferedStates.length; i++) {
+				//System.out.println(i + "\n" + bufferedStates[i] );
+			}
+			
+			client.sendTCP(inputPacket);
+			//relevant = false;
+		}
+		
+		currentState = bufferedStates[currentIndex];
+		currentState.set(bufferedStates[old]);
 	}
 	
-	public MyInput(int screenWidth, int screenHeight, OrthographicCamera cam) {
+	private void putCurrentStateToPacket() {
+		TransmittedInputState s = inputPacket.inputs[currentIndex];
+		s.inputs = currentState.getButtonsCopy();
+		s.mx = currentState.mx;
+		s.my = currentState.my;
+	}
+	
+	public RemoteInput(OrthographicCamera cam, PlayClient gc, int stateBufferSize) {
+		this.client = gc;
+		bufferedStates = new InputSate[stateBufferSize];
+		inputPacket = new ClientInputC();
+		inputPacket.inputs = new TransmittedInputState[stateBufferSize];
+		
+		for(int i = 0; i < bufferedStates.length; i++) {
+			bufferedStates[i] = new InputSate(5);
+			inputPacket.inputs[i] = new TransmittedInputState();
+		}
+		
+		currentState = bufferedStates[0];
 		resize(screenWidth, screenHeight);
 		camPos = cam.position;
 		viewWidth = cam.viewportWidth;
 		viewHeight = cam.viewportHeight;
 		this.cam = cam;
+		mappingToRemoteInputs = new HashMap<Integer, Integer>();
+		mappingToRemoteInputs.put(Keys.W, 0);
+		mappingToRemoteInputs.put(Keys.A, 1);
+		mappingToRemoteInputs.put(Keys.S, 2);
+		mappingToRemoteInputs.put(Keys.D, 3);
+	
 	}
 	
 	public void resize(int screenWidth, int screenHeight){
@@ -44,15 +102,26 @@ public class MyInput extends InputAdapter{
 	
 	@Override
 	public boolean keyDown(int keycode) {
-		System.out.println("key pressed: " + keycode);
-
-		return false;
+	
+		Integer remoteInput = mappingToRemoteInputs.get(keycode);
+		if(remoteInput == null) return false;
+		
+		currentState.down(mappingToRemoteInputs.get(keycode));
+		relevant = true;
+		
+		return true;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-
-		return false;
+		
+		Integer remoteInput = mappingToRemoteInputs.get(keycode);
+		if(remoteInput == null) return false;
+		
+		currentState.up(mappingToRemoteInputs.get(keycode));
+		relevant = true;
+		
+		return true;
 	}
 
 	@Override
@@ -123,8 +192,6 @@ public class MyInput extends InputAdapter{
 			this.standardBind = standardBind;
 		}
 	}
-	
-
 
 	public float getWorldX(){
 		return worldX;

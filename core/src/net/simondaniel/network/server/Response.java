@@ -1,10 +1,12 @@
 package net.simondaniel.network.server;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import com.badlogic.gdx.graphics.Pixmap;
 
 import net.simondaniel.entities.EntityInformation;
+import net.simondaniel.fabio.phisx.SyncBodyInfo;
 
 /**
  * Responses get the suffix S for server
@@ -12,8 +14,17 @@ import net.simondaniel.entities.EntityInformation;
  *
  */
 public class Response {
+	
+	public static class SyncBodiesS{
+		public List<SyncBodyInfo> updates;
+	}
+	
 	public static class LoginS{
 		public String response;
+	}
+	
+	public static class WorldStateS{
+		public List<SyncBodyInfo> bodies;
 	}
 	
 	public static class LobbyJoinS{

@@ -59,7 +59,7 @@ public class Player {
 		fdef.shape = cs;
 		fdef.isSensor = true;
 		obj.createFixture(fdef);
-		animation = new PokemonAnimation(p, obj);
+		animation = new PokemonAnimation(p);
 		animation.setScale(2.0f);
 		animation.runAnimation(AnimationType.MOVEMENT, AnimationDirection.RIGHT);
 	}
