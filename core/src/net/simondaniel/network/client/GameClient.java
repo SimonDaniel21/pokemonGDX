@@ -2,29 +2,21 @@ package net.simondaniel.network.client;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener.LagListener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.network.Message;
 import net.simondaniel.network.Network;
-import net.simondaniel.network.Network_interface;
-import net.simondaniel.network.chanels.MessageChannel;
-import net.simondaniel.network.chanels.MessageChannelEnd.InvalidMessageTypeError;
 import net.simondaniel.network.client.Request.LobbyCreateC;
 import net.simondaniel.network.client.Request.LobbyJoinC;
 import net.simondaniel.network.client.Request.LoginC;
-import net.simondaniel.network.server.Response.LoginS;
 
-public class GameClient extends Client implements Network_interface {
+public class GameClient extends Client {
 
 	public ClientMonitor window;
 
@@ -38,11 +30,11 @@ public class GameClient extends Client implements Network_interface {
 
 	public final String IP_ADRESS, SERVER_NAME;
 
-	public ChanelListenerList myListeners;
+	//public ChanelListenerList myListeners;
 
-	private ChanelListenerList addedMyListeners;
+	//private ChanelListenerList addedMyListeners;
 
-	private ChanelListenerList removedMyListeners;
+	//private ChanelListenerList removedMyListeners;
 
 	long startTime;
 
@@ -54,9 +46,9 @@ public class GameClient extends Client implements Network_interface {
 		IP_ADRESS = ip;
 		SERVER_NAME = name;
 		packetBuffer = new HashSet<Packet>();
-		myListeners = new ChanelListenerList();
-		addedMyListeners = new ChanelListenerList();
-		removedMyListeners = new ChanelListenerList();
+//		myListeners = new ChanelListenerList();
+//		addedMyListeners = new ChanelListenerList();
+//		removedMyListeners = new ChanelListenerList();
 		this.start();
 		state = State.IDLE;
 
@@ -140,7 +132,7 @@ public class GameClient extends Client implements Network_interface {
 		LoginC login = new LoginC();
 		login.name = name;
 		login.pw = pw;
-		this.send(MessageChannel.initialChannel, login);
+		//this.send(MessageChannel.initialChannel, login);
 		state = State.LOGGING_IN;
 	}
 
@@ -232,58 +224,47 @@ public class GameClient extends Client implements Network_interface {
 	}
 
 	public void handlePacketBuffer() {
-		Object o;
-		Connection c;
-		packetLock.lock();
+//		Object o;
+//		Connection c;
+//		packetLock.lock();
+//	
+//		try {
+//			for (Packet p : packetBuffer) {
+//				o = p.o;
+//				c = p.con;
+//				if(p.o instanceof LoginS)
+//					System.err.println("handling Loginanswer: " + ((LoginS)p.o).response + " " + myListeners.size() + " times");
+//				
+//				boolean handled = false;
+//				for (ChanelListener ml : myListeners) {
+//					ml.received(c, o);
+//					handled = true;
+//				}
+//				if(!handled) {
+//					System.err.println("a message of type " + o.getClass().getName() + " was not handled by channels: ");
+//					for(ChanelListener ml : myListeners) {
+//						System.err.println(ml.getChanel().getName());
+//					}
+//				}
+//
+//				//myListeners.addAll(addedMyListeners);
+//				for (ChanelListener ml : addedMyListeners) {
+//					ml.received(c, o);
+//					myListeners.add(ml);
+//					System.err.println("added Chanel serious");
+//				}
+//				myListeners.removeAll(removedMyListeners);
+//				addedMyListeners.clear();
+//				removedMyListeners.clear();
+//			}
+//			packetBuffer.clear();
+//		}
+//		finally {
+//			packetLock.unlock();
+//		}
+	}
+
 	
-		try {
-			for (Packet p : packetBuffer) {
-				o = p.o;
-				c = p.con;
-				if(p.o instanceof LoginS)
-					System.err.println("handling Loginanswer: " + ((LoginS)p.o).response + " " + myListeners.size() + " times");
-				
-				boolean handled = false;
-				for (ChanelListener ml : myListeners) {
-					ml.received(c, o);
-					handled = true;
-				}
-				if(!handled) {
-					System.err.println("a message of type " + o.getClass().getName() + " was not handled by channels: ");
-					for(ChanelListener ml : myListeners) {
-						System.err.println(ml.getChanel().getName());
-					}
-				}
-
-				//myListeners.addAll(addedMyListeners);
-				for (ChanelListener ml : addedMyListeners) {
-					ml.received(c, o);
-					myListeners.add(ml);
-					System.err.println("added Chanel serious");
-				}
-				myListeners.removeAll(removedMyListeners);
-				addedMyListeners.clear();
-				removedMyListeners.clear();
-			}
-			packetBuffer.clear();
-		}
-		finally {
-			packetLock.unlock();
-		}
-	}
-
-	public void addChanelListener(ChanelListener ml) {
-//		removedMyListeners.remove(ml);
-//		myListeners.add(ml);
-		addListener(ml);
-	}
-
-	public void removeChanelListener(ChanelListener ml) {
-//		addedMyListeners.remove(ml);
-//		removedMyListeners.add(ml);
-		removeListener(ml);
-	}
-
 	public int packetCount() {
 		return packetsReceived;
 	}
@@ -294,42 +275,17 @@ public class GameClient extends Client implements Network_interface {
 		return packetsReceived / seconds;
 	}
 
-	@Override
-	public void send(MessageChannel mc, Object o) {
-		try {
-			sendMessage(mc, o);
-		} catch (InvalidMessageTypeError e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void send(Object o) {
-		send(myListeners.active.channel, o);
-	}
-	
-	
-	private void sendMessage(MessageChannel ch, Object msg) throws InvalidMessageTypeError{
-		if(ch.canReceive(msg)) {
-			Message m = new Message();
-			m.channel = ch.ID;
-			m.msg = msg;
-			sendTCP(m);
-		}else {
-			throw new InvalidMessageTypeError(msg.getClass().getName(), ch, false);
-		}
-	}
-
 	public void sendLobbyCreateRequest(String lobbyName, GameMode mode) {
 		LobbyCreateC p = new LobbyCreateC();
 		p.name = lobbyName;
 		p.gameMode = mode.ordinal();
-		send(MessageChannel.initialChannel, p);
+		//send(MessageChannel.initialChannel, p);
 	}
 
 	public void sendLobbyJoinRequest(String lobbyName) {
 		LobbyJoinC p = new LobbyJoinC();
 		p.lobbyName = lobbyName;
-		send(MessageChannel.initialChannel, p);
+		//send(MessageChannel.initialChannel, p);
 	}
 
 }

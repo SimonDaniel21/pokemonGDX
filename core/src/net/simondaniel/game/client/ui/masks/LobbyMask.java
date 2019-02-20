@@ -11,33 +11,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.kryonet.Connection;
-
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
-import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.InviteList;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.game.server.Lobby;
-import net.simondaniel.network.UserTracker.UserTrackerListener;
-import net.simondaniel.network.chanels.MessageChannel;
-import net.simondaniel.network.client.ChanelListener;
-import net.simondaniel.network.client.ChanelListenerList;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
 import net.simondaniel.network.client.Request.LobbyLeaveC;
 import net.simondaniel.network.client.Request.TeamJoinC;
 import net.simondaniel.network.client.Request.UserReadyC;
-import net.simondaniel.network.server.Response.InviteAnswerS;
-import net.simondaniel.network.server.Response.InviteUserToLobbyS;
-import net.simondaniel.network.server.Response.LobbyStartTimerS;
-import net.simondaniel.network.server.Response.LobbyUserJoinedS;
-import net.simondaniel.network.server.Response.LobbyUserLeftS;
-import net.simondaniel.network.server.Response.StartGameS;
-import net.simondaniel.network.server.Response.TeamJoinedS;
-import net.simondaniel.network.server.Response.UserReadyS;
 import net.simondaniel.pokes.Pokemon;
-import net.simondaniel.screens.IngameScreen;
 
 public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
@@ -47,9 +31,6 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	InviteList inviteList;
 	TextButton joinUndecided, readyButton;
 	TeamWidget tw1, tw2;
-	
-	LobbyMaskListener listener;
-	UserTrackerListener userTrackerListener;
 	
 	boolean timerStarted;
 	long targetTime;
@@ -64,7 +45,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		s.getFont("title").getData().markupEnabled = true;
 		debug();
 		//this.right();
-		userTrackerListener = new UserListener();
+		//SuserTrackerListener = new UserListener();
 		title = new Label(null, s);
 		add(title).colspan(2).center();
 		row();
@@ -95,7 +76,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 				InviteUserToLobbyC p = new InviteUserToLobbyC();
 				p.user = inviteList.getSelectedName();
 				p.lobby = info.lobbyName;
-				info.gc.send(p);
+				//info.gc.send(p);
 			}
 		});
 		add(inviteButton).row();
@@ -151,7 +132,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			public void changed(ChangeEvent event, Actor actor) {
 				if(!isActive())return;
 				LobbyLeaveC p = new LobbyLeaveC();
-				info.gc.send(p);
+				//info.gc.send(p);
 				deactivateUntilResponse();
 			}
 		});
@@ -388,9 +369,9 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	public void enter() {
 		
 		final GameClient gc = info.gc;
-		listener = new LobbyMaskListener(info.gc.myListeners);
-		gc.addChanelListener(listener);
-		info.userTracker.addListener(userTrackerListener);
+		//listener = new LobbyMaskListener(info.gc.myListeners);
+		//gc.addChanelListener(listener);
+		//info.userTracker.addListener(userTrackerListener);
 		
 		if(!info.joinLobby) {
 //			for(String s : undecided.getItems()) {
@@ -402,7 +383,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			
 			UserReadyC p = new UserReadyC();
 			p.ready = true;
-			info.gc.send(p);
+			//info.gc.send(p);
 			deactivateUntilResponse();
 			return;
 		}
@@ -414,11 +395,11 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		tw1.set("Team 1", info.mode.maxPlayersInTeam(0), 1,gc);
 		tw2.set("Team 2",info. mode.maxPlayersInTeam(1), 2, gc);
 	
-		for(String s : info.userTracker.getUsers()) {
-			if(!s.equals(info.gc.userName()))
-				inviteList.addName(s);
-		}
-		
+//		for(String s : info.userTracker.getUsers()) {
+//			if(!s.equals(info.gc.userName()))
+//				inviteList.addName(s);
+//		}
+//		
 		addPlayersToLobby(info.others[0]);
 		
 		addPlayersToTeam(tw1, info.others[1]);
@@ -435,107 +416,107 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			gc.sendTCP(p);
 			UserReadyC p2 = new UserReadyC();
 			p2.ready = true;
-			info.gc.send(p2);
+			//info.gc.send(p2);
 			deactivateUntilResponse();
 		}
 	}
 
 	@Override
 	public void leave() {
-		info.gc.removeChanelListener(listener);
-		info.userTracker.removeListener(userTrackerListener);
+		//info.gc.removeChanelListener(listener);
+		//info.userTracker.removeListener(userTrackerListener);
 	}
 	
 	
-	private class LobbyMaskListener extends ChanelListener{
-
-		public LobbyMaskListener(ChanelListenerList list) {
-			super(MessageChannel.lobbyState, false, list);
-		}
-
-
-		@Override
-		protected void channelReceive(Connection c, Object o) {
-			if(o instanceof LobbyUserJoinedS) {
-				//System.out.println("RECEIVED LOBBYJOIN " + info.gc.userName());
-				LobbyUserJoinedS p = (LobbyUserJoinedS) o;
-				addPlayerToLobby(p.name);
-			}
-			else if(o instanceof LobbyUserLeftS) {
-				LobbyUserLeftS p = (LobbyUserLeftS) o;
-				if(p.name.equals(info.gc.userName())) {
-					reActivateUI();
-					goBack();
-				}
-				else {
-					removePlayerFromLobby(p.name);
-				}
-			}
-			
-			if(o instanceof TeamJoinedS) {
-				TeamJoinedS p = (TeamJoinedS) o;
-				if(p.id == Lobby.LOBBY_FULL) {
-					InfoDialog.show("the team is already full", getStage());
-				}
-				else if(p.id == Lobby.NO_SUCH_USER) {
-					InfoDialog.show("you are not member of the Lobby!", getStage());
-				}
-				else {
-					joinTeam(p.name, p.id, p.slotID);
-					//System.out.println("receivedd a TEAM " + p.id + "@" + p.slotID);
-				}
-				reActivateUI();
-			}
-			if(o instanceof InviteUserToLobbyS) {
-				InviteUserToLobbyS p = (InviteUserToLobbyS) o;
-				inviteList.setPending(p.name);
-			}
-			if(o instanceof InviteAnswerS) {
-				InviteAnswerS p = (InviteAnswerS) o;
-				inviteList.reply(p.name, p.answer);
-			}
-			if(o instanceof UserReadyS) {
-				UserReadyS p = (UserReadyS) o;
-				if(p.user.equals(info.gc.userName())){
-					ready = p.ready;
-					updateReadyButton();
-					reActivateUI();
-				}
-				if(p.ready == false) {
-					timerStarted = false;
-					timer.setText("");
-				}
-			}
-			if(o instanceof LobbyStartTimerS) {
-				LobbyStartTimerS p = (LobbyStartTimerS) o;
-				targetTime = p.start;
-				timerStarted = true;
-				System.err.println("START TIMER");
-			}
-			if(o instanceof StartGameS) {
-				StartGameS p = (StartGameS) o;
-				PokemonGDX.game.setScreen(new IngameScreen(info.gc));
-			}
-		}
-	}
-	
-	private class UserListener implements UserTrackerListener{
-
-		@Override
-		public void userJoined(String name) {
-			inviteList.addName(name);
-		}
-
-		@Override
-		public void userLeft(String name) {
-			inviteList.removeName(name);
-			removePlayerFromLobby(name);	
-		}
-
-		@Override
-		public void reset() {
-			// TODO Auto-generated method stub
-			
-		}
-	}
+//	private class LobbyMaskListener extends ChanelListener{
+//
+//		public LobbyMaskListener(ChanelListenerList list) {
+//			super(MessageChannel.lobbyState, false, list);
+//		}
+//
+//
+//		@Override
+//		protected void channelReceive(Connection c, Object o) {
+//			if(o instanceof LobbyUserJoinedS) {
+//				//System.out.println("RECEIVED LOBBYJOIN " + info.gc.userName());
+//				LobbyUserJoinedS p = (LobbyUserJoinedS) o;
+//				addPlayerToLobby(p.name);
+//			}
+//			else if(o instanceof LobbyUserLeftS) {
+//				LobbyUserLeftS p = (LobbyUserLeftS) o;
+//				if(p.name.equals(info.gc.userName())) {
+//					reActivateUI();
+//					goBack();
+//				}
+//				else {
+//					removePlayerFromLobby(p.name);
+//				}
+//			}
+//			
+//			if(o instanceof TeamJoinedS) {
+//				TeamJoinedS p = (TeamJoinedS) o;
+//				if(p.id == Lobby.LOBBY_FULL) {
+//					InfoDialog.show("the team is already full", getStage());
+//				}
+//				else if(p.id == Lobby.NO_SUCH_USER) {
+//					InfoDialog.show("you are not member of the Lobby!", getStage());
+//				}
+//				else {
+//					joinTeam(p.name, p.id, p.slotID);
+//					//System.out.println("receivedd a TEAM " + p.id + "@" + p.slotID);
+//				}
+//				reActivateUI();
+//			}
+//			if(o instanceof InviteUserToLobbyS) {
+//				InviteUserToLobbyS p = (InviteUserToLobbyS) o;
+//				inviteList.setPending(p.name);
+//			}
+//			if(o instanceof InviteAnswerS) {
+//				InviteAnswerS p = (InviteAnswerS) o;
+//				inviteList.reply(p.name, p.answer);
+//			}
+//			if(o instanceof UserReadyS) {
+//				UserReadyS p = (UserReadyS) o;
+//				if(p.user.equals(info.gc.userName())){
+//					ready = p.ready;
+//					updateReadyButton();
+//					reActivateUI();
+//				}
+//				if(p.ready == false) {
+//					timerStarted = false;
+//					timer.setText("");
+//				}
+//			}
+//			if(o instanceof LobbyStartTimerS) {
+//				LobbyStartTimerS p = (LobbyStartTimerS) o;
+//				targetTime = p.start;
+//				timerStarted = true;
+//				System.err.println("START TIMER");
+//			}
+//			if(o instanceof StartGameS) {
+//				StartGameS p = (StartGameS) o;
+//				PokemonGDX.game.setScreen(new IngameScreen(info.gc));
+//			}
+//		}
+//	}
+//	
+//	private class UserListener implements UserTrackerListener{
+//
+//		@Override
+//		public void userJoined(String name) {
+//			inviteList.addName(name);
+//		}
+//
+//		@Override
+//		public void userLeft(String name) {
+//			inviteList.removeName(name);
+//			removePlayerFromLobby(name);	
+//		}
+//
+//		@Override
+//		public void reset() {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//	}
 }

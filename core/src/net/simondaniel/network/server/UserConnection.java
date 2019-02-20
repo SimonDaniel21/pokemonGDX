@@ -7,22 +7,18 @@ import com.esotericsoftware.kryonet.Connection;
 
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.Message;
-import net.simondaniel.network.chanels.MessageChannel;
-import net.simondaniel.network.chanels.Protocol;
-import net.simondaniel.network.client.ChanelListener;
-import net.simondaniel.network.client.ChanelListenerList;
 
 public class UserConnection extends Connection{
 
 
 	public String name;
 	public Lobby lobby = null;
-	public ChanelListenerList channelListeners;
+	//public ChanelListenerList channelListeners;
 	
 	public UserConnection() {
 		super();
 		name = null;
-		channelListeners = new ChanelListenerList();
+		//channelListeners = new ChanelListenerList();
 	}
 	
 	public UserConnection(String name) {
@@ -49,11 +45,6 @@ public class UserConnection extends Connection{
 	
 	public void logout() {
 		this.name = null;
-	}
-	
-	public void addChannelListener(ChanelListener l){
-		channelListeners.add(l);
-		addListener(l);
 	}
 	
 }

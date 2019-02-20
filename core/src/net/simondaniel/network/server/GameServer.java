@@ -23,8 +23,6 @@ import net.simondaniel.GameMode;
 import net.simondaniel.MyRandom;
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.Network;
-import net.simondaniel.network.chanels.MessageChannel;
-import net.simondaniel.network.protocols.InitialListener;
 import net.simondaniel.network.server.Response.EndConnectionS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyListS;
@@ -50,7 +48,7 @@ public class GameServer extends Server{
 
 	public GameServer() throws IOException {
 
-		MessageChannel.setServerRef(this);
+		//MessageChannel.setServerRef(this);
 		lobbys = new ArrayList<Lobby>();
 		usersTrackingUsers = new ArrayList<UserConnection>();
 		database = new LocalFileDatabase("database.deseus");
@@ -100,7 +98,7 @@ public class GameServer extends Server{
 		// By providing our own connection implementation, we can store per
 		// connection state without a connection ID to state look up.
 		UserConnection c = new UserConnection();
-		c.addListener(new InitialListener(this, c.channelListeners));
+		//c.addListener(new InitialListener(this, c.channelListeners));
 		return c;
 	}
 	

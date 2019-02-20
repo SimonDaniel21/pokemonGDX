@@ -1,28 +1,19 @@
 package net.simondaniel.desktop;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 
 import javax.swing.JOptionPane;
-
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import net.simondaniel.Config;
-import net.simondaniel.FileSystem;
 import net.simondaniel.GameConfig;
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.network.Download;
 import net.simondaniel.network.UpdateDialog;
-import net.simondaniel.network.chanels.MessageChannel;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.ServerListener;
 
@@ -83,8 +74,6 @@ public class DesktopLauncher {
 			config = LaunchConfiguration.configuration(args[0]);
 		
 		LaunchConfiguration.config = config;
-		
-		MessageChannel.initCommunication(config.isServer());
 		
 		switch (config) {
 		case RELEASE_CLIENT:

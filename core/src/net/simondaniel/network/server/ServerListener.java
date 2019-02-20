@@ -5,10 +5,6 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import net.simondaniel.game.server.Lobby;
-import net.simondaniel.network.chanels.MessageChannel;
-import net.simondaniel.network.chanels.MessageChannelEnd.InvalidMessageTypeError;
-import net.simondaniel.network.chanels.MessageChannelEnd.MessageNotHandledError;
-import net.simondaniel.network.chanels.Protocol;
 import net.simondaniel.network.client.Request.*;
 import net.simondaniel.network.server.Response.*;
 public class ServerListener extends Listener{

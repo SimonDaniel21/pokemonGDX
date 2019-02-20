@@ -23,9 +23,6 @@ import net.simondaniel.game.client.ui.NamingDialog.ButtonOption;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.network.Message;
-import net.simondaniel.network.chanels.MessageChannel;
-import net.simondaniel.network.client.ChanelListener;
-import net.simondaniel.network.client.ChanelListenerList;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.GameClient.State;
 import net.simondaniel.network.client.Request.AccountActivationC;
@@ -73,7 +70,7 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 					p.name = name_tf.getText();
 					p.pw = values[1];
 					p.email = values[0];
-					info.client.send(MessageChannel.initialChannel, p);
+					//info.client.send(MessageChannel.initialChannel, p);
 					deactivateUntilResponse();
 				}
 			}
@@ -84,7 +81,7 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 				AccountActivationC p = new AccountActivationC();
 				p.name = name_tf.getText();
 				p.code = values[0];
-				info.client.send(MessageChannel.initialChannel, p);
+				//info.client.send(MessageChannel.initialChannel, p);
 				deactivateUntilResponse();
 			}
 		};
@@ -186,8 +183,8 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 
 	@Override
 	public void enter() {
-		listener = new LoginMaskListener(this, info.client.myListeners);
-		info.client.addChanelListener(listener);
+//		listener = new LoginMaskListener(this, info.client.myListeners);
+//		info.client.addChanelListener(listener);
 		System.out.println("added chanel listener");
 		serverName.setText(info.client.SERVER_NAME);
 		// name_tf.setText("blader108");
@@ -239,19 +236,18 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 
 	@Override
 	public void leave() {
-		info.client.removeChanelListener(listener);
+		//info.client.removeChanelListener(listener);
 	}
 
-	public static class LoginMaskListener extends ChanelListener {
+	public static class LoginMaskListener {
 
 		private LoginMask mask;
 		
-		public LoginMaskListener(LoginMask m, ChanelListenerList list) {
-			super(MessageChannel.initialChannel, false, list);
-			this.mask = m;
-		}
+//		public LoginMaskListener(LoginMask m, ChanelListenerList list) {
+//			super(MessageChannel.initialChannel, false, list);
+//			this.mask = m;
+//		}
 
-		@Override
 		protected void channelReceive(Connection c, Object o) {
 			
 			System.err.println("CLIENT CHANEL RECEIVE");

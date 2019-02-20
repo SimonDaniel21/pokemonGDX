@@ -1,13 +1,10 @@
 package net.simondaniel.network.server;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
 import net.simondaniel.network.Network;
-import net.simondaniel.network.protocols.InitialListener;
 
 public class PlayServer extends Server{
 
