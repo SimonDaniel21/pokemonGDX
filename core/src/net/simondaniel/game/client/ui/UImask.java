@@ -85,18 +85,18 @@ public abstract class UImask<T extends ShowMaskInfo> extends Table {
 
 	public void show(Stage s) {
 		List<String> missing = info.getMissingFields();
+		String errString = "";
 		
 		if(!missing.isEmpty()){
-			System.err.println("cant show UImask [" + this.getClass().getSimpleName() + "] because following fields are missing: ");
-			String string = "[";
+			errString += "cant show UImask [" + this.getClass().getSimpleName() + "] because following fields are missing: \n";;
+			String missingList = "[";
 			for(String m : missing) {
-				string += m + ",";
+				missingList += m + ",";
 			}
-			string = string.substring(0, string.length() -1);
-			string += "]";
-			System.err.println(string);
-			
-			return;
+			missingList = missingList.substring(0, missingList.length() -1);
+			missingList += "]";
+			errString += missingList;
+			throw new RuntimeException(errString);
 		}
 		
 		if (currentStage != null)

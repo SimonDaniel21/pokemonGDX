@@ -6,28 +6,17 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-import net.simondaniel.Assets;
-import net.simondaniel.Assets.Atlas;
-import net.simondaniel.entities.Entity;
 import net.simondaniel.fabio.input.BattleInput;
 import net.simondaniel.fabio.input.InputHandler;
 import net.simondaniel.fabio.input.BattleInput.BattleInputType;
-import net.simondaniel.MyInterpolation;
-import net.simondaniel.game.client.MoveAction;
 import net.simondaniel.game.client.attacks.Bite;
 import net.simondaniel.game.client.attacks.Fireblast;
 import net.simondaniel.game.client.attacks.HydroPump;
-import net.simondaniel.game.client.gfx.AnimatedSprite;
-import net.simondaniel.game.client.gfx.AnimationLayout;
-import net.simondaniel.game.client.gfx.AnimationLayout.PokemonAnimationLayout;
 import net.simondaniel.game.client.gfx.AnimationType;
 import net.simondaniel.game.client.gfx.PokemonAnimation;
 import net.simondaniel.game.client.ui.SkillBar;
@@ -35,7 +24,6 @@ import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.server.Response.MovementS;
 import net.simondaniel.network.server.Response.MovementShandler;
-import net.simondaniel.screens.MainMenuScreen;
 
 public class Schiggy extends MovingEntity implements MovementShandler, InputHandler<BattleInput> {
 

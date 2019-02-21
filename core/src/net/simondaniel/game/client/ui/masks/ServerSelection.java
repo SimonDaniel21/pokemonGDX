@@ -1,51 +1,48 @@
 package net.simondaniel.game.client.ui.masks;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 
 import net.simondaniel.Config;
 import net.simondaniel.GameConfig;
 import net.simondaniel.GameMode;
-import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.MyRandom;
-import net.simondaniel.game.client.PokemonGDX;
+import net.simondaniel.MyColor;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.ButtonOption;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.network.client.GameClient;
-import net.simondaniel.screens.MainMenuScreen;
+import net.simondaniel.network.client.PlayClient;
 
 public class ServerSelection extends UImask<ServerSelectionInfo>{
 	
 	Skin skin;
-	GameClient gc;
+	
+	private PlayClient client;
 	
 	public LoginMask loginMask;
 	
+	boolean connecting;
+	private String answer;
+	
+	private CheckBox remindServer;
+	
+	private String host;
+	
 	public ServerSelection(Skin s) {
 		super(new ServerSelectionInfo(), s);
+		
 		loginMask = new LoginMask(s);
 		this.skin = getSkin();
 		
@@ -65,8 +62,9 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					if(isActive())
+					if(isActive()) {
 						tryToConnectTo(name, ip);
+					}
 				}
 				
 			});
@@ -101,9 +99,19 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 		
 		for(String string : Config.gameConfig.CUSTOM_SERVERS) {
 			String[] sa = string.split(":");
-			String name = sa[0];
-			String ip = sa[1];
+			final String name = sa[0];
+			final String ip = sa[1];
 			final TextButton startServerbBttn = new TextButton(name, skin);
+			startServerbBttn.addListener(new ChangeListener() {
+
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					if(isActive()) {
+						tryToConnectTo(name, ip);
+					}
+				}
+				
+			});
 			add(startServerbBttn);
 			Button b = new Button(skin);
 			final NamingDialog nd = new NamingDialog("info", skin, 
@@ -157,36 +165,36 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 			
 		});
 		add(addCustomServer);
-	}
-	
-	public void set(String lobbyName, String[][] others, GameMode mode, final GameClient gc, Skin skin) {
+		row();
 		
+		remindServer = new CheckBox("automatisch verbinden", s);
+		add(remindServer);
 	}
 	
 	private Dialog tryToConnectDialog;
 	private Label connectingLabel;
 	
-	/** sends a connectRequest and displays a waiting dialog while waiting for response
+	/**  connects to server async and shows info
 	 * 
 	 * @param name
 	 * @param ip
 	 */
-	private void tryToConnectTo(final String name, final String ip) {
+	private void tryToConnectTo(final String name, final String host) {
 		connectingLabel.setText("connecting to " + name + "...");
+		this.host = host;
 		tryToConnectDialog.show(getStage());
 		tryToConnectDialog.setOrigin(Align.center);
+		deactivateUntilResponse();
 		
-		connectRequest(ip, name);
+		new Thread(new Runnable() {	
+			@Override
+			public void run() {
+				answer = client.connectBlocking(host);
+				reActivateUI();
+			}
+		}).start();;
 	}
 	
-	public void connectRequest(String ip, String name) {
-		gc = new GameClient(ip, name);
-		
-		gc.sendConnectRequest();
-		
-		//tryToConnectDialog.addAction(Actions.sequence(Actions.fadeOut(0.3f), Actions.hide()));
-	
-	}
 	
 	class ServerEntry extends Table{
 		String servername, ipAdress;
@@ -223,38 +231,38 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 
 	@Override
 	public void enter() {
-		if(!info.greetingMessage.equals("")) {
-			InfoDialog.show(info.greetingMessage, getStage());
-		}
-		if(PokemonGDX.CONFIGURATION == LaunchConfiguration.LOGGED_IN) {
-			connectRequest("localhost", "AutoConnectServer");
+		client = info.client;
+		String auto = GameConfig.gameConfig.AUTO_SERVER_HOST;
+		if(!auto.equals("null")) {
+			tryToConnectTo("auto_server", auto);
 		}
 	}
 
 	@Override
 	public void leave() {
-		// TODO Auto-generated method stub
-		
+		client = null;
+		//GameConfig.gameConfig.writeAsBool("use_auto_server", remindServer.isChecked());
+		String autoServer = remindServer.isChecked() ? host : "null";
+		GameConfig.gameConfig.writeAsString("auto_server_host", autoServer);
+		GameConfig.gameConfig.save();
 	}
 	
 	@Override
 	public void act(float delta) {
-		super.act(delta);
-		if(gc == null) return;
-		System.out.println(gc.getState());
-		if(gc.isConnectionFinished()) {
-			if(gc.isConnected()) {
-				System.err.println("isCOnnected");
-				loginMask.getInfo().client = gc;
+		
+		if(answer != null) {
+			if(answer.equals("connected")) {
+				loginMask.getInfo().client = client;
 				switchTo(loginMask);
 			}
 			else {
-				System.err.println("showing error");
-				InfoDialog.show(gc.errorMsg, getStage());
-				gc.resetConnection();
-				System.out.println(gc.getState());
+				InfoDialog.show(MyColor.dye(Color.RED, "error"), answer, getStage());
 			}
 			tryToConnectDialog.hide();
+			answer = null;
 		}
+		
+		
+		super.act(delta);
 	}
 }

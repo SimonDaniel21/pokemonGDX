@@ -31,6 +31,7 @@ public abstract class Sservice {
 	public void activate() {
 		if(active) return;
 		
+		onActivation(con);
 		con.addListener(listener);
 		active = true;
 	}
@@ -38,6 +39,7 @@ public abstract class Sservice {
 	public void deactivate() {
 		if(!active) return;
 		
+		onDeactivation(con);
 		con.removeListener(listener);
 		active = false;
 	}
@@ -51,5 +53,20 @@ public abstract class Sservice {
 			throw new RuntimeException("tried to send a message on an inactive service");
 		
 		con.sendTCP(o);
+	}
+	
+	public void toggle() {
+		if(active)
+			deactivate();
+		else
+			activate();
+	}
+	
+	protected void onActivation(Connection c) {
+		
+	}
+	
+	protected void onDeactivation(Connection c) {
+		
 	}
 }

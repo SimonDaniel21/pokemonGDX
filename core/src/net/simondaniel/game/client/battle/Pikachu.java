@@ -13,10 +13,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import net.simondaniel.Assets;
 import net.simondaniel.Assets.Atlas;
-import net.simondaniel.entities.Entity;
 import net.simondaniel.fabio.input.BattleInput;
 import net.simondaniel.fabio.input.InputHandler;
-import net.simondaniel.game.client.MoveAction;
 import net.simondaniel.game.client.attacks.Bite;
 import net.simondaniel.game.client.attacks.Fireblast;
 import net.simondaniel.game.client.gfx.AnimatedSprite;

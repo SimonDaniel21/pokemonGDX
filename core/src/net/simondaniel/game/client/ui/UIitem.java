@@ -1,13 +1,13 @@
 package net.simondaniel.game.client.ui;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import net.simondaniel.entities.Drawer;
 import net.simondaniel.fabio.input.BattleInput;
 import net.simondaniel.fabio.input.InputHandler;
 
-public abstract class UIitem implements Drawer, InputHandler<BattleInput>{
+public abstract class UIitem implements InputHandler<BattleInput>{
 
 	protected int x, y, w, h;
 	
@@ -42,11 +42,12 @@ public abstract class UIitem implements Drawer, InputHandler<BattleInput>{
 		sr.rect(x, y, w, h);
 		
 	}
-	
-	@Override
+
 	public void render(ShapeRenderer sr) {
 		sr.setColor(Color.DARK_GRAY);
 		sr.rect(x, y, w, h);
 		
 	}
+
+	public abstract void render(SpriteBatch sb);
 }

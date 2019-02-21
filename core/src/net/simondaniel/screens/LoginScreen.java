@@ -14,47 +14,43 @@ import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.game.client.ui.masks.GameMenu;
 import net.simondaniel.game.client.ui.masks.ServerSelection;
 import net.simondaniel.network.client.GameClient;
+import net.simondaniel.network.client.PlayClient;
 
 public class LoginScreen implements Screen{
 
 
 	public UImaskHandler stage;
 	public ServerSelection serverSelection;
-	GameClient gc;
+	PlayClient client;
 	
 	UImaskHandler handler;
 	
 	// DEBUG VALUES
 	private final boolean autoLogin;
 	
+	
+	
 	public LoginScreen() {
-		autoLogin = false;
+		this(false);
 	}
 	public LoginScreen(boolean autoLogin) {
 		this.autoLogin = autoLogin;
+		client = new PlayClient();
 	}
+	
 	
 	@Override
 	public void show() {
+		
 		Skin skin = new Skin(Gdx.files.internal("skins/sgx/sgx-ui.json"));
 		serverSelection = new ServerSelection(skin);
-		serverSelection.getInfo().greetingMessage = "";
 		stage = new UImaskHandler(new TextureRegion(new Texture("gfx/background.jpg")));
+		serverSelection.getInfo().client = client;
+		serverSelection.getInfo().greetingMessage = "";
 		serverSelection.show(stage);
 		
 		if(autoLogin) {
-			GameMenu m = new GameMenu(skin);
 			
-			GameClient gc = new GameClient("localhost", "AutoConnectServer");
-			gc.sendConnectRequest();
-			if(gc.waitForConnection()) {
-				gc.sendLoginRequest("user " + MyRandom.random.nextInt(1000), "development");
-				if(gc.waitForLogin()) {
-					PokemonGDX.game.client = gc;
-					m.getInfo().client = gc;
-					serverSelection.switchTo(m);
-				}
-			}
 		}
 		
 	

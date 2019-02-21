@@ -18,6 +18,7 @@ import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.network.UserTracker;
 import net.simondaniel.network.client.GameClient;
+import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.network.client.Request.LobbyListC;
 
 public class GameMenu extends UImask<LoginMaskInfo>{
@@ -33,6 +34,8 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	MailListener gameInviteListener;
 	
 	UserTracker userTracker;
+	
+	PlayClient client;
 	
 	
 	public GameMenu(final Skin skin) {
@@ -56,7 +59,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			@Override
 			public void updateValues(String[] values) {
 				
-				info.client.sendLobbyCreateRequest(values[0], GameMode.ONE_VS_ONE);
+				//info.client.sendLobbyCreateRequest(values[0], GameMode.ONE_VS_ONE);
 				deactivateUntilResponse();
 			}
 		};
@@ -91,7 +94,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			String[] sa, String[] sd, String[] sp) {
 	
 		LobbyMaskInfo info = lobbyMask.getInfo();
-		info.gc = getInfo().client;
+		//info.gc = getInfo().client;
 		info.lobbyName = name;
 		info.mode = mode;
 		info.others = others;
@@ -111,15 +114,24 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	
 	@Override
 	public void act(float delta) {
-		info.client.handlePacketBuffer();
+		//info.client.handlePacketBuffer();
 		super.act(delta);
 	}
 
 	@Override
 	public void enter() {
-		final GameClient gc = info.client;
+		//final GameClient gc = info.client;
+		
+		client = info.client;
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		client.trackingService.activate();
 	
-		gc.sendTCP(new LobbyListC());
+		//gc.sendTCP(new LobbyListC());
 		
 //		userTracker = new UserTracker(info.client.myListeners);
 //		userTrackerListener = new UserListener();
@@ -130,7 +142,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 //		gc.addChanelListener(listener);
 		
 		if(PokemonGDX.CONFIGURATION == LaunchConfiguration.LOGGED_IN) {
-			info.client.sendLobbyJoinRequest("testLobby");
+			//info.client.sendLobbyJoinRequest("testLobby");
 		}
 	}
 

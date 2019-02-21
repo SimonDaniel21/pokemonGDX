@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 
 import net.simondaniel.MyInterpolation;
-import net.simondaniel.entities.Entity;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ReversableAction;
 import net.simondaniel.network.client.Request.MovementC;

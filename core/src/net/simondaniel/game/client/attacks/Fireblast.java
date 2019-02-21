@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.simondaniel.MyInterpolation;
-import net.simondaniel.entities.Entity;
-
 import net.simondaniel.game.client.battle.Pikachu;
 import net.simondaniel.game.client.battle.Position;
 import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
@@ -27,7 +25,7 @@ public class Fireblast extends Attack{
 	int range = 10;
 	int speed = 1;
 	
-	Entity shooter;
+	//Entity shooter;
 	
 	Position start, dest;
 	float maxFlyTime = 4.0f;

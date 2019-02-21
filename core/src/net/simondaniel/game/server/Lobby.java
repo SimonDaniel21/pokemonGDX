@@ -9,7 +9,6 @@ import java.util.TimerTask;
 
 import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.game.client.OneVsOneGame;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.MyServerlistener;
 import net.simondaniel.network.server.Response.InviteAnswerS;
@@ -30,7 +29,7 @@ public class Lobby implements MyServerlistener{
 	private int teamCount;
 	private int[] teamSizes, teamindexStart;
 	
-	private final ServerGame gameInstance;
+	//private final ServerGame gameInstance = null;
 	
 	private UserConnection[] userSlots; // specific slots
 	private boolean[] readys;
@@ -64,15 +63,15 @@ public class Lobby implements MyServerlistener{
 				indexoffset+= teamSizes[i];
 			}
 			userSlots = new UserConnection[2];
-			gameInstance = new ServerGame(gs, new OneVsOneGame(gs));
+			//gameInstance = new ServerGame(gs, new OneVsOneGame(gs));
 			break;
 		default:
-			gameInstance = null;
+			//gameInstance = null;
 			break;
 		}
-		if(gameInstance != null) {
-			
-		}
+//		if(gameInstance != null) {
+//			
+//		}
 		readys = new boolean[userSlots.length];
 	}
 	
@@ -80,8 +79,8 @@ public class Lobby implements MyServerlistener{
 		for(UserConnection u : userSlots) {
 			if(u == null) return false;
 		}
-		gameInstance.start(this);
-		gameInstance.server.window.startLobby(NAME);
+//		gameInstance.start(this);
+//		gameInstance.server.window.startLobby(NAME);
 		return true;
 	}
 

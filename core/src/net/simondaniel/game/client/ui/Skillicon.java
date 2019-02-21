@@ -9,10 +9,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.simondaniel.MyRandom;
-import net.simondaniel.entities.Drawer;
 import net.simondaniel.screens.MainMenuScreen;
 
-public class Skillicon implements Drawer{
+public class Skillicon {
 
 	
 	private static final int ICON_WIDTH = 64, BORDER = 2;
@@ -42,7 +41,6 @@ public class Skillicon implements Drawer{
 		font.setColor(Color.RED);
 	}
 	
-	@Override
 	public void render(SpriteBatch sb) {
 		
 		if(active) {
@@ -65,7 +63,6 @@ public class Skillicon implements Drawer{
 		}
 	}
 
-	@Override
 	public void render(ShapeRenderer sr) {
 		
 	}

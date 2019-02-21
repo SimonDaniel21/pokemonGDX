@@ -35,7 +35,7 @@ public class ServerScreen implements Screen {
 	
 		inputs = new InputQueue();
 		in = inputs.nextState();
-		server = new PlayServer();
+		server = new PlayServer("Test Server");
 		server.start();
 	
 		sl = new PlayServerListener(server);

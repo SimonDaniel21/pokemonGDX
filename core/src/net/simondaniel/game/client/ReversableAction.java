@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import net.simondaniel.network.client.GameClient;
+import net.simondaniel.network.client.PlayClient;
 
 public abstract class ReversableAction<T, O> {
 	
@@ -13,18 +14,18 @@ public abstract class ReversableAction<T, O> {
 	protected Queue<T> toExecute; // execution buffer locally for client
 	protected Queue<T> waitForApproval; // actions that havent been approved by the server
 	
-	protected GameClient client; // a reference to a network object just for convenience
+	protected PlayClient client; // a reference to a network object just for convenience
 	
 	/**
 	 * constructs a ReversableAction
 	 * @param object that executes the Action
-	 * @param client ref to a GameClient
+	 * @param client2 ref to a GameClient
 	 */
-	public ReversableAction(O object, GameClient client){
+	public ReversableAction(O object, PlayClient client2){
 		toExecute = new LinkedList<T>();
 		waitForApproval = new LinkedList<T>();
 		this.object = object;
-		this.client = client;
+		this.client = client2;
 	}
 	
 	/**

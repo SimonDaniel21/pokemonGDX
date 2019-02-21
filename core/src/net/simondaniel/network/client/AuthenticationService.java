@@ -3,7 +3,7 @@ package net.simondaniel.network.client;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 
-
+import net.simondaniel.network.Synchronized;
 import net.simondaniel.network.client.Request.LoginC;
 import net.simondaniel.network.server.Response.LoginS;
 import net.simondaniel.screens.tempNet.MyCallback;
@@ -12,10 +12,14 @@ import net.simondaniel.screens.tempNet.Service;
 public class AuthenticationService extends Service{
 	
 	private MyCallback onAuth;
+	
+	public Synchronized<String> response;
 	private Client client;
+	private boolean authenticated;
 	
 	public AuthenticationService(Client c) {
 		super(c);
+		response = new Synchronized<String>();
 	}
 	
 	@Override
@@ -24,7 +28,10 @@ public class AuthenticationService extends Service{
 			LoginS p = (LoginS) o;
 			if(p.response.equals("success")) {
 				onAuth.perform();
+				authenticated = true;
 			}
+			response.set(p.response);
+			System.out.println("received answer!!!");
 		}
 	}
 	

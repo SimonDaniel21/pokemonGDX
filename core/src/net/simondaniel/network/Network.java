@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
-import net.simondaniel.entities.EntityInformation;
 import net.simondaniel.fabio.input.InputSate.TransmittedInputState;
 import net.simondaniel.fabio.phisx.SyncBodyInfo;
 import net.simondaniel.network.client.Request;
@@ -41,10 +40,6 @@ public class Network {
 		}
 		
 		for(Class<?> c : Response.class.getClasses()) {
-			kryo.register(c);
-		}
-		
-		for(Class<?> c : EntityInformation.class.getClasses()) {
 			kryo.register(c);
 		}
 		

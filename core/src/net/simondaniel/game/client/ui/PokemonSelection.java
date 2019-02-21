@@ -10,12 +10,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 
 import net.simondaniel.MyRandom;
-import net.simondaniel.entities.Drawer;
 import net.simondaniel.fabio.input.BattleInput;
 import net.simondaniel.fabio.input.InputHandler;
 import net.simondaniel.screens.MainMenuScreen;
 
-public class PokemonSelection implements Drawer, InputHandler<BattleInput>{
+public class PokemonSelection implements InputHandler<BattleInput>{
 
 	int x, y;
 	
@@ -79,7 +78,6 @@ public class PokemonSelection implements Drawer, InputHandler<BattleInput>{
 		}
 	}
 	
-	@Override
 	public void render(SpriteBatch sb) {
 		//sb.draw(r, x, y);
 		for(int i = 0; i < s.length; i++) {
@@ -114,10 +112,5 @@ public class PokemonSelection implements Drawer, InputHandler<BattleInput>{
 		s[i].setScale(1.25f);
 	}
 	
-
-	@Override
-	public void render(ShapeRenderer sr) {
-		
-	}
 
 }

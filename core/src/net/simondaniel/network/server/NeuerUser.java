@@ -4,9 +4,14 @@ import com.esotericsoftware.kryonet.Connection;
 
 public class NeuerUser extends Connection{
 
-	AuthenticationSservice authService;
+	UserAccount account;
 	
-	public NeuerUser() {
+	AuthenticationSservice authService;
+	UserTrackSservice trackService;
+	
+	public NeuerUser(PlayServer server) {
 		authService = new AuthenticationSservice(this);
+		trackService = new UserTrackSservice(this, server);
+		account = new UserAccount();
 	}
 }

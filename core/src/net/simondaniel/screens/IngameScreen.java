@@ -12,8 +12,6 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import net.simondaniel.game.client.GameInstance;
-import net.simondaniel.game.client.OneVsOneGame;
 import net.simondaniel.network.client.GameClient;
 
 public class IngameScreen extends GameScreen{
@@ -31,7 +29,7 @@ public class IngameScreen extends GameScreen{
 	BitmapFont font = new BitmapFont();
 	ParticleEffect pe;
 
-	GameInstance game;
+	//GameInstance game;
 	
 	@Override
 	public void show() {
@@ -39,8 +37,8 @@ public class IngameScreen extends GameScreen{
 		batch = new SpriteBatch();
 		sr = new ShapeRenderer();
 		sr.setAutoShapeType(true);
-		game = new OneVsOneGame(client, batch);
-		game.start();
+		//game = new OneVsOneGame(client, batch);
+		//game.start();
 		//Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		pe = new ParticleEffect();
 		pe.load(Gdx.files.internal("gfx/atlases/rain/rain.p"), Gdx.files.internal("gfx/atlases/rain/"));
@@ -66,7 +64,7 @@ public class IngameScreen extends GameScreen{
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		client.handlePacketBuffer();
-		game.update(Gdx.graphics.getDeltaTime());
+		//game.update(Gdx.graphics.getDeltaTime());
 		pe.update(Gdx.graphics.getDeltaTime());
 		if(pe.isComplete()) {
 			pe.reset();
@@ -89,7 +87,7 @@ public class IngameScreen extends GameScreen{
 
 	@Override
 	public void resize(int width, int height) {
-		game.resizeScreen(width, height);
+		//game.resizeScreen(width, height);
 	}
 
 	@Override
@@ -112,7 +110,7 @@ public class IngameScreen extends GameScreen{
 		batch.dispose();
 		img.dispose();
 		//renderer.dispose();
-		game.dispose();
+		//game.dispose();
 		
 	}
 

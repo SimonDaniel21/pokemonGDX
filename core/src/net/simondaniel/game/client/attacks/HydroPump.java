@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import net.simondaniel.MyInterpolation;
-import net.simondaniel.entities.Entity;
 import net.simondaniel.game.client.battle.Position;
 
 public class HydroPump extends Attack{
@@ -23,8 +22,6 @@ public class HydroPump extends Attack{
 	float dir;
 	int range = 10;
 	int speed = 8;
-	
-	Entity shooter;
 	
 	Position start, dest;
 	float maxFlyTime = 3.0f;

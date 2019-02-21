@@ -2,16 +2,13 @@ package net.simondaniel.game.client;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.simondaniel.Assets;
 import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.network.client.GameClient;
+import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.pokes.Pokemon;
-import net.simondaniel.screens.IngameScreen;
-import net.simondaniel.screens.MainMenuScreen;
-import net.simondaniel.screens.NeuerGameScreen;
+import net.simondaniel.screens.LoginScreen;
 import net.simondaniel.screens.tempNet.ServerScreen;
 
 public class PokemonGDX extends Game {
@@ -28,7 +25,7 @@ public class PokemonGDX extends Game {
 	}
 
 	SpriteBatch batch;
-	public GameClient client;
+	public PlayClient client;
 	public static PokemonGDX game;
 
 	public PokemonGDX(LaunchConfiguration config) {
@@ -44,13 +41,13 @@ public class PokemonGDX extends Game {
 	@Override
 	public void render() {
 		super.render();
-		if (i++ == 200) {
-			int p = (client == null) ? 0 : client.packetCount();
-			float rate = (float) (p==0 ? 0 : Math.round(client.packetRate() * 100.0) / 100.0);
-			Gdx.graphics.setTitle(Gdx.app.getJavaHeap()/mb + " mb used, " + p + " packets received (" + rate + "p/s)");
-			
-			i = 0;
-		}
+//		if (i++ == 200) {
+//			int p = (client == null) ? 0 : client.packetCount();
+//			float rate = (float) (p==0 ? 0 : Math.round(client.packetRate() * 100.0) / 100.0);
+//			Gdx.graphics.setTitle(Gdx.app.getJavaHeap()/mb + " mb used, " + p + " packets received (" + rate + "p/s)");
+//			
+//			i = 0;
+//		}
 	}
 
 	@Override
@@ -73,7 +70,7 @@ public class PokemonGDX extends Game {
 			Pokemon.loadFromFile();
 			Assets.load();
 			batch = new SpriteBatch();
-			setScreen(new NeuerGameScreen());
+			setScreen(new LoginScreen());
 			break;
 		case DEBUG_SERVER:
 			setScreen(new ServerScreen());

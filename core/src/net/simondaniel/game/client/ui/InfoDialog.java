@@ -36,10 +36,15 @@ public class InfoDialog extends Dialog {
 		d = new InfoDialog("", s);
 	}
 	
-	public static void show(String msg, Stage stage) {
+	public static void show(String title, String msg, Stage stage) {
 		if(d.isVisible())
 			d.hide();
 		d.text.setText(msg);
+		d.getTitleLabel().setText(title);
 		d.show(stage);
+	}
+	
+	public static void show(String msg, Stage stage) {
+		show("info", msg, stage);
 	}
 }

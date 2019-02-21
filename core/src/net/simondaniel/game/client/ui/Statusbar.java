@@ -5,10 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import net.simondaniel.MyRandom;
-import net.simondaniel.entities.Drawer;
-
-public class Statusbar implements Drawer{
+public class Statusbar{
 
 	private static TextureRegion barTex;
 	private int x, y, hx, hy, ex, ey;
@@ -30,7 +27,6 @@ public class Statusbar implements Drawer{
 		}
 	}
 	
-	@Override
 	public void render(SpriteBatch sb) {
 		sb.draw(playerIcon, x, y);
 		sb.draw(barTex, x, y);
@@ -38,7 +34,6 @@ public class Statusbar implements Drawer{
 		sb.draw(expbar, ex, ey);
 	}
 
-	@Override
 	public void render(ShapeRenderer sr) {
 		// TODO Auto-generated method stub
 		

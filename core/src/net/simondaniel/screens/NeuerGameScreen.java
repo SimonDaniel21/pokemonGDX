@@ -61,6 +61,8 @@ public class NeuerGameScreen implements Screen {
 		PlayClient gc = new PlayClient();
 		
 		while(!gc.isConnected())Thread.yield();
+		System.out.println("connected: " + gc.isConnected());
+		System.out.println("active: " + gc.authService.isActive());
 		gc.authService.login("Simon", "1234");
 		
 		input = new RemoteInput(cam, gc, 5);

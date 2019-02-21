@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Pixmap;
 
-import net.simondaniel.entities.EntityInformation;
 import net.simondaniel.fabio.phisx.SyncBodyInfo;
 
 /**
@@ -14,6 +13,10 @@ import net.simondaniel.fabio.phisx.SyncBodyInfo;
  *
  */
 public class Response {
+	
+	public static class ServerInfoS{
+		public String name;
+	}
 	
 	public static class SyncBodiesS{
 		public List<SyncBodyInfo> updates;
@@ -108,18 +111,10 @@ public class Response {
 		public void handle(LoadAreaS p);
 	}
 	
-	public static class AddEntityS{
-		public EntityInformation info;
-	}
-	
 	public static class UserReadyS{
 		public String user;
 		public boolean ready;
 	} 
-
-	public static interface AddEntityShandler{
-		public void handle(AddEntityS p);
-	}
 	
 	public static class InviteUserToLobbyS{
 		public String name, sender, lobby;

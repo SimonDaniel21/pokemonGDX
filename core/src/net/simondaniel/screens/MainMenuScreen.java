@@ -14,6 +14,7 @@ import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.game.client.ui.masks.GameMenu;
 import net.simondaniel.game.client.ui.masks.ServerSelection;
 import net.simondaniel.network.client.GameClient;
+import net.simondaniel.network.client.PlayClient;
 
 public class MainMenuScreen implements Screen{
 
@@ -46,16 +47,16 @@ public class MainMenuScreen implements Screen{
 		if(autoLogin) {
 			GameMenu m = new GameMenu(skin);
 			
-			GameClient gc = new GameClient("localhost", "AutoConnectServer");
-			gc.sendConnectRequest();
-			if(gc.waitForConnection()) {
-				gc.sendLoginRequest("user " + MyRandom.random.nextInt(1000), "development");
-				if(gc.waitForLogin()) {
-					PokemonGDX.game.client = gc;
-					m.getInfo().client = gc;
-					serverSelection.switchTo(m);
-				}
-			}
+//			PlayClient gc = new GameClient("localhost", "AutoConnectServer");
+//			gc.sendConnectRequest();
+//			if(gc.waitForConnection()) {
+//				gc.sendLoginRequest("user " + MyRandom.random.nextInt(1000), "development");
+//				if(gc.waitForLogin()) {
+//					PokemonGDX.game.client = gc;
+//					//m.getInfo().client = gc;
+//					serverSelection.switchTo(m);
+//				}
+//			}
 		}
 		
 	

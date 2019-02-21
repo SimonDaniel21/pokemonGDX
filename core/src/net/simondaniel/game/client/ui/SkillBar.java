@@ -4,12 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import net.simondaniel.Assets;
-import net.simondaniel.entities.Drawer;
-
-public class SkillBar implements Drawer{
+public class SkillBar{
 	
 	Skillicon icon1, icon2, icon3, icon4;
 	
@@ -24,7 +20,7 @@ public class SkillBar implements Drawer{
 		icon4 = new Skillicon(new TextureRegion(new Texture("gfx/atlases/hydro_pump/hydro_64.png")), startX + between*3, startY);
 	}
 
-	@Override
+
 	public void render(SpriteBatch sb) {
 		icon1.render(sb);
 		icon2.render(sb);
@@ -32,7 +28,7 @@ public class SkillBar implements Drawer{
 		icon4.render(sb);
 	}
 
-	@Override
+	
 	public void render(ShapeRenderer sr) {
 	
 	}

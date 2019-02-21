@@ -26,6 +26,7 @@ public class GameConfig extends Config{
 	public String  CONFIG_URL;
 	public String[] SERVERS;
 	public String[] CUSTOM_SERVERS;
+	public String AUTO_SERVER_HOST;
 	
 	
 	public GameConfig() {
@@ -41,7 +42,8 @@ public class GameConfig extends Config{
 				"version_url",
 				"config_url",
 				"standard_servers",
-				"custom_servers"});
+				"custom_servers",
+				"auto_server_host"});
 	}
 
 	@Override
@@ -59,6 +61,7 @@ public class GameConfig extends Config{
 		CONFIG_URL = readAsString(MUST_HAVE[i++]);
 		SERVERS = readAsStringArray(MUST_HAVE[i++], ",");
 		CUSTOM_SERVERS = readAsStringArray(MUST_HAVE[i++], ",");
+		AUTO_SERVER_HOST = readAsString(MUST_HAVE[i++]);
 	}
 
 	@Override

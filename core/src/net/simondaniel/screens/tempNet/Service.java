@@ -1,5 +1,7 @@
 package net.simondaniel.screens.tempNet;
 
+import java.util.HashMap;
+
 import org.w3c.dom.ls.LSInput;
 
 import com.esotericsoftware.kryonet.Client;
@@ -28,16 +30,18 @@ public abstract class Service {
 		};
 	}
 	
-	public void activate() {
+	public final void activate() {
 		if(active) return;
 		
 		client.addListener(listener);
 		active = true;
+		onActivation();
 	}
 	
-	public void deactivate() {
+	public final void deactivate() {
 		if(!active) return;
 		
+		onDeactivation();
 		client.removeListener(listener);
 		active = false;
 	}
@@ -45,10 +49,22 @@ public abstract class Service {
 	/**
 	 * sends a tcp packet to the server. if the service is not active, this method will throw an error instead
 	 */
-	protected void send(Object o) {
+	protected final void send(Object o) {
 		if(!active)
 			throw new RuntimeException("tried to send a message on an inactive service");
 		
 		client.sendTCP(o);
+	}
+	
+	public final boolean isActive() {
+		return active;
+	}
+	
+	protected void onActivation() {
+		
+	}
+	
+	protected void onDeactivation() {
+		
 	}
 }
