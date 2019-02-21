@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import net.simondaniel.aux.MyInterpolation;
+import net.simondaniel.util.MyInterpolation;
 import net.simondaniel.game.client.battle.Pikachu;
 import net.simondaniel.game.client.battle.Position;
 import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;

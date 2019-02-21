@@ -1,23 +1,13 @@
 package net.simondaniel.desktop;
 
-import java.io.IOException;
-
-import javax.swing.JOptionPane;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 
 import net.simondaniel.Config;
-import net.simondaniel.GameConfig;
 import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.aux.MyRandom;
 import net.simondaniel.game.client.PokemonGDX;
-import net.simondaniel.network.UpdateDialog;
-import net.simondaniel.network.server.GameServer;
-import net.simondaniel.screens.MainMenuScreen;
 
 public class ClientLauncher {
 

@@ -20,7 +20,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
 import net.simondaniel.GameMode;
-import net.simondaniel.aux.MyRandom;
+import net.simondaniel.util.MyRandom;
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.Network;
 import net.simondaniel.network.server.Response.EndConnectionS;

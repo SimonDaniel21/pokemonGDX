@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import net.simondaniel.aux.MyColor;
+import net.simondaniel.util.MyColor;
 import net.simondaniel.game.client.ui.Entry.EntryType;
 
 public class InviteList extends List<Entry>{

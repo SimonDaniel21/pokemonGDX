@@ -3,7 +3,7 @@ package net.simondaniel.game.client.battle;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 
-import net.simondaniel.aux.MyInterpolation;
+import net.simondaniel.util.MyInterpolation;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ReversableAction;
 import net.simondaniel.network.client.Request.MovementC;

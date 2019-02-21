@@ -15,14 +15,12 @@ import com.badlogic.gdx.utils.Align;
 
 import net.simondaniel.Config;
 import net.simondaniel.GameConfig;
-import net.simondaniel.GameMode;
-import net.simondaniel.aux.MyColor;
+import net.simondaniel.util.MyColor;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.ButtonOption;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
-import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.PlayClient;
 
 public class ServerSelection extends UImask<ServerSelectionInfo>{

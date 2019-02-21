@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import com.badlogic.gdx.files.FileHandle;
 
-import net.simondaniel.aux.FileSystem;
+import net.simondaniel.util.FileSystem;
 
 public abstract class Config {
 

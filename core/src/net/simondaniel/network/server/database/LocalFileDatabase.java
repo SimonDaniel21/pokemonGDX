@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g3d.particles.batches.BillboardParticleBatch.Config;
 
-import net.simondaniel.aux.FileSystem;
+import net.simondaniel.util.FileSystem;
 
 public class LocalFileDatabase extends Config implements DatabaseInerface{
 
