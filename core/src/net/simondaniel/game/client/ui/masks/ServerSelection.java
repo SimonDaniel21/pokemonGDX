@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Align;
 import net.simondaniel.Config;
 import net.simondaniel.GameConfig;
 import net.simondaniel.GameMode;
-import net.simondaniel.MyColor;
+import net.simondaniel.aux.MyColor;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.ButtonOption;

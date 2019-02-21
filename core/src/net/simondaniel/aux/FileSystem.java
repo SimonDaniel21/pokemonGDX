@@ -1,4 +1,4 @@
-package net.simondaniel;
+package net.simondaniel.aux;
 
 import java.io.File;
 

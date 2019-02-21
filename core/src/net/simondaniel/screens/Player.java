@@ -2,31 +2,14 @@ package net.simondaniel.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-
 import actions.ActionPool;
 import actions.ActionQueue;
-import actions.pokemon.LinInterpolateVecAction;
-import actions.pokemon.MoveAction;
-import actions.pokemon.MoveBodyToAction;
 import net.simondaniel.fabio.input.MyInput;
-import net.simondaniel.fabio.phisx.PhysicObject;
-import net.simondaniel.fabio.phisx.PhysicsWorld;
-import net.simondaniel.game.client.gfx.AnimatedSprite;
-import net.simondaniel.game.client.gfx.AnimationType;
 import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
 import net.simondaniel.game.client.gfx.PokemonAnimation;
 import net.simondaniel.pokes.Pokemon;
-import net.simondaniel.pokes.PokemonInstance;
 
 public class Player {
 
@@ -39,30 +22,30 @@ public class Player {
 	
 	Pokemon p;
 	
-	PhysicObject obj;
-	
-	public Player(Pokemon p, PhysicsWorld world) {
-		this.p = p;
-		//pos = new Vector2();
-		
-		
-		actions = new ActionPool();
-		moveQueue = new ActionQueue();
-		actions.runAction(moveQueue);
-		
-		obj = world.createPhysicsObject(1, 1);
-		
-		//body = world.createBody(def);
-		CircleShape cs = new CircleShape();
-		cs.setRadius(0.8f);
-		FixtureDef fdef = new FixtureDef();
-		fdef.shape = cs;
-		fdef.isSensor = true;
-		obj.createFixture(fdef);
-		animation = new PokemonAnimation(p);
-		animation.setScale(2.0f);
-		animation.runAnimation(AnimationType.MOVEMENT, AnimationDirection.RIGHT);
-	}
+//	PhysicObject obj;
+//	
+//	public Player(Pokemon p, PhysicsWorld world) {
+//		this.p = p;
+//		//pos = new Vector2();
+//		
+//		
+//		actions = new ActionPool();
+//		moveQueue = new ActionQueue();
+//		actions.runAction(moveQueue);
+//		
+//		obj = world.createPhysicsObject(1, 1);
+//		
+//		//body = world.createBody(def);
+//		CircleShape cs = new CircleShape();
+//		cs.setRadius(0.8f);
+//		FixtureDef fdef = new FixtureDef();
+//		fdef.shape = cs;
+//		fdef.isSensor = true;
+//		obj.createFixture(fdef);
+//		animation = new PokemonAnimation(p);
+//		animation.setScale(2.0f);
+//		animation.runAnimation(AnimationType.MOVEMENT, AnimationDirection.RIGHT);
+//	}
 
 	AnimationDirection lastDir = AnimationDirection.NO_DIRECTION;
 	AnimationDirection newDir = AnimationDirection.NO_DIRECTION;
@@ -141,11 +124,4 @@ public class Player {
 		return null;
 	}
 
-	public float getX() {
-		return obj.getX();
-	}
-	
-	public float getY() {
-		return obj.getY();
-	}
 }

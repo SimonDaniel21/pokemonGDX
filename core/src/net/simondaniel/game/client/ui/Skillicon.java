@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import net.simondaniel.MyRandom;
+import net.simondaniel.aux.MyRandom;
 import net.simondaniel.screens.MainMenuScreen;
 
 public class Skillicon {

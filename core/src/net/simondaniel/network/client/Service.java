@@ -1,4 +1,4 @@
-package net.simondaniel.screens.tempNet;
+package net.simondaniel.network.client;
 
 import java.util.HashMap;
 

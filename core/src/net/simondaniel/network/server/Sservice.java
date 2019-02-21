@@ -5,7 +5,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
-import net.simondaniel.screens.tempNet.Service;
+import net.simondaniel.network.client.Service;
 
 public abstract class Sservice {
 	private Connection con;

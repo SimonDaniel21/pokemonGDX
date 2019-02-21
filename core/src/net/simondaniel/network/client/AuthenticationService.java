@@ -7,7 +7,6 @@ import net.simondaniel.network.Synchronized;
 import net.simondaniel.network.client.Request.LoginC;
 import net.simondaniel.network.server.Response.LoginS;
 import net.simondaniel.screens.tempNet.MyCallback;
-import net.simondaniel.screens.tempNet.Service;
 
 public class AuthenticationService extends Service{
 	

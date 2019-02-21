@@ -4,11 +4,11 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import net.simondaniel.fabio.input.InputQueue;
+import net.simondaniel.fabio.phisx.NetworkedWorld;
 import net.simondaniel.network.client.Request.ClientInputC;
 import net.simondaniel.network.client.Request.LoginC;
 import net.simondaniel.network.server.Response.LoginS;
 import net.simondaniel.network.server.Response.WorldStateS;
-import net.simondaniel.screens.tempNet.NetworkedWorld;
 
 public class AuthenticationListener extends Listener{
 

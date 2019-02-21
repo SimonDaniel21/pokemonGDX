@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import net.simondaniel.Config;
-import net.simondaniel.FileSystem;
 import net.simondaniel.GameConfig;
+import net.simondaniel.aux.FileSystem;
 
 import javax.swing.JProgressBar;
 import javax.swing.WindowConstants;

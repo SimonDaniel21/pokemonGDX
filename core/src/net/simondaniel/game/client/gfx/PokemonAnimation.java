@@ -3,17 +3,12 @@ package net.simondaniel.game.client.gfx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-
 import net.simondaniel.Assets;
-import net.simondaniel.fabio.phisx.PhysicObject;
+import net.simondaniel.fabio.phisx.NetworkedWorld;
 import net.simondaniel.fabio.phisx.PredictedBody;
 import net.simondaniel.game.client.gfx.AnimationLayout.AnimationNotSupportedException;
-import net.simondaniel.game.client.gfx.AnimationLayout.PokemonAnimationLayout;
 import net.simondaniel.game.client.gfx.AnimationType.AnimationDirection;
 import net.simondaniel.pokes.Pokemon;
-import net.simondaniel.screens.tempNet.NetworkedWorld;
 
 public class PokemonAnimation{
 

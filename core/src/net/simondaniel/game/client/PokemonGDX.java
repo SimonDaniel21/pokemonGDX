@@ -9,7 +9,7 @@ import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.pokes.Pokemon;
 import net.simondaniel.screens.LoginScreen;
-import net.simondaniel.screens.tempNet.ServerScreen;
+import net.simondaniel.screens.ServerScreen;
 
 public class PokemonGDX extends Game {
 

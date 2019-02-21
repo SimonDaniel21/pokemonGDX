@@ -1,4 +1,4 @@
-package net.simondaniel.screens.tempNet;
+package net.simondaniel.screens;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
@@ -14,6 +14,7 @@ import net.simondaniel.fabio.input.InputQueue;
 import net.simondaniel.fabio.input.InputSate.TransmittedInputState;
 import net.simondaniel.fabio.phisx.Geometry;
 import net.simondaniel.fabio.phisx.LogicMap;
+import net.simondaniel.fabio.phisx.NetworkedWorld;
 import net.simondaniel.fabio.phisx.TiledMapLogicLoader;
 import net.simondaniel.network.server.PlayServer;
 import net.simondaniel.network.server.PlayServerListener;

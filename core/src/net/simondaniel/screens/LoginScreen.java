@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import net.simondaniel.MyRandom;
+import net.simondaniel.aux.MyRandom;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.UImaskHandler;

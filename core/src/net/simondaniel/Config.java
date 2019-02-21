@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import com.badlogic.gdx.files.FileHandle;
 
+import net.simondaniel.aux.FileSystem;
+
 public abstract class Config {
 
 	public static GameConfig gameConfig;

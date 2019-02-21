@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-import net.simondaniel.MyRandom;
+import net.simondaniel.aux.MyRandom;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.pokes.Pokemon;
 

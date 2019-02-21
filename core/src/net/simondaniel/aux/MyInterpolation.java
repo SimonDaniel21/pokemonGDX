@@ -1,4 +1,4 @@
-package net.simondaniel;
+package net.simondaniel.aux;
 
 public class MyInterpolation {
 

@@ -13,7 +13,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
 import net.simondaniel.Config;
 import net.simondaniel.GameConfig;
 import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.MyRandom;
+import net.simondaniel.aux.MyRandom;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.network.UpdateDialog;
 import net.simondaniel.network.server.GameServer;

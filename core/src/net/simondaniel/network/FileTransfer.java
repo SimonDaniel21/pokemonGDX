@@ -103,7 +103,7 @@ public class FileTransfer {
 	}
 	
 	private static void endReceive() {
-		FileHandle fh = net.simondaniel.FileSystem.loadFile(currentlyDownloaded);
+		FileHandle fh = net.simondaniel.aux.FileSystem.loadFile(currentlyDownloaded);
 		fh.writeBytes(buffer, false);
 		System.err.println("wrote Image " + buffer.length);
 		currentlyDownloaded = null;

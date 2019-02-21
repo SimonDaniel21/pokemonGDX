@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 
-import net.simondaniel.MyRandom;
+import net.simondaniel.aux.MyRandom;
 import net.simondaniel.fabio.input.BattleInput;
 import net.simondaniel.fabio.input.InputHandler;
 import net.simondaniel.screens.MainMenuScreen;

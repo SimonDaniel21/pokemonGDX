@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import net.simondaniel.MyInterpolation;
+import net.simondaniel.aux.MyInterpolation;
 import net.simondaniel.game.client.battle.Position;
 
 public class HydroPump extends Attack{

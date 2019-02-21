@@ -9,7 +9,6 @@ import com.esotericsoftware.kryonet.Connection;
 import net.simondaniel.network.client.Request.UserListC;
 import net.simondaniel.network.server.Response.PlayerListS;
 import net.simondaniel.network.server.Response.UserJoinedS;
-import net.simondaniel.screens.tempNet.Service;
 
 public class UserTrackService extends Service{
 	

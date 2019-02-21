@@ -6,9 +6,8 @@ import java.util.List;
 import com.badlogic.gdx.math.Matrix4;
 
 import net.simondaniel.network.server.Response.WorldStateS;
-import net.simondaniel.screens.tempNet.TrackedBody;
 
-public class PredictedWorld extends PhysicsWorld{
+public class PredictedWorld{
 	
 	HashMap<Integer, PredictedBody> idBodyMap;
 	
@@ -16,28 +15,12 @@ public class PredictedWorld extends PhysicsWorld{
 		idBodyMap = new HashMap<Integer, PredictedBody>();
 	}
 
-	@Override
 	public void update(float delta) {
 		for(PredictedBody b : idBodyMap.values()) {
 			b.update(delta);
 		}
 	}
 
-	@Override
-	public void addObject(PhysicObject o) {
-	}
-
-	@Override
-	public void removeObject(PhysicObject o) {
-	
-	}
-
-	@Override
-	public PhysicObject createPhysicsObject(float x, float y) {
-		return null;
-	}
-
-	@Override
 	public void renderDebug(Matrix4 projMatrix) {
 		
 	}

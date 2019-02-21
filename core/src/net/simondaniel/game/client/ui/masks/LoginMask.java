@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import net.simondaniel.GameConfig;
 import net.simondaniel.LaunchConfiguration;
-import net.simondaniel.MyRandom;
+import net.simondaniel.aux.MyRandom;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.NamingDialog;

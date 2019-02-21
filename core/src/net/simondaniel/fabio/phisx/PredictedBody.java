@@ -3,8 +3,6 @@ package net.simondaniel.fabio.phisx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 
-import net.simondaniel.screens.tempNet.NetworkedWorld;
-
 public class PredictedBody {
 	
 	private float elapsedSinceLastSync = 0;
