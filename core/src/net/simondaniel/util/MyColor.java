@@ -1,4 +1,4 @@
-package net.simondaniel.aux;
+package net.simondaniel.util;
 
 import com.badlogic.gdx.graphics.Color;
 
