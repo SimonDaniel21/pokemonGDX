@@ -1,5 +1,7 @@
 package net.simondaniel.game.client.ui;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -53,6 +55,13 @@ public class Friendlist extends Table {
 		}
 	}
 	
+	public void set(java.util.List<String> names) {
+		scrollTable.clear();
+		for(String s : names) {
+			addUser(s);
+		}
+	}
+	
 	public void addUser(String name) {
 			FriendListEntry fle = new FriendListEntry(s, name, true);
 			scrollTable.add(fle);
@@ -63,4 +72,6 @@ public class Friendlist extends Table {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 }

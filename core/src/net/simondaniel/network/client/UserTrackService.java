@@ -1,25 +1,29 @@
 package net.simondaniel.network.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 
 import net.simondaniel.network.client.Request.UserListC;
 import net.simondaniel.network.server.Response.PlayerListS;
 import net.simondaniel.network.server.Response.UserJoinedS;
+import net.simondaniel.network.server.Response.UserLeftS;
+import net.simondaniel.screens.tempNet.MyCallback;
+import net.simondaniel.util.SyncableList;
 
 public class UserTrackService extends Service{
 	
 	//UserTrackService others;
 	
-	List<String> others;
+	//List<String> others;
+	
+	MyCallback onJoin, onLeave;
+	
+	public SyncableList<String> names;
 
 	public UserTrackService(Client c) {
 		super(c);
 		trackRequest = new UserListC();
-		others = new ArrayList<String>();
+		names = new SyncableList<String>();
 	}
 
 	@Override
@@ -27,8 +31,21 @@ public class UserTrackService extends Service{
 		if(o instanceof PlayerListS) {
 			PlayerListS p = (PlayerListS)o;
 			for(UserJoinedS uj : p.joined) {
-				others.add(uj.user);
+				names.add(uj.user);
 			}
+		}
+		
+		if(o instanceof UserJoinedS) {
+			UserJoinedS p = (UserJoinedS)o;
+			names.add(p.user);
+
+		}
+		
+		if(o instanceof UserLeftS) {
+			UserLeftS p = (UserLeftS)o;
+			names.remove(p.user);
+
+			System.out.println("REMOVES " + p.user);
 		}
 	}
 	

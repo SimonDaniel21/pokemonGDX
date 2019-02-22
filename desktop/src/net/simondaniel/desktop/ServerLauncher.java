@@ -1,20 +1,9 @@
 package net.simondaniel.desktop;
 
-import java.io.IOException;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl.LwjglFiles;
-import com.esotericsoftware.kryonet.Listener.LagListener;
-import com.esotericsoftware.kryonet.Listener.ThreadedListener;
-
-import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
-import net.simondaniel.network.server.GameServer;
-import net.simondaniel.network.server.ServerListener;
 
 public class ServerLauncher {
 

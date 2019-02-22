@@ -11,6 +11,7 @@ import net.simondaniel.GameMode;
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.network.server.GameServer;
 import net.simondaniel.network.server.MyServerlistener;
+import net.simondaniel.network.server.NeuerUser;
 import net.simondaniel.network.server.Response.InviteAnswerS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
 import net.simondaniel.network.server.Response.LobbyJoinS;
@@ -22,8 +23,6 @@ import net.simondaniel.network.server.UserConnection;
 
 public class Lobby implements MyServerlistener{
 
-	public static int STARTING_TIME = 10*1000, EXTRA_TIME = 1*1000;
-	
 	public final String NAME;
 
 	private int teamCount;
@@ -31,10 +30,10 @@ public class Lobby implements MyServerlistener{
 	
 	//private final ServerGame gameInstance = null;
 	
-	private UserConnection[] userSlots; // specific slots
+	private NeuerUser[] userSlots; // specific slots
 	private boolean[] readys;
-	private List<UserConnection> users; // those who have no slot yet
-	private HashMap<UserConnection, Integer> invitedUsers;
+	private List<NeuerUser> users; // those who have no slot yet
+	private HashMap<NeuerUser, Integer> invitedUsers;
 	private GameMode mode;
 	
 	Timer timer;
@@ -42,13 +41,12 @@ public class Lobby implements MyServerlistener{
 	boolean timerActive;
 	
 	
-	public Lobby(String name, GameMode mode, GameServer gs) {
+	public Lobby(String name, GameMode mode) {
 		if(LaunchConfiguration.config == LaunchConfiguration.DEBUG_SERVER) {
-			STARTING_TIME = 100;
-			EXTRA_TIME = 10;
+		
 		}
-		users = new ArrayList<UserConnection>();
-		invitedUsers = new HashMap<UserConnection, Integer>();
+		users = new ArrayList<NeuerUser>();
+		invitedUsers = new HashMap<NeuerUser, Integer>();
 		this.NAME = name;
 		this.mode = mode;
 		timer = new Timer();
@@ -62,7 +60,7 @@ public class Lobby implements MyServerlistener{
 				teamindexStart[i] = indexoffset;
 				indexoffset+= teamSizes[i];
 			}
-			userSlots = new UserConnection[2];
+			userSlots = new NeuerUser[2];
 			//gameInstance = new ServerGame(gs, new OneVsOneGame(gs));
 			break;
 		default:
@@ -76,7 +74,7 @@ public class Lobby implements MyServerlistener{
 	}
 	
 	public boolean startGameInstance() {
-		for(UserConnection u : userSlots) {
+		for(NeuerUser u : userSlots) {
 			if(u == null) return false;
 		}
 //		gameInstance.start(this);
@@ -89,35 +87,35 @@ public class Lobby implements MyServerlistener{
 	
 	}
 
-	public UserConnection getUser(int i) {
+	public NeuerUser getUser(int i) {
 		
 		return userSlots[i];
 	}
 
 	public void sendToAllTCP(Object s) {
-		for(UserConnection c : userSlots) {
+		for(NeuerUser c : userSlots) {
 			if(c != null) {
 				c.sendTCP(s);
 			}
 		}
-		for(UserConnection c : users) {
+		for(NeuerUser c : users) {
 			c.sendTCP(s);
 		}
 	}
 
-	private void sendToAllTCPexcept(Object p, UserConnection con) {
-		for(UserConnection c : userSlots) {
+	private void sendToAllTCPexcept(Object p,NeuerUser con) {
+		for(NeuerUser c : userSlots) {
 			if(c != null && c != con) {
 				c.sendTCP(p);
 			}
 		}
-		for(UserConnection c : users) {
+		for(NeuerUser c : users) {
 			if(c != con)
 				c.sendTCP(p);
 		}
 	}
 
-	public UserConnection[] getUsers() {
+	public NeuerUser[] getUsers() {
 		return userSlots;
 	}
 	
@@ -125,38 +123,39 @@ public class Lobby implements MyServerlistener{
 		return userSlots.length;
 	}
 
-	public void putUserInSlot(int slot, UserConnection c) {
+	public void putUserInSlot(int slot, NeuerUser c) {
 		
 		userSlots[slot] = c;
 	}
 	
 	private String[] getInvitedUsersWithState(int state) {
-		ArrayList<String> l = new ArrayList<String>();
-		for(UserConnection s : invitedUsers.keySet()) {
-			if(invitedUsers.get(s) == state)
-				l.add(s.name);
-		}
-		String[] sa = new String[l.size()];
-		for(int i = 0; i < l.size(); i++) {
-			sa[i] = l.get(i);
-		}
-		return sa;
+		return null;
+//		ArrayList<String> l = new ArrayList<String>();
+//		for(NeuerUser s : invitedUsers.keySet()) {
+//			if(invitedUsers.get(s) == state)
+//				//l.add(s.name);
+//		}
+//		String[] sa = new String[l.size()];
+//		for(int i = 0; i < l.size(); i++) {
+//			sa[i] = l.get(i);
+//		}
+//		return sa;
 	}
 	
-	public void addUser(UserConnection c) {
-		System.out.println("Lobby adds user " + c.name);
+	public void addUser(NeuerUser u) {
+		System.out.println("Lobby adds user ");
 		LobbyJoinS ps = new LobbyJoinS();
 		
 		if(isFull()) {
 			ps.gameMode = -1;
 		}
 		else {
-			users.add(c);
+			users.add(u);
 			
-			c.lobby = this;
+			//u.lobby = this;
 			LobbyUserJoinedS luj = new LobbyUserJoinedS();
-			luj.name = c.name;
-			sendToAllTCPexcept(luj, c);
+			//luj.name = u.name;
+			sendToAllTCPexcept(luj, u);
 			
 			ps.name = NAME;
 			ps.gameMode = mode.ordinal();
@@ -166,18 +165,18 @@ public class Lobby implements MyServerlistener{
 			ps.invitedPending = getInvitedUsersWithState(PENDING);
 		}
 		
-		c.sendTCP(ps);
+		u.sendTCP(ps);
 	}
 
 	public void removeUser(UserConnection c) {
 		boolean removed = false;
 		for(int i = 0; i < userSlots.length; i++) {
-			if(userSlots[i] == c) {
-				userSlots[i] = null;
-				readys[i] = false;
-				removed = true;
-				break;
-			}
+//			if(userSlots[i] == c) {
+//				userSlots[i] = null;
+//				readys[i] = false;
+//				removed = true;
+//				break;
+//			}
 		}
 		if(!removed)
 			removed = users.remove(c);
@@ -199,17 +198,17 @@ public class Lobby implements MyServerlistener{
 		
 		names[0] = new String[users.size()];
 		for(int i = 0; i < names[0].length; i++) {
-			names[0][i] = users.get(i).name;
+			//names[0][i] = users.get(i).name;
 		}
 		
 		int index = 0;
 		for(int i = 1; i < teamCount+1; i++) {
 			names[i] = new String[teamSizes[i-1]];
 			for(int j = 0; j < teamSizes[j]; j++) {
-				if(userSlots[index] != null)
-					names[i][j] = userSlots[index].name;
-				else
-					names[i][j] = null;
+//				if(userSlots[index] != null)
+//					names[i][j] = userSlots[index].name;
+//				else
+//					names[i][j] = null;
 				index++;
 			}
 		}
@@ -218,7 +217,7 @@ public class Lobby implements MyServerlistener{
 	
 	public static final int NO_SUCH_USER = -1, LOBBY_FULL = -2, NEXT_FREE_TEAM = -3;
 
-	public int joinTeam(UserConnection user, int id) {
+	public int joinTeam(NeuerUser user, int id) {
 		if(id == NEXT_FREE_TEAM) {
 			for(int i = 0; i < teamCount; i++) {
 				if(!isTeamFull(i)) {
@@ -281,7 +280,7 @@ public class Lobby implements MyServerlistener{
 	
 	public boolean isFull() {
 		int count = 0, maxCount = 0;
-		for(UserConnection u : userSlots) {
+		for(NeuerUser u : userSlots) {
 			if(u != null)
 				count++;
 		}
@@ -295,25 +294,25 @@ public class Lobby implements MyServerlistener{
 	}
 	
 	public boolean isEmpty() {
-		for(UserConnection u : userSlots) {
+		for(NeuerUser u : userSlots) {
 			if(u != null)
 				return false;
 		}
 		return users.isEmpty();
 	}
 	
-	public boolean contains(UserConnection c) {
+	public boolean contains(NeuerUser c) {
 		
-		for(UserConnection c_ : users) 
+		for(NeuerUser c_ : users) 
 			if(c_ == c)
 				return true;
-		for(UserConnection c_ : userSlots) 
+		for(NeuerUser c_ : userSlots) 
 			if(c_ == c)
 				return true;
 		return false;
 	}
 	
-	public void invite(UserConnection c, String sender) {
+	public void invite(NeuerUser c, String sender) {
 		
 		if(contains(c))return;
 		
@@ -328,7 +327,7 @@ public class Lobby implements MyServerlistener{
 		
 		InviteUserToLobbyS p = new InviteUserToLobbyS();
 		p.lobby = NAME;
-		p.name = c.name;
+		//p.name = c.name;
 		sendToAllTCP(p);
 		p.sender = sender;
 		c.sendTCP(p);
@@ -338,25 +337,25 @@ public class Lobby implements MyServerlistener{
 		
 		if(!invitedUsers.containsKey(c)) return;
 		
-		invitedUsers.put(c, answer ? ACCEPTED : DECLINED);
+		//.put(c, answer ? ACCEPTED : DECLINED);
 		
 		InviteAnswerS s = new InviteAnswerS();
 		s.answer = answer;
 		s.name = c.name;
 		sendToAllTCP(s);
-		if(answer)
-			addUser(c);
+		//if(answer)
+			//addUser(c);
 		
 	}
 	
 	private static final int PENDING = 0, ACCEPTED = 1, DECLINED = 2;
 
 	public void setReady(UserConnection c) {
-		ready(c, true);
+
 	}
 	
 	public void setUnReady(UserConnection c) {
-		ready(c, false);
+	
 	}
 	
 	private boolean isEveryoneReady() {
@@ -369,9 +368,7 @@ public class Lobby implements MyServerlistener{
 	private void ready(int i, boolean ready) {
 		
 		if(ready) {
-			if(isEveryoneReady()) {
-				startTimer();
-			}
+		
 		}
 		else {
 			timerActive = false;
@@ -379,39 +376,7 @@ public class Lobby implements MyServerlistener{
 		}
 	}
 	
-	public void ready(UserConnection c, boolean ready) {
-		System.err.println("try: ready " + ready);
-		for(int i = 0; i < userSlots.length; i++) {
-			if(userSlots[i] == c && readys[i] != ready) {
-				readys[i] = ready;
-				UserReadyS p = new UserReadyS();
-				p.user =  c.name;
-				p.ready = ready;
-				sendToAllTCP(p);
-				if(!ready)
-					timer.cancel();
-			}
-		}
-		if(isEveryoneReady())
-			startTimer();
-		
-	}
 
-	private void startTimer() {
-		LobbyStartTimerS p = new LobbyStartTimerS();
-		p.start = System.currentTimeMillis() + STARTING_TIME;
-		sendToAllTCP(p);
-		timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				//System.out.println("STARTING GAME");
-				startGameInstance();
-				timer.cancel();
-			}
-		}, (STARTING_TIME + EXTRA_TIME));
-	}
-	
 	public boolean isTeamFull(int i) {
 		
 		for(int j = 0; j < teamSizes[i]; j++) {

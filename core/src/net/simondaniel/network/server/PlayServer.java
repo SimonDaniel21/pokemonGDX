@@ -15,12 +15,18 @@ public class PlayServer extends Server{
 
 	public final String SERVER_NAME;
 	private ServerInfoS serverInfoPacket;
-	
-	List<NeuerUser> users;
+
+	AuthenticationSservice auth;
+	UserTrackSservice track;
+	MatchmakingSservice match;
 	
 	public PlayServer(String name) {
-		users = new ArrayList<NeuerUser>();
 		this.SERVER_NAME = name;
+		
+		auth = new AuthenticationSservice(this);
+		track = new UserTrackSservice(this);
+		match = new MatchmakingSservice(this);
+		
 		serverInfoPacket = new ServerInfoS();
 		serverInfoPacket.name = SERVER_NAME;
 		Listener infoListener = new Listener() {
@@ -49,9 +55,7 @@ public class PlayServer extends Server{
 	protected Connection newConnection() {
 
 		NeuerUser c = new NeuerUser(this);
-		users.add(c);
-		c.authService.activate();
-		
+		auth.activate(c);
 		return c;
 	}
 	

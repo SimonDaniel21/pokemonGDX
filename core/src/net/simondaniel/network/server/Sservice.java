@@ -1,23 +1,19 @@
 package net.simondaniel.network.server;
 
-import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
-
-import net.simondaniel.network.client.Service;
 
 public abstract class Sservice {
-	private Connection con;
 	
 	private Listener listener;
 	
-	private boolean active;
+	protected PlayServer server;
 	
 	protected abstract void received(Connection c, Object o);
 	
-	public Sservice(Connection con) {
-		this.con = con;
+	public Sservice(PlayServer server) {
+		//this.con = con;
+		this.server = server;
 		
 		final Sservice ref = this;
 		listener = new Listener() {
@@ -28,39 +24,29 @@ public abstract class Sservice {
 		};
 	}
 	
-	public void activate() {
-		if(active) return;
+	public void activate(Connection c) {
+		onActivation(c);
+		c.addListener(listener);
+	}
+
+	
+	public void deactivate(Connection c) {
 		
-		onActivation(con);
-		con.addListener(listener);
-		active = true;
+		onDeactivation(c);
+		c.removeListener(listener);
 	}
 	
-	public void deactivate() {
-		if(!active) return;
-		
-		onDeactivation(con);
-		con.removeListener(listener);
-		active = false;
-	}
+//	/**
+//	 * TODO
+//	 * sends a tcp packet to all clients connected with the service. if the service is not active, this method will throw an error instead
+//	 */
+//	protected void send(Object o) {
+//		if(!active)
+//			throw new RuntimeException("tried to send a message on an inactive service");
+//		
+//		con.sendTCP(o);
+//	}
 	
-	/**
-	 * TODO
-	 * sends a tcp packet to all clients connected with the service. if the service is not active, this method will throw an error instead
-	 */
-	protected void send(Object o) {
-		if(!active)
-			throw new RuntimeException("tried to send a message on an inactive service");
-		
-		con.sendTCP(o);
-	}
-	
-	public void toggle() {
-		if(active)
-			deactivate();
-		else
-			activate();
-	}
 	
 	protected void onActivation(Connection c) {
 		

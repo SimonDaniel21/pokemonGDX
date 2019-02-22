@@ -1,5 +1,8 @@
 package net.simondaniel.game.client.ui.masks;
 
+import java.util.ArrayList;
+
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,7 +19,6 @@ import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
-import net.simondaniel.network.UserTracker;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.network.client.Request.LobbyListC;
@@ -32,8 +34,6 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	Inbox inbox;
 	
 	MailListener gameInviteListener;
-	
-	UserTracker userTracker;
 	
 	PlayClient client;
 	
@@ -60,6 +60,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			public void updateValues(String[] values) {
 				
 				//info.client.sendLobbyCreateRequest(values[0], GameMode.ONE_VS_ONE);
+				client.matchService.addLobby(values[0], 0);
 				deactivateUntilResponse();
 			}
 		};
@@ -98,7 +99,6 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		info.lobbyName = name;
 		info.mode = mode;
 		info.others = others;
-		info.userTracker = userTracker;
 		info.joinLobby = true;
 		switchTo(lobbyMask);
 		for(String s : sa) {
@@ -112,16 +112,42 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		}
 	}
 	
+	ArrayList<String> dummy = new ArrayList<String>();
+	ArrayList<String> lobbys = new ArrayList<String>();
+	
 	@Override
 	public void act(float delta) {
-		//info.client.handlePacketBuffer();
+		if(client.trackingService.names.sync(dummy)) {
+			fl.set(dummy);
+		}
+		if(client.matchService.lobbyNames.sync(lobbys)) {
+			buildLobbyTable();
+		}
 		super.act(delta);
 	}
 
+
+	
+	private void buildLobbyTable() {
+		lobbyTable.clear();
+		for(String l : lobbys) {
+			final TextButton b = new TextButton(l, getSkin(), "menu-list-button");
+			b.addListener(new ChangeListener() {
+				@Override
+				public void changed(ChangeEvent event, Actor actor) {
+					String lobbyName = b.getText().toString();
+					client.matchService.joinLobby(lobbyName);
+				}
+			});
+			b.setColor(Color.GREEN);
+			lobbyTable.add(b);
+			lobbyTable.row();
+		}
+	}
+
+	
 	@Override
 	public void enter() {
-		//final GameClient gc = info.client;
-		
 		client = info.client;
 		try {
 			Thread.sleep(100);
@@ -131,136 +157,17 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		}
 		client.trackingService.activate();
 	
-		//gc.sendTCP(new LobbyListC());
-		
-//		userTracker = new UserTracker(info.client.myListeners);
-//		userTrackerListener = new UserListener();
-//		userTracker.addListener(userTrackerListener);
-//		userTracker.startTracking(gc);
-//		
-//		listener = new GameMenuListener(info.client.myListeners);
-//		gc.addChanelListener(listener);
-		
 		if(PokemonGDX.CONFIGURATION == LaunchConfiguration.LOGGED_IN) {
 			//info.client.sendLobbyJoinRequest("testLobby");
 		}
 	}
-
+	
 	@Override
 	public void leave() {
+		client = null;
 		//info.client.removeChanelListener(listener);
 		//userTracker.removeListener(userTrackerListener);
 	}
 	
-//	private class GameMenuListener extends ChanelListener{
-//		
-//		public GameMenuListener(ChanelListenerList list) {
-//			super(MessageChannel.gameMenuState, false, list);
-//		}
-//
-//
-//		@Override
-//		protected void channelReceive(Connection c, Object o) {
-//			if(o instanceof EndConnectionS) {
-//				EndConnectionS p = (EndConnectionS) o;
-//				InfoDialog.show(p.reason, getStage());
-//			}
-//			if(o instanceof LobbyJoinS) {
-//				LobbyJoinS p = (LobbyJoinS)o;
-//				reActivateUI();
-//				if(p.gameMode != -1) {
-//					enterLobby(p.name, GameMode.valueOf(p.gameMode), p.others,
-//							p.invitedAccepted,
-//							p.invitedDeclined,
-//							p.invitedPending);
-//				}
-//				else {
-//					InfoDialog.show("lobby is full already", getStage());
-//				}
-//			}
-//			if(o instanceof MessageS) {
-//				MessageS s = (MessageS)o;
-//				if(s.sender.equals("server")) {
-//					InfoDialog.show(s.message, getStage());
-//					reActivateUI();
-//				}
-//			}
-//			if(o instanceof LobbyListS) {
-//				LobbyListS p = (LobbyListS)o;
-//				lobbyTable.clear();
-//				lobbyTable.add("public Lobbys: ").row();
-//				for(String l : p.lobbys) {
-//					final TextButton b = new TextButton(l, getSkin(), "menu-list-button");
-//					b.addListener(new ChangeListener() {
-//						@Override
-//						public void changed(ChangeEvent event, Actor actor) {
-//							String lobbyName = b.getText().toString();
-//							info.client.sendLobbyJoinRequest(lobbyName);
-//						}
-//					});
-//					b.setColor(Color.GREEN);
-//					lobbyTable.add(b);
-//					lobbyTable.row();
-//				}
-//			}
-//			if(o instanceof StartGameS) {
-//				System.err.println("received Startgame");
-//				PokemonGDX.game.setScreen(new IngameScreen(info.client));
-//				getStage().dispose();
-//			}
-//			if(o instanceof InviteUserToLobbyS) {
-//			
-//				InviteUserToLobbyS p = (InviteUserToLobbyS) o;
-//				if(p.name.equals(info.client.userName())) {
-//					inbox.addMail("game invite", p.sender + " wants you to join " + p.lobby,
-//							new String[] {p.lobby},
-//							gameInviteListener);
-//				}
-//			}
-//		}
-//		
-//	}
-//	
-//	private class GameInviteListener implements MailListener{
-//
-//		
-//		@Override
-//		public void accept(String[] data) {
-//			InviteAnswerC p = new InviteAnswerC();
-//			p.lobby = data[0];
-//			p.answer = true;
-//			info.client.send(MessageChannel.initialChannel, p);
-//			deactivateUntilResponse();
-//		}
-//
-//		@Override
-//		public void decline(String[] data) {
-//			InviteAnswerC p = new InviteAnswerC();
-//			p.lobby = data[0];
-//			p.answer = false;
-//			info.client.send(p);
-//		}
-//	}
-//	
-//	private class UserListener implements UserTrackerListener{
-//
-//		@Override
-//		public void userJoined(String name) {
-//			if(!info.client.userName().equals(name)) {
-//				fl.addUser(name);
-//				System.out.println("adding " + name);
-//			}
-//		}
-//
-//		@Override
-//		public void userLeft(String name) {
-//			fl.removeUser(name);
-//		}
-//
-//		@Override
-//		public void reset() {
-//		
-//		}
-//		
-//	}
+
 }

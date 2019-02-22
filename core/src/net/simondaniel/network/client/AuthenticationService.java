@@ -30,7 +30,6 @@ public class AuthenticationService extends Service{
 				authenticated = true;
 			}
 			response.set(p.response);
-			System.out.println("received answer!!!");
 		}
 	}
 	
@@ -39,7 +38,7 @@ public class AuthenticationService extends Service{
 		p.name = name;
 		p.pw = pw;
 		send(p);
-		System.out.println(p.name + " tried to connect with pw: " + p.pw);
+		//System.out.println(p.name + " tried to connect with pw: " + p.pw);
 	}
 
 	public void setAuthenticationCallback(MyCallback c) {

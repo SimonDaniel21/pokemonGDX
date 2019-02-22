@@ -50,8 +50,8 @@ public class Response {
 		public int id, slotID;
 	}
 	
-	public static class LobbyListS{
-		public String[] lobbys;
+	public static class LobbyAddedS{
+		public String name;
 	}
 	
 	public static class PlayerListS{

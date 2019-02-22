@@ -38,7 +38,7 @@ public abstract class Config {
 		System.out.println("len " + content.length); 
 		for(String s : content) {
 			s = s.replace("\r", "");
-			System.out.println("line: " + s); 
+			//System.out.println("line: " + s); 
 			readLine(s);
 		}
 		

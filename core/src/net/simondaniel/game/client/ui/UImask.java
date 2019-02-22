@@ -107,7 +107,7 @@ public abstract class UImask<T extends ShowMaskInfo> extends Table {
 		
 		setFillParent(true);
 		addAction(appear());
-		System.out.println("showing");
+		//System.out.println("showing");
 	}
 	
 	

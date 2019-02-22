@@ -25,7 +25,6 @@ import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.Network;
 import net.simondaniel.network.server.Response.EndConnectionS;
 import net.simondaniel.network.server.Response.InviteUserToLobbyS;
-import net.simondaniel.network.server.Response.LobbyListS;
 import net.simondaniel.network.server.Response.MessageS;
 import net.simondaniel.network.server.Response.UserJoinedS;
 import net.simondaniel.network.server.Response.UserLeftS;
@@ -370,22 +369,8 @@ public class GameServer extends Server{
 	}
 	
 	public Lobby addLobby(String name, int gameMode) {
-		boolean exists = isLobbyNameTaken(name);
-		
-		if(!exists) {
-			Lobby l = new Lobby(name, GameMode.valueOf(gameMode), this);
-			lobbys.add(l);
-			
-			
-			window.addedLobby(name);
-			LobbyListS lls = new LobbyListS();
-			lls.lobbys = new String[lobbys.size()];
-			for(int i = 0; i < lobbys.size(); i++)
-				lls.lobbys[i] = lobbys.get(i).NAME;
-			sendAllOutsideLobbyTCP(lls);
-			return l;
-		}
 		return null;
+	
 	}
 	
 	/**
