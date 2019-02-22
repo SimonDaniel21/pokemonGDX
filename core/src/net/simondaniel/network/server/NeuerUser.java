@@ -6,7 +6,7 @@ import net.simondaniel.network.server.UserTrackSservice.UserTrackServiceData;
 
 public class NeuerUser extends Connection{
 
-	UserAccount account;
+	public UserAccount account;
 	
 	UserTrackServiceData track;
 	

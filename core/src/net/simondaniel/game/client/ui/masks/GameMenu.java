@@ -19,9 +19,7 @@ import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
-import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.PlayClient;
-import net.simondaniel.network.client.Request.LobbyListC;
 
 public class GameMenu extends UImask<LoginMaskInfo>{
 
@@ -122,6 +120,9 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		}
 		if(client.matchService.lobbyNames.sync(lobbys)) {
 			buildLobbyTable();
+		}
+		if(client.matchService.lobbyToJoin.isReady()) {
+			System.err.println("CLIENT WANTS TO JOIN " + client.matchService.lobbyToJoin.consume());
 		}
 		super.act(delta);
 	}

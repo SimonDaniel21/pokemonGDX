@@ -404,21 +404,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		
 		addPlayersToTeam(tw1, info.others[1]);
 		addPlayersToTeam(tw2, info.others[2]);
-		if(PokemonGDX.CONFIGURATION == LaunchConfiguration.LOGGED_IN) {
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			TeamJoinC p = new TeamJoinC();
-			p.teamID = Lobby.NEXT_FREE_TEAM;
-			gc.sendTCP(p);
-			UserReadyC p2 = new UserReadyC();
-			p2.ready = true;
-			//info.gc.send(p2);
-			deactivateUntilResponse();
-		}
+	
 	}
 
 	@Override

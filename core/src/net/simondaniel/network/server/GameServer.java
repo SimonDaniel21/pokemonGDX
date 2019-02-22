@@ -355,13 +355,13 @@ public class GameServer extends Server{
 	public String[] getLobbyList() {
 		String[] sa = new String[lobbys.size()];
 		for(int i = 0; i < lobbys.size(); i++)
-			sa[i] = lobbys.get(i).NAME;
+			sa[i] = lobbys.get(i).getName();
 		return sa;
 	}
 	
 	public boolean isLobbyNameTaken(String name ) {
 		for(Lobby l : lobbys) {
-			if(l.NAME.equalsIgnoreCase(name)){
+			if(l.getName().equalsIgnoreCase(name)){
 				return true;
 			}
 		}
@@ -381,7 +381,7 @@ public class GameServer extends Server{
 	public Lobby getLobby(String name) {
 		
 		for(Lobby l : lobbys) {
-			if(l.NAME.equals(name)) {
+			if(l.getName().equals(name)) {
 				return l;
 			}
 		}

@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.Connection;
 
 import net.simondaniel.GameMode;
 import net.simondaniel.game.server.Lobby;
+import net.simondaniel.game.server.TestLobby;
 import net.simondaniel.network.client.Request.LobbyCreateC;
 import net.simondaniel.network.client.Request.LobbyJoinC;
 import net.simondaniel.network.server.Response.LobbyAddedS;
@@ -22,9 +23,11 @@ public class MatchmakingSservice extends Sservice{
 		lobbies = new ArrayList<Lobby>();
 		trackingUsers = new ArrayList<NeuerUser>();
 		
-		Lobby standardLobby = new Lobby("standard lobby", GameMode.ONE_VS_ONE);
+		Lobby standardLobby = new TestLobby("lobby");
 		lobbies.add(standardLobby);
-	}
+		
+		addPacket = new LobbyAddedS();
+	} 
 
 	@Override
 	protected void received(Connection c, Object o) {
@@ -34,6 +37,7 @@ public class MatchmakingSservice extends Sservice{
 		}
 		if(o instanceof LobbyJoinC) {
 			LobbyJoinC p = (LobbyJoinC) o;
+			join((NeuerUser) c, p.lobbyName);
 		}
 	}
 	
@@ -41,7 +45,7 @@ public class MatchmakingSservice extends Sservice{
 	protected void onActivation(Connection c) {
 		System.err.println("Server ON ACTIVATION");
 		for(Lobby l : lobbies) {
-			addPacket.name = l.NAME;
+			addPacket.name = l.getName();
 			c.sendTCP(addPacket);
 		}
 		trackingUsers.add((NeuerUser) c);
@@ -55,10 +59,10 @@ public class MatchmakingSservice extends Sservice{
 	LobbyAddedS addPacket;
 	
 	private void addLobby(String name, GameMode mode) {
-		Lobby l = new Lobby(name, mode);
+		Lobby l = new TestLobby(name);
 		lobbies.add(l);
 		addPacket = new LobbyAddedS();
-		addPacket.name = name;
+		addPacket.name = l.getName();
 		for(NeuerUser u : trackingUsers) {
 			u.sendTCP(addPacket);
 		}
@@ -67,8 +71,9 @@ public class MatchmakingSservice extends Sservice{
 	private void join(NeuerUser u, String lobby) {
 		LobbyJoinS p = new LobbyJoinS();
 		for(Lobby l : lobbies) {
-			if(l.NAME.equals(lobby)) {
-				l.addUser(u);
+			if(l.getName().equals(lobby)) {
+			
+				l.tryToJoin(u);
 			}
 		}
 	}
