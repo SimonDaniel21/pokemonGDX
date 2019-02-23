@@ -22,6 +22,9 @@ public class Request {
 		public String name, pw;
 	}
 	
+	public static class LogoutC{
+	}
+	
 	public static class RegisterUserC{
 		public String name, pw, email;
 	}

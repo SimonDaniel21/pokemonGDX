@@ -1,12 +1,15 @@
 package net.simondaniel.game.client.ui;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+import net.simondaniel.util.MyColor;
 
 public class InfoDialog extends Dialog {
 
@@ -46,5 +49,9 @@ public class InfoDialog extends Dialog {
 	
 	public static void show(String msg, Stage stage) {
 		show("info", msg, stage);
+	}
+
+	public static void showError(String msg, Stage stage) {
+		show(MyColor.dye(Color.RED, "error"), msg, stage);
 	}
 }

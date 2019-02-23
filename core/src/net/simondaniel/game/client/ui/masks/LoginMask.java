@@ -111,6 +111,8 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 		tb.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				client.close();
+				client.authService.deactivate();
 				goBack();
 			}
 		});
@@ -145,6 +147,7 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 		deactivateUntilResponse();
 		
 		client.authService.login(name_tf.getText(), pw_tf.getText());
+		System.out.println("try login woth " + name_tf.getText());
 	}
 
 	@Override

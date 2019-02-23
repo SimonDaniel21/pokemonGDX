@@ -37,6 +37,8 @@ public class Lobby{
 	
 	int[] fullness;
 	
+	List<NeuerUser> pendingRequests;
+	
 	public Lobby(int[] teamSizes, String name) {
 		this.name = name;
 		this.teamSizes = teamSizes;
@@ -50,6 +52,15 @@ public class Lobby{
 			team[i] = -1;
 		}
 		fullness = new int[teamSizes.length];
+		
+		enterPacket = new LobbyJoinS();
+		enterPacket.name = name;
+		enterPacket.others = new String[userSlots.length];
+		enterPacket.gameMode = 0;
+		enterPacket.team = team;
+		
+		lobbyFullPacket = new LobbyJoinS();
+		lobbyFullPacket.gameMode = -1;
 	}
 	
 	/**
@@ -67,7 +78,7 @@ public class Lobby{
 			if(userSlots[i] == null) {
 				informJoin(u);
 				informOthersJoin(u);
-				userSlots[i] = u;
+				setSlot(i, u);
 				return true;
 			}
 		}
@@ -140,10 +151,17 @@ public class Lobby{
 		return name;
 	}
 	
+	private void setSlot(int i, NeuerUser u) {
+		userSlots[i] = u;
+		team[i] = -1;
+		enterPacket.others[i] = (u == null) ? null : u.account.getName();
+	}
+	
 	//-----------------------------------------------
 	
 	LobbyUserJoinedS joinPacket = new LobbyUserJoinedS();
-	LobbyJoinS enterPacket = new LobbyJoinS();
+	LobbyJoinS enterPacket;
+	LobbyJoinS lobbyFullPacket;
 	LobbyUserLeftS leavePacket = new LobbyUserLeftS();
 	
 	private void sendToLobby(Object o) {
@@ -154,11 +172,10 @@ public class Lobby{
 	}
 	
 	private void sendLobbyFull(NeuerUser u) {
-		
+		u.sendTCP(lobbyFullPacket);
 	}
 	
 	private void informJoin(NeuerUser u) {
-		enterPacket.name = name;
 		u.sendTCP(enterPacket);
 	}
 	
@@ -171,4 +188,18 @@ public class Lobby{
 		leavePacket.name = u.account.getName();
 		sendToLobby(leavePacket);
 	}
+	
+	
+	InviteUserToLobbyS invitePacket = new InviteUserToLobbyS();
+	private void invite(NeuerUser sender, NeuerUser receiver) {
+		if(pendingRequests.contains(receiver)) {
+		}
+		else {
+			invitePacket.lobby = name;
+			invitePacket.sender = sender.account.getName();
+			receiver.sendTCP(invitePacket);
+			pendingRequests.add(receiver);
+		}
+	}
+	
 }

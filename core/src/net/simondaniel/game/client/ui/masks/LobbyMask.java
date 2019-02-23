@@ -17,6 +17,7 @@ import net.simondaniel.game.client.ui.InviteList;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.client.GameClient;
+import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.network.client.Request.InviteUserToLobbyC;
 import net.simondaniel.network.client.Request.LobbyLeaveC;
 import net.simondaniel.network.client.Request.TeamJoinC;
@@ -25,6 +26,7 @@ import net.simondaniel.pokes.Pokemon;
 
 public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
+	PlayClient client;
 	
 	Label title, timer;
 	List<String> undecided;
@@ -90,7 +92,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 				
 					TeamJoinC p = new TeamJoinC();
 					p.teamID = 0;
-					info.gc.sendTCP(p);
+					//info.gc.sendTCP(p);
 					deactivateUntilResponse();
 			}
 			
@@ -107,15 +109,15 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			public void changed(ChangeEvent event, Actor actor) {
 				if(!isActive()) return;
 				for(String s : undecided.getItems()) {
-					if(s.equals(info.gc.userName())){
-						beep();
-						return;
-					}
+//					if(s.equals(info.gc.userName())){
+//						beep();
+//						return;
+//					}
 				}
 				
 				PokemonChooseMaskInfo info = new PokemonChooseMaskInfo();
 				info.lobbyMask = ref;
-				info.gc = ref.info.gc;
+				//info.gc = ref.info.client;
 				PokemonChooseMask m = new PokemonChooseMask(info, getSkin());
 				switchTo(m);
 			}
@@ -160,7 +162,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 
 		undecided.getItems().add(playersName);
 		
-		if(playersName.equals(info.gc.userName())) {
+		if(playersName.equals("TODO")) {
 			undecided.setSelected(playersName);
 		}
 		undecided.setItems(undecided.getItems());
@@ -194,13 +196,13 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			if(!s.occupied) {
 				s.set(playersName);
 				System.out.println(playersName);
-				if(s.name.equals(info.gc.userName()))
-					tw1.list.setSelected(s);
+//				if(s.name.equals(info.client.userName()))
+//					tw1.list.setSelected(s);
 				return;
 			}
 		}
 		undecided.setItems(playersName);
-		undecided.setSelected(info.gc.userName());
+		//undecided.setSelected(info.gc.userName());
 	}
 	
 	/**
@@ -228,7 +230,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			tw2.addName(name, slotID);
 		}
 		
-		if(name.equals(info.gc.userName())) {
+		if(name.equals("TODO")) {
 			joinUndecided.setTouchable(Touchable.enabled);
 			tw1.join.setTouchable(Touchable.enabled);
 			tw2.join.setTouchable(Touchable.enabled);
@@ -261,8 +263,6 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	
 	public class TeamWidget extends Table{
 	
-		GameClient gc;
-		
 		int id;
 		int size;
 		String name;
@@ -282,9 +282,8 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 					
 					if(!isActive())return;
 					
-					TeamJoinC p = new TeamJoinC();
-					p.teamID = id;
-					gc.sendTCP(p);
+					
+					client.matchService.joinTeam(id);
 					System.out.println("join team " + id + "!");
 					
 					deactivateUntilResponse();
@@ -295,8 +294,8 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 			add(join);
 		}
 		
-		public void set(String name, int size, final int id, final GameClient gc) {
-			this.gc = gc;
+		public void set(String name, int size, final int id) {
+			
 			this.id = id;
 			this.name = name;
 			this.size = size;
@@ -357,7 +356,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	}
 	@Override
 	public void act(float delta) {
-		info.gc.handlePacketBuffer();
+		
 		long timeLeft = (targetTime - System.currentTimeMillis() + 999) / 1000;
 		if(timerStarted)
 			timer.setText(timeLeft + "");
@@ -367,8 +366,9 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 
 	@Override
 	public void enter() {
+		client = info.client;
 		
-		final GameClient gc = info.gc;
+		//final GameClient gc = info.gc;
 		//listener = new LobbyMaskListener(info.gc.myListeners);
 		//gc.addChanelListener(listener);
 		//info.userTracker.addListener(userTrackerListener);
@@ -392,8 +392,8 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 		
 		title.setText(info.lobbyName + " (" +  info.mode + ")");
 		
-		tw1.set("Team 1", info.mode.maxPlayersInTeam(0), 1,gc);
-		tw2.set("Team 2",info. mode.maxPlayersInTeam(1), 2, gc);
+		//tw1.set("Team 1", info.mode.maxPlayersInTeam(0), 1,gc);
+		//tw2.set("Team 2",info. mode.maxPlayersInTeam(1), 2, gc);
 	
 //		for(String s : info.userTracker.getUsers()) {
 //			if(!s.equals(info.gc.userName()))
@@ -402,9 +402,13 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 //		
 		addPlayersToLobby(info.others[0]);
 		
-		addPlayersToTeam(tw1, info.others[1]);
-		addPlayersToTeam(tw2, info.others[2]);
-	
+		for(int i = 0; i < info.others.length; i++) {
+			if(info.team[i] == 0)
+				addPlayerToTeam(tw1, info.others[i]);
+			if(info.team[i] == 1)
+				addPlayerToTeam(tw2, info.others[i]);
+				
+		}
 	}
 
 	@Override

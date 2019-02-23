@@ -33,7 +33,8 @@ public class Response {
 	public static class LobbyJoinS{
 		public String name;
 		public int gameMode;
-		public String[][] others;
+		public String[] others;
+		public int[] team;
 		public String[] invitedPending, invitedAccepted, invitedDeclined;
 	}
 	

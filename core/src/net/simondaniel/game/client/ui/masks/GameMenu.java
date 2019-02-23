@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -20,6 +21,8 @@ import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
 import net.simondaniel.network.client.PlayClient;
+import net.simondaniel.network.server.Response.LobbyJoinS;
+import net.simondaniel.util.MyColor;
 
 public class GameMenu extends UImask<LoginMaskInfo>{
 
@@ -41,16 +44,28 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		
 		//SgameInviteListener = new GameInviteListener();
 		
-	
+		this.debug();
 		lobbyMask  = new LobbyMask(skin);
 		
+		
+		TextButton logoutButton = new TextButton(MyColor.dye(Color.PINK, "logout"), skin);
+		logoutButton.addListener(new ChangeListener() {
+
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				client.logout();
+				goBack();
+			}
+			
+		});
+		add(logoutButton).top().left();
 		
 		
 		lobbyTable = new Table(skin);
 	
 		final List<String> list = new List<String>(skin);
 		list.setItems(new String[]{"1v1", "2v2", "3v3"});
-		add(lobbyTable);
+		//add(lobbyTable);
 		
 		final NamingDialog nda = new NamingDialog("enter Name", skin, new Entry("new lobby")) {
 			
@@ -89,14 +104,14 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		
 	}
 	
-	public void enterLobby(String name,GameMode mode, String[][] others,
+	private void enterLobby(String name,GameMode mode, String[][] others,
 			String[] sa, String[] sd, String[] sp) {
 	
 		LobbyMaskInfo info = lobbyMask.getInfo();
 		//info.gc = getInfo().client;
 		info.lobbyName = name;
 		info.mode = mode;
-		info.others = others;
+		//info.others = others;
 		info.joinLobby = true;
 		switchTo(lobbyMask);
 		for(String s : sa) {
@@ -122,7 +137,21 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			buildLobbyTable();
 		}
 		if(client.matchService.lobbyToJoin.isReady()) {
-			System.err.println("CLIENT WANTS TO JOIN " + client.matchService.lobbyToJoin.consume());
+			LobbyJoinS lobbyToJoin = client.matchService.lobbyToJoin.consume();
+			
+			if(lobbyToJoin.gameMode == -1) {
+				InfoDialog.showError("the lobby is full already!", getStage());
+			}
+			else {
+				System.err.println("CLIENT WANTS TO JOIN " + lobbyToJoin.name);
+				lobbyMask.getInfo().client = client;
+				lobbyMask.getInfo().joinLobby = true;
+				lobbyMask.getInfo().lobbyName = lobbyToJoin.name;
+				lobbyMask.getInfo().others = lobbyToJoin.others;
+				lobbyMask.getInfo().team = lobbyToJoin.team;
+				lobbyMask.getInfo().mode = GameMode.valueOf(lobbyToJoin.gameMode);
+				switchTo(lobbyMask);
+			}
 		}
 		super.act(delta);
 	}

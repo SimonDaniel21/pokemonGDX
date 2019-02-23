@@ -11,6 +11,7 @@ import com.esotericsoftware.kryonet.FrameworkMessage.RegisterUDP;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 
 import net.simondaniel.network.Network;
+import net.simondaniel.network.client.Request.LogoutC;
 import net.simondaniel.network.server.Response.ServerInfoS;
 import net.simondaniel.screens.NeuerGameScreen;
 import net.simondaniel.screens.tempNet.MyCallback;
@@ -113,6 +114,12 @@ public class PlayClient extends Client{
 
 	public void setWorld(NeuerGameScreen neuerGameScreen) {
 		//l.setWorld(neuerGameScreen);
+	}
+	
+	LogoutC logoutPacket = new LogoutC();
+
+	public void logout() {
+		sendTCP(logoutPacket);
 	}
 	
 }

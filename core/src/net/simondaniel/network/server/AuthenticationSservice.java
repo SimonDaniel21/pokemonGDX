@@ -6,6 +6,7 @@ import java.util.List;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import net.simondaniel.network.client.Request.LoginC;
+import net.simondaniel.network.client.Request.LogoutC;
 import net.simondaniel.network.client.Request.UserListC;
 import net.simondaniel.network.server.Response.LoginS;
 
@@ -29,10 +30,17 @@ public class AuthenticationSservice extends Sservice{
 		};
 		
 		connectionLostListener = new Listener() {
+			@Override
+			public void received(Connection con, Object o) {
+				NeuerUser u = (NeuerUser)con;
+				if(o instanceof LogoutC) {
+					logout(u);
+					server.auth.activate(u);
+					u.sendTCP(o);
+				}
+			}
 			public void disconnected(Connection con) {
 				NeuerUser u = (NeuerUser)con;
-				server.track.deactivate(con);
-				server.match.deactivate(con);
 				logout(u);
 			};
 		};
@@ -87,6 +95,9 @@ public class AuthenticationSservice extends Sservice{
 		con.removeListener(connectionLostListener);
 		con.removeListener(requestServiceListener);
 		loggedInUsers.remove(con);
+		
+		server.track.deactivate(con);
+		server.match.deactivate(con);
 	}
 
 	public List<NeuerUser> getLoggedInUsers() {
