@@ -3,6 +3,7 @@ package net.simondaniel.game.client.ui.masks;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -15,6 +16,7 @@ import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.game.client.PokemonGDX;
 import net.simondaniel.game.client.ui.InviteList;
 import net.simondaniel.game.client.ui.UImask;
+import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.game.server.Lobby;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.PlayClient;
@@ -39,8 +41,8 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 
 	private boolean ready = false;
 	
-	public LobbyMask(Skin s) {
-		super(new LobbyMaskInfo(), s);
+	public LobbyMask(Skin s, final UImaskHandler stage) {
+		super(new LobbyMaskInfo(), s, stage);
 		s.getFont("font").getData().markupEnabled = true;
 		s.getFont("medium").getData().markupEnabled = true;
 		s.getFont("small").getData().markupEnabled = true;
@@ -118,7 +120,7 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 				PokemonChooseMaskInfo info = new PokemonChooseMaskInfo();
 				info.lobbyMask = ref;
 				//info.gc = ref.info.client;
-				PokemonChooseMask m = new PokemonChooseMask(info, getSkin());
+				PokemonChooseMask m = stage.pokemon_choose_mask;
 				switchTo(m);
 			}
 			
@@ -415,6 +417,12 @@ public class LobbyMask extends UImask<LobbyMaskInfo>{
 	public void leave() {
 		//info.gc.removeChanelListener(listener);
 		//info.userTracker.removeListener(userTrackerListener);
+	}
+
+	@Override
+	public void afterInit() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

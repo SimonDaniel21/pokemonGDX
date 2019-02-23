@@ -78,4 +78,14 @@ public class MatchmakingSservice extends Sservice{
 		}
 	}
 
+	
+	static class MatchServiceData{
+		
+		public Lobby l;
+
+		public void logout() {
+			l = null;
+		}
+		
+	}
 }

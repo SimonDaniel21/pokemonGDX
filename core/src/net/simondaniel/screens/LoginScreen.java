@@ -13,6 +13,7 @@ import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.game.client.ui.masks.GameMenu;
 import net.simondaniel.game.client.ui.masks.ServerSelection;
+import net.simondaniel.game.client.ui.masks.ServerSelectionInfo;
 import net.simondaniel.network.client.GameClient;
 import net.simondaniel.network.client.PlayClient;
 
@@ -43,11 +44,12 @@ public class LoginScreen implements Screen{
 	public void show() {
 		
 		Skin skin = new Skin(Gdx.files.internal("skins/sgx/sgx-ui.json"));
-		serverSelection = new ServerSelection(skin);
-		stage = new UImaskHandler(new TextureRegion(new Texture("gfx/background.jpg")));
-		serverSelection.getInfo().client = client;
-		serverSelection.getInfo().greetingMessage = "";
-		serverSelection.show(stage);
+
+		stage = new UImaskHandler(new TextureRegion(new Texture("gfx/background.jpg")), skin);
+		ServerSelectionInfo info = stage.server_select_mask.getInfo();
+		info.client = client;
+		info.greetingMessage = "";
+		stage.server_select_mask.show();
 		
 		if(autoLogin) {
 			

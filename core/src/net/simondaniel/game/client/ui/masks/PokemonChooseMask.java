@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import net.simondaniel.util.MyRandom;
 import net.simondaniel.game.client.ui.UImask;
+import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.pokes.Pokemon;
 
 public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
@@ -33,8 +34,8 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 	
 	TextButton select;
 	
-	public PokemonChooseMask(PokemonChooseMaskInfo info_, Skin skin) {
-		super(info_, skin);
+	public PokemonChooseMask(Skin skin, UImaskHandler ui) {
+		super(new PokemonChooseMaskInfo(), skin, ui);
 		infoTable = new Table(skin);
 		nameLBL = new Label("", skin);
 		typeLBL = new Label("", skin);
@@ -207,5 +208,11 @@ public class PokemonChooseMask extends UImask<PokemonChooseMaskInfo>{
 	}
 	public Pokemon getSelectedPokemon() {
 		return selected.poke;
+	}
+
+
+	@Override
+	public void afterInit() {
+		
 	}
 }

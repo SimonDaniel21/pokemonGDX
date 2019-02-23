@@ -13,18 +13,19 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import net.simondaniel.game.client.ui.masks.LoginMask;
+import net.simondaniel.game.client.ui.masks.ServerSelection;
 import net.simondaniel.game.client.ui.masks.ShowMaskInfo;
 import net.simondaniel.network.client.GameClient;
 
 public abstract class UImask<T extends ShowMaskInfo> extends Table {
-
-	protected final T info;
+	
+	
+	public final T info;
 	
 	private final float FADE_DELAY = 0.1f;
 	
-	protected Stage currentStage = null;
-
-	private UImask<?> lastMask = null;
+	protected final UImaskHandler stage;
 	
 	private boolean visable = false;
 	
@@ -34,8 +35,9 @@ public abstract class UImask<T extends ShowMaskInfo> extends Table {
 	
 	private static Sound unActiveSound;
 
-	public UImask(T info, Skin skin) {
+	public UImask(T info, Skin skin, UImaskHandler ui) {
 		super(skin);
+		this.stage = ui;
 		active = true;
 		this.info = info;
 		if(unActiveSound == null)
@@ -46,12 +48,10 @@ public abstract class UImask<T extends ShowMaskInfo> extends Table {
 	}
 
 	public void switchTo(final UImask<?> otherMask) {
-		final Stage s = currentStage;
 		final UImask<T> instance = this;
 		
 		instance.hide();
-		otherMask.show(s);
-		otherMask.lastMask = instance;
+		otherMask.show();
 
 //		addAction(Actions.sequence(disappear(), Actions.run(new Runnable() {
 //			@Override
@@ -63,27 +63,8 @@ public abstract class UImask<T extends ShowMaskInfo> extends Table {
 //		})));
 	}
 
-	public void goBack() {
-		
-		if(lastMask == null) {
-			return;
-		}
-		
-		final Stage s = currentStage;
-		final UImask<T> instance = this;
 
-		addAction(Actions.sequence(disappear(), Actions.run(new Runnable() {
-			@Override
-			public void run() {
-				instance.hide();
-				lastMask.show(s);
-				//lastMask.addAction(Actions.alpha(1));
-				//lastMask.addAction(Actions.scaleTo(1.4f, 1.4f, 3));
-			}
-		})));
-	}
-
-	public void show(Stage s) {
+	public void show() {
 		List<String> missing = info.getMissingFields();
 		String errString = "";
 		
@@ -99,10 +80,8 @@ public abstract class UImask<T extends ShowMaskInfo> extends Table {
 			throw new RuntimeException(errString);
 		}
 		
-		if (currentStage != null)
-			hide();
-		currentStage = s;
-		s.addActor(this);
+		//hide();
+		stage.addActor(this);
 		enter();
 		
 		setFillParent(true);
@@ -120,20 +99,9 @@ public abstract class UImask<T extends ShowMaskInfo> extends Table {
 			}
 		}));
 	}
-	private Action disappear() {
-		return Actions.sequence(Actions.touchable(Touchable.disabled), Actions.fadeOut(FADE_DELAY), Actions.run(new Runnable() {
-			
-			@Override
-			public void run() {
-				visable = false;
-			}
-		}));
-	}
-
 	public void hide() {
 		leave();
-		currentStage.clear();
-		currentStage = null;
+		stage.clear();
 		visable = false;
 	}
 	
@@ -149,7 +117,10 @@ public abstract class UImask<T extends ShowMaskInfo> extends Table {
 		return visable;
 	}
 	
+	
+	public abstract void afterInit();
 
+	@Deprecated
 	public T getInfo() {
 		return info;
 	}

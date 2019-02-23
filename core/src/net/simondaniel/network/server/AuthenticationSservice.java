@@ -36,7 +36,7 @@ public class AuthenticationSservice extends Sservice{
 				if(o instanceof LogoutC) {
 					logout(u);
 					server.auth.activate(u);
-					u.sendTCP(o);
+					//u.sendTCP(o);
 				}
 			}
 			public void disconnected(Connection con) {
@@ -91,7 +91,7 @@ public class AuthenticationSservice extends Sservice{
 	}
 	
 	private void logout(NeuerUser con) {
-		con.account.logout();
+		con.onLogout();
 		con.removeListener(connectionLostListener);
 		con.removeListener(requestServiceListener);
 		loggedInUsers.remove(con);

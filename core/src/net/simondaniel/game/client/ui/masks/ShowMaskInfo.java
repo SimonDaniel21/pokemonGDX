@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowMaskInfo {
+public abstract class ShowMaskInfo {
 	
 	public List<String> getMissingFields() {
 		List<String> result = new ArrayList<String>();
@@ -24,5 +24,9 @@ public class ShowMaskInfo {
 		}
 		
 		return result;
+	}
+	
+	public void clear() {
+		
 	}
 }

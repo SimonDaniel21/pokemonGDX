@@ -19,6 +19,7 @@ import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.ButtonOption;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
+import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.network.client.Request.AccountActivationC;
 import net.simondaniel.network.client.Request.RegisterUserC;
@@ -35,7 +36,7 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 	CheckBox remindPW;
 
 	GameMenu gameMenu;
-
+	ServerSelection server_select;
 	NamingDialog nd;
 	public NamingDialog activation;
 
@@ -44,9 +45,9 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 
 	final Dialog loggingInDialog;
 
-	public LoginMask(Skin s) {
-		super(new LoginMaskInfo(), s);
-		gameMenu = new GameMenu(s);
+	public LoginMask(Skin s, UImaskHandler ui) {
+		super(new LoginMaskInfo(), s, ui);
+		
 
 		loggingInDialog = new Dialog("info", s);
 		loggingInDialog.text("logging in...");
@@ -113,7 +114,7 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 			public void changed(ChangeEvent event, Actor actor) {
 				client.close();
 				client.authService.deactivate();
-				goBack();
+				switchTo(server_select);
 			}
 		});
 		add(tb);
@@ -214,6 +215,14 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 	public void leave() {
 		client.authService.deactivate();
 		client = null;
+	}
+
+
+
+	@Override
+	public void afterInit() {
+		gameMenu = stage.game_menu_mask;
+		server_select = stage.server_select_mask;
 	}
 
 }

@@ -39,14 +39,7 @@ public class MainMenuScreen implements Screen{
 	@Override
 	public void show() {
 		Skin skin = new Skin(Gdx.files.internal("skins/sgx/sgx-ui.json"));
-		serverSelection = new ServerSelection(skin);
-		serverSelection.getInfo().greetingMessage = "";
-		stage = new UImaskHandler(new TextureRegion(new Texture("gfx/background.jpg")));
-		serverSelection.show(stage);
-		
-		if(autoLogin) {
-			GameMenu m = new GameMenu(skin);
-			
+	
 //			PlayClient gc = new GameClient("localhost", "AutoConnectServer");
 //			gc.sendConnectRequest();
 //			if(gc.waitForConnection()) {
@@ -58,19 +51,7 @@ public class MainMenuScreen implements Screen{
 //				}
 //			}
 		}
-		
 	
-		
-		
-		
-		
-		
-		
-		InfoDialog.init(skin);
-		//stage.setDebugAll(true);
-		Gdx.input.setInputProcessor(stage);
-
-	}
 
 	@Override
 	public void render(float delta) {

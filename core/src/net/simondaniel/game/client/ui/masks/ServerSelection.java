@@ -21,6 +21,7 @@ import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.ButtonOption;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
+import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.network.client.PlayClient;
 
 public class ServerSelection extends UImask<ServerSelectionInfo>{
@@ -38,10 +39,9 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 	
 	private String host;
 	
-	public ServerSelection(Skin s) {
-		super(new ServerSelectionInfo(), s);
+	public ServerSelection(Skin s, UImaskHandler ui) {
+		super(new ServerSelectionInfo(), s, ui);
 		
-		loginMask = new LoginMask(s);
 		this.skin = getSkin();
 		
 		tryToConnectDialog = new Dialog("info", skin);
@@ -250,6 +250,7 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 		
 		if(answer != null) {
 			if(answer.equals("connected")) {
+				System.out.println("info " + loginMask.getInfo());
 				loginMask.getInfo().client = client;
 				switchTo(loginMask);
 			}
@@ -262,5 +263,10 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 		
 		
 		super.act(delta);
+	}
+
+	@Override
+	public void afterInit() {
+		loginMask = stage.login_mask;
 	}
 }

@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.simondaniel.game.client.ui.UImask;
+import net.simondaniel.game.client.ui.UImaskHandler;
 
 public class IngameMenu extends UImask<IngameMenuInfo>{
 
@@ -31,8 +32,8 @@ public class IngameMenu extends UImask<IngameMenuInfo>{
 	Button bttnOptions;
 	Button bttnExit;
 	
-	public IngameMenu(Skin skin){
-		super(new IngameMenuInfo(), skin);
+	public IngameMenu(Skin skin, UImaskHandler stage){
+		super(new IngameMenuInfo(), skin, stage);
 		int w = 200;
 		int h = 500;
 		bttnPokedex = new TextButton("fullscreen", skin, "big");
@@ -79,6 +80,12 @@ public class IngameMenu extends UImask<IngameMenuInfo>{
 
 	@Override
 	public void leave() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterInit() {
 		// TODO Auto-generated method stub
 		
 	}

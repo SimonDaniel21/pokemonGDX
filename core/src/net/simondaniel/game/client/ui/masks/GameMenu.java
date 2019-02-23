@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -20,6 +21,7 @@ import net.simondaniel.game.client.ui.InfoDialog;
 import net.simondaniel.game.client.ui.NamingDialog;
 import net.simondaniel.game.client.ui.NamingDialog.Entry;
 import net.simondaniel.game.client.ui.UImask;
+import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.network.server.Response.LobbyJoinS;
 import net.simondaniel.util.MyColor;
@@ -30,6 +32,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	Table lobbyTable;
 	Friendlist fl;
 	LobbyMask lobbyMask;
+	LoginMask loginMask;
 	
 
 	Inbox inbox;
@@ -39,14 +42,13 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 	PlayClient client;
 	
 	
-	public GameMenu(final Skin skin) {
-		super(new LoginMaskInfo(), skin);
+	public GameMenu(final Skin skin, UImaskHandler stage) {
+		super(new LoginMaskInfo(), skin, stage);
 		
 		//SgameInviteListener = new GameInviteListener();
 		
 		this.debug();
-		lobbyMask  = new LobbyMask(skin);
-		
+		lobbyMask  = stage.lobby_mask;	
 		
 		TextButton logoutButton = new TextButton(MyColor.dye(Color.PINK, "logout"), skin);
 		logoutButton.addListener(new ChangeListener() {
@@ -54,7 +56,8 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				client.logout();
-				goBack();
+				switchTo(loginMask);
+				//TODO
 			}
 			
 		});
@@ -144,12 +147,12 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			}
 			else {
 				System.err.println("CLIENT WANTS TO JOIN " + lobbyToJoin.name);
-				lobbyMask.getInfo().client = client;
-				lobbyMask.getInfo().joinLobby = true;
-				lobbyMask.getInfo().lobbyName = lobbyToJoin.name;
-				lobbyMask.getInfo().others = lobbyToJoin.others;
-				lobbyMask.getInfo().team = lobbyToJoin.team;
-				lobbyMask.getInfo().mode = GameMode.valueOf(lobbyToJoin.gameMode);
+				lobbyMask.info.client = client;
+				lobbyMask.info.joinLobby = true;
+				lobbyMask.info.lobbyName = lobbyToJoin.name;
+				lobbyMask.info.others = lobbyToJoin.others;
+				lobbyMask.info.team = lobbyToJoin.team;
+				lobbyMask.info.mode = GameMode.valueOf(lobbyToJoin.gameMode);
 				switchTo(lobbyMask);
 			}
 		}
@@ -197,6 +200,12 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 		client = null;
 		//info.client.removeChanelListener(listener);
 		//userTracker.removeListener(userTrackerListener);
+	}
+
+	@Override
+	public void afterInit() {
+		lobbyMask = stage.lobby_mask;
+		loginMask = stage.login_mask;
 	}
 	
 
