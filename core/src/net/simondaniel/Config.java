@@ -45,7 +45,6 @@ public abstract class Config {
 		if(!isComplete()) {
 			System.err.println("config file is missing something...");
 			complete();
-			save();
 		}
 		setGlobals();
 	}
@@ -104,9 +103,12 @@ public abstract class Config {
 		for(String s : MUST_HAVE){
 			if(!variables.containsKey(s)) variables.put(s, "null");
 		}
-		save();
 	}
 	
+	
+	/**
+	 * writes the config to the persistent file
+	 */
 	public void save(){
 		fh.delete();
 		try {
@@ -119,6 +121,7 @@ public abstract class Config {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	public void writeAsString(String key, String value) {
 		if(variables.containsKey(key)) {

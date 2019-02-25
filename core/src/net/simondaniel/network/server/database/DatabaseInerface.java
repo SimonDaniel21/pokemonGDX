@@ -5,7 +5,8 @@ import java.util.Collection;
 public interface DatabaseInerface {
 
 	public UserProfileDO loadUser(String uniqueName);
-	public String addUser(UserProfileDO user);
+	public void addUser(UserProfileDO user);
+	public String checkValidation(UserProfileDO user);
 	public void removeUser(String uniqueName);
 	
 	public NotActivatedDO loadNotActivatedName(String name);

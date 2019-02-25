@@ -23,6 +23,7 @@ import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.network.client.Request.AccountActivationC;
 import net.simondaniel.network.client.Request.RegisterUserC;
+import net.simondaniel.network.server.Response.MessageS;
 
 public class LoginMask extends UImask<LoginMaskInfo> {
 
@@ -52,19 +53,15 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 		loggingInDialog = new Dialog("info", s);
 		loggingInDialog.text("logging in...");
 
-		nd = new NamingDialog("enter email", s, ButtonOption.OK_CANCEL, new Entry("email:", ""),
-				new Entry("repeat password:", "")) {
+		nd = new NamingDialog("enter email", s, ButtonOption.OK_CANCEL, new Entry("email:", "istmieegal@gmail.com"),
+				new Entry("repeat password:", "pw1")) {
 			@Override
 			public void updateValues(String[] values) {
 				if (!values[1].equals(pw_tf.getText())) {
 					System.err.println("reached");
 					InfoDialog.show("passwords dont match!", getStage());
 				} else {
-					RegisterUserC p = new RegisterUserC();
-					p.name = name_tf.getText();
-					p.pw = values[1];
-					p.email = values[0];
-					//info.client.send(MessageChannel.initialChannel, p);
+					client.authService.registerNewUser(name_tf.getText(), values[1], values[0]);
 					deactivateUntilResponse();
 				}
 			}
@@ -72,10 +69,7 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 		activation = new NamingDialog("Activation", s, ButtonOption.OK, new Entry("code:", "")) {
 			@Override
 			public void updateValues(String[] values) {
-				AccountActivationC p = new AccountActivationC();
-				p.name = name_tf.getText();
-				p.code = values[0];
-				//info.client.send(MessageChannel.initialChannel, p);
+				info.client.authService.activateAccount(name_tf.getText(), values[0]);
 				deactivateUntilResponse();
 			}
 		};
@@ -112,9 +106,11 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 		tb.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				client.close();
-				client.authService.deactivate();
-				switchTo(server_select);
+				if(isActive()) {
+					client.close();
+					client.authService.deactivate();
+					switchTo(server_select);
+				}
 			}
 		});
 		add(tb);
@@ -181,6 +177,28 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 	@Override
 	public void act(float delta) {
 		
+		MessageS rr = client.authService.regResponse.consume();
+		
+		if(rr != null) {
+			reActivateUI();
+			if(rr.type == 0) {
+				InfoDialog.showError(rr.message, getStage());
+			}
+			
+			if(rr.type == 1) {
+				activation.show(getStage());
+			}
+			
+			if(rr.type == 2) {
+				InfoDialog.show(rr.message, stage);
+			}
+			
+			if(rr.type == 3) {
+				InfoDialog.showError(rr.message, stage);
+			}
+		}
+		
+		
 		if(client.authService.response.isReady()) {
 			//System.err.println("response ready " + client.authService.response.consume().response);
 			String r = client.authService.response.consume();
@@ -193,7 +211,6 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 					GameConfig.gameConfig.writeAsString("last_loginPassword", "null");
 				}
 				GameConfig.gameConfig.writeAsBool("keep_password", remindPW.isChecked());
-				GameConfig.gameConfig.save();
 
 				PokemonGDX.game.client = info.client;
 				gameMenu.getInfo().client = info.client;

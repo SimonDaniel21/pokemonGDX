@@ -57,7 +57,6 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			public void changed(ChangeEvent event, Actor actor) {
 				client.logout();
 				switchTo(loginMask);
-				//TODO
 			}
 			
 		});

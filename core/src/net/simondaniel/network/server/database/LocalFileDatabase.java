@@ -108,7 +108,13 @@ public class LocalFileDatabase extends Config implements DatabaseInerface{
 	}
 
 	@Override
-	public String addUser(UserProfileDO user) {
+	public void addUser(UserProfileDO user) {
+		
+		userTable.add(user);
+	}
+	
+	@Override
+	public String checkValidation(UserProfileDO user) {
 		
 		if(userTable.contains(user.name)) return "name already exists";
 		
@@ -117,8 +123,6 @@ public class LocalFileDatabase extends Config implements DatabaseInerface{
 				return "email already taken";
 			
 		}
-		
-		userTable.add(user);
 		
 		return "success";
 	}

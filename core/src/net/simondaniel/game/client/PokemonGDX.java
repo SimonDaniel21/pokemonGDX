@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.simondaniel.Assets;
+import net.simondaniel.GameConfig;
 import net.simondaniel.LaunchConfiguration;
 import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.pokes.Pokemon;
@@ -80,5 +81,13 @@ public class PokemonGDX extends Game {
 		
 		
 	}
+	
+	
+	@Override
+	public void dispose() {
+		GameConfig.gameConfig.save();
+		super.dispose();
+	}
+	
 
 }

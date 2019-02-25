@@ -149,7 +149,6 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 					@Override
 					public void updateValues(String[] values) {
 						GameConfig.gameConfig.writeAppendToStringArray("custom_servers", values[0] + ":" + values[1], ",");
-						GameConfig.gameConfig.save();
 					}
 			
 		};
@@ -242,7 +241,6 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 		//GameConfig.gameConfig.writeAsBool("use_auto_server", remindServer.isChecked());
 		String autoServer = remindServer.isChecked() ? host : "null";
 		GameConfig.gameConfig.writeAsString("auto_server_host", autoServer);
-		GameConfig.gameConfig.save();
 	}
 	
 	@Override

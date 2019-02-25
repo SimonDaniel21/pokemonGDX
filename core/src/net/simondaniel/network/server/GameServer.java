@@ -236,7 +236,7 @@ public class GameServer extends Server{
 		NotActivatedDO no = new NotActivatedDO();
 		no.name = name;
 		no.code = code;
-		response.message = database.addUser(updo);
+		//response.message = database.addUser(updo);
 		
 		if(response.message.equals("success")) {
 			database.addNotActivatedName(no);

@@ -10,6 +10,8 @@ import com.esotericsoftware.kryonet.Server;
 
 import net.simondaniel.network.Network;
 import net.simondaniel.network.server.Response.ServerInfoS;
+import net.simondaniel.network.server.database.DatabaseInerface;
+import net.simondaniel.network.server.database.LocalFileDatabase;
 
 public class PlayServer extends Server{
 
@@ -19,6 +21,8 @@ public class PlayServer extends Server{
 	AuthenticationSservice auth;
 	UserTrackSservice track;
 	MatchmakingSservice match;
+	
+	public final DatabaseInerface database;
 	
 	public PlayServer(String name) {
 		this.SERVER_NAME = name;
@@ -35,6 +39,8 @@ public class PlayServer extends Server{
 			};
 		};
 		this.addListener(infoListener);
+		
+		database = new LocalFileDatabase("database.deseus");
 	}
 	
 	@Override
