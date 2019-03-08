@@ -205,6 +205,7 @@ public class AuthenticationSservice extends Sservice{
 			else {
 				response.message = "registered and sent activation mail";
 				response.type = 1;
+				database.addUser(updo);
 				database.addNotActivatedName(no);
 				database.save();
 			}

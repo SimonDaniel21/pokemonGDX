@@ -56,6 +56,7 @@ public class GameMenu extends UImask<LoginMaskInfo>{
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				client.logout();
+				loginMask.info.autoLogin = false;
 				switchTo(loginMask);
 			}
 			

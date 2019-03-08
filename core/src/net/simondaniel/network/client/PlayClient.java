@@ -34,14 +34,6 @@ public class PlayClient extends Client{
 		matchService = new MatchmakingService(this);
 		trackingService = new UserTrackService(this);
 		
-		authService.setAuthenticationCallback(new MyCallback() {
-			@Override
-			public void perform() {
-				authService.deactivate();
-				matchService.activate();
-			}
-		});
-		
 		
 		serverNameListener = new Listener() {
 			@Override

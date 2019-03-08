@@ -9,6 +9,8 @@ public class ServerSelectionInfo extends ShowMaskInfo{
 	
 	public String greetingMessage;
 	
+	public boolean autoConnect;
+	
 	public boolean isComplete() {
 		return !(client == null);
 	}

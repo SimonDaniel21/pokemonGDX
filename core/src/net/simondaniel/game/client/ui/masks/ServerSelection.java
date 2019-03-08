@@ -230,7 +230,7 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 	public void enter() {
 		client = info.client;
 		String auto = GameConfig.gameConfig.AUTO_SERVER_HOST;
-		if(!auto.equals("null")) {
+		if(!auto.equals("null")  && info.autoConnect) {
 			tryToConnectTo("auto_server", auto);
 		}
 	}
@@ -248,8 +248,8 @@ public class ServerSelection extends UImask<ServerSelectionInfo>{
 		
 		if(answer != null) {
 			if(answer.equals("connected")) {
-				System.out.println("info " + loginMask.getInfo());
-				loginMask.getInfo().client = client;
+				loginMask.info.client = client;
+				loginMask.info.autoLogin = true;
 				switchTo(loginMask);
 			}
 			else {

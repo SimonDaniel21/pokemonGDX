@@ -23,6 +23,7 @@ import net.simondaniel.game.client.ui.UImaskHandler;
 import net.simondaniel.network.client.PlayClient;
 import net.simondaniel.network.client.Request.AccountActivationC;
 import net.simondaniel.network.client.Request.RegisterUserC;
+import net.simondaniel.network.server.Response.LoginS;
 import net.simondaniel.network.server.Response.MessageS;
 
 public class LoginMask extends UImask<LoginMaskInfo> {
@@ -109,6 +110,7 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 				if(isActive()) {
 					client.close();
 					client.authService.deactivate();
+					server_select.info.autoConnect = false;
 					switchTo(server_select);
 				}
 			}
@@ -158,13 +160,16 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 		name_tf.setCursorPosition(name_tf.getText().length());
 
 		String pw = GameConfig.gameConfig.LAST_LOGIN_PASSWORD;
+		
 		if (pw.equals("null"))
 			pw = "";
-		else {
-			//loginRequest();
+		else if(info.autoLogin){
+			pw_tf.setText(pw);
+			loginRequest();
 			
 			System.err.println("auto login deaktiviert");
 		}
+		
 		pw_tf.setText(pw);
 		remindPW.setChecked(GameConfig.gameConfig.KEEP_PASSWORD);
 		name_tf.selectAll();
@@ -173,11 +178,42 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 			loginRequest();
 		}
 	}
+	
+	private void doLogin() {
+		GameConfig.gameConfig.writeAsString("last_loginName", name_tf.getText());
+		
+		if (remindPW.isChecked()) {
+			GameConfig.gameConfig.writeAsString("last_loginPassword", pw_tf.getText());
+		} else {
+			GameConfig.gameConfig.writeAsString("last_loginPassword", "null");
+		}
+		GameConfig.gameConfig.writeAsBool("keep_password", remindPW.isChecked());
+
+		PokemonGDX.game.client = info.client;
+		gameMenu.info.client = info.client;
+		switchTo(gameMenu);
+	}
 
 	@Override
 	public void act(float delta) {
 		
-		MessageS rr = client.authService.regResponse.consume();
+		MessageS rr = client.authService.registerRequest.consume();
+		MessageS aar = client.authService.activateAccountRequest.consume();
+		
+		LoginS p = client.authService.loginRequest.consume();
+		
+		if(p != null) {
+			
+			if (p.response.equals("success")) {
+				doLogin();
+
+			} else {
+				InfoDialog id = new InfoDialog(p.response, getSkin());
+				id.show(getStage());
+			}
+			loggingInDialog.hide();
+			reActivateUI();
+		}
 		
 		if(rr != null) {
 			reActivateUI();
@@ -188,42 +224,23 @@ public class LoginMask extends UImask<LoginMaskInfo> {
 			if(rr.type == 1) {
 				activation.show(getStage());
 			}
-			
-			if(rr.type == 2) {
-				InfoDialog.show(rr.message, stage);
-			}
-			
-			if(rr.type == 3) {
-				InfoDialog.showError(rr.message, stage);
-			}
 		}
 		
-		
-		if(client.authService.response.isReady()) {
-			//System.err.println("response ready " + client.authService.response.consume().response);
-			String r = client.authService.response.consume();
-			
-			if (r.equals("success")) {
-				GameConfig.gameConfig.writeAsString("last_loginName", name_tf.getText());
-				if (remindPW.isChecked()) {
-					GameConfig.gameConfig.writeAsString("last_loginPassword", pw_tf.getText());
-				} else {
-					GameConfig.gameConfig.writeAsString("last_loginPassword", "null");
-				}
-				GameConfig.gameConfig.writeAsBool("keep_password", remindPW.isChecked());
-
-				PokemonGDX.game.client = info.client;
-				gameMenu.getInfo().client = info.client;
-				switchTo(gameMenu);
-
-			} else {
-				InfoDialog id = new InfoDialog(r, getSkin());
-				id.show(getStage());
-				// System.out.println("showing login error");
-			}
-			loggingInDialog.hide();
+		if(aar != null) {
 			reActivateUI();
+			if(aar.type == 0) {
+				InfoDialog.showError(aar.message, getStage());
+			}
+			
+			if(aar.type == 2) {
+				InfoDialog.show(aar.message, stage);
+			}
+			
+			if(aar.type == 3) {
+				InfoDialog.showError(aar.message, stage);
+			}
 		}
+		
 		
 		super.act(delta);
 	}

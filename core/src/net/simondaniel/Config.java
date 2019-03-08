@@ -126,6 +126,7 @@ public abstract class Config {
 	public void writeAsString(String key, String value) {
 		if(variables.containsKey(key)) {
 			variables.put(key, value);
+			setGlobals();
 		}
 	}
 	
@@ -137,11 +138,13 @@ public abstract class Config {
 			else oldText = oldText + regex;
 			
 			variables.put(key, oldText + value);
+			setGlobals();
 		}
 	}
 	
 	public void writeAsBool(String key, boolean value) {
 		writeAsString(key, value ?  "true" : "false");
+		setGlobals();
 	}
 	
 	private void readLine(String line) {

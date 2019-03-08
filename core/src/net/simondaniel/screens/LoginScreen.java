@@ -49,6 +49,7 @@ public class LoginScreen implements Screen{
 		ServerSelectionInfo info = stage.server_select_mask.getInfo();
 		info.client = client;
 		info.greetingMessage = "";
+		info.autoConnect = true;
 		stage.server_select_mask.show();
 		
 		if(autoLogin) {
